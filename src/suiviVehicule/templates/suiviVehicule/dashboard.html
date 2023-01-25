@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static './bootstrap-4.3.1/bootstrap-4.3.1/dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static './sass/dist/style.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open Sans">
+    <title>Dashboard - Mautourco</title>
+</head>
+
+<body>
+{% load crispy_forms_tags %}
+{% csrf_token %}
+<div class="header row">
+    <div class=" col-md-4 header-logo">
+        <img src="{% static './image/logo.png' %}" alt="">
+    </div>
+    <div class="col-md-4 header-title">
+        <h2>SUIVI DE FLOTTE DE VEHICULE</h2>
+    </div>
+    <div class="col-md-4 header-sign-in">
+        <h5><i class="fa-solid fa-house-user"></i></h5>
+    </div>
+</div>
+
+<div class="main">
+    <button class="carrosell" data-toggle="collapse" href="#multiCollapseExample1" role="button" onclick="clickIcon()"
+            aria-expanded="false" aria-controls="multiCollapseExample1">Search <i
+            class="fa-solid fa-angle-right fa-rotate-90"></i>
+    </button>
+
+    <div class="row collapse multi-collapse" id="multiCollapseExample1">
+        <div class="search col-md-6 ">
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label for="drive">Driver </label>
+                    <input type="text" name="drive" class="form-control">
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="from">From </label>
+                    <input type="text" name="from" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label for="drive_mobile">Driver mobile </label>
+                    <input type="text" name="drive_mobile" class="form-control">
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="to">To </label>
+                    <input type="text" name="to" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label for="vehicule">Vehicule </label>
+                    <input type="text" name="vehicule" class="form-control">
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="status">Status </label>
+                    <input type="text" name="status" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label for="trip_id">Trip </label>
+                    <input type="text" name="trip_id" class="form-control">
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="trip">Trip N° </label>
+                    <input type="text" name="trip" class="form-control">
+                </div>
+            </div>
+
+            <div class="footer row">
+                <button class="left ">Reset</button>
+                <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+        </div>
+        <div class="dashboard col-md-6">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    <div class="list">
+        <div class="row">
+            <div class="col-md-12 head">
+                <p>Last updated : {{ last_refresh }} ago
+                    <a href="/refresh" class="btn" >
+                        <button>
+                            Refresh
+                            <i class="fa-sharp fa-solid fa-arrows-rotate"></i>
+                        </button>
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="row table-responsive">
+            <table class="table table-borderless col-md-12">
+                <thead>
+                <tr>
+                    <th scope="col">Driver name</th>
+                    <th scope="col">Driver mobile</th>
+                    <th scope="col">From</th>
+                    <th scope="col">To</th>
+                    <th scope="col">Vehicule N°</th>
+                    <th scope="col">Start date</th>
+                    <th scope="col">Pick up time</th>
+                    <th scope="col" style="width: 200px;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in data_list %}
+                <tr>
+                    <td>{{ item.driver_oname }}</td>
+                    <td>{{ item.driver_mobile_number }}</td>
+                    <td>{{ item.FromPlace }}</td>
+                    <td>{{ item.ToPlace }}</td>
+                    <td>{{ item.vehicleno }}</td>
+                    <td>{{ item.trip_start_date }}</td>
+                    <td>{{ item.pick_up_time|time:"h:i a"}}</td>
+                    <td class="list-action">
+
+                        <button class="btn btn-outline-success action">On time</button>
+                        <a href="/refresh" class="outline-btn"><img class="svg" src="{% static '/reset.svg' %}" alt=""></a>
+                        <a href="/map/{{ item.PickUp_H_Pos }}" class="outline-btn"><img class="svg" target="_blank"
+                                                                                        src="{% static '/map.svg' %}"
+                                                                                        alt=""></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="list-footer">
+            <button>Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+<script src="{% static './bootstrap-4.3.1/bootstrap-4.3.1/dist/js/bootstrap.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="{% static './graph.js' %}"></script>
+<script src="https://kit.fontawesome.com/2c856785c3.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

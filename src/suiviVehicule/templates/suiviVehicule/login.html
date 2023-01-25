@@ -1,0 +1,29 @@
+{% extends "suiviVehicule/index.html" %}
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<!--Register-->
+<div class="container col-md-4 py-5">
+    <div class="container-header">
+        <h1>Connexion</h1>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {{ login_form.mail |as_crispy_field }}
+        {{ login_form.pswd |as_crispy_field }}
+        {% if error %}
+        <div class="alert alert-danger text-center">
+            <strong>{{ error|escape }}</strong>
+        </div>
+        {% endif %}
+        <div class="container-button">
+            <button class="btn btn-primary" type="submit">Connexion</button>
+        </div>
+
+    </form>
+    <p class="text-center">If you haven't an account, <a href="/register">Sign in</a> instead.</p>
+</div>
+
+{% endblock %}
+<!-- Optional Javascript -->

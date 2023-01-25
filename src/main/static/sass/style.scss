@@ -1,0 +1,200 @@
+// $button: #105378;
+$button: #1a5a9f;
+$button-hover: #f58220;
+$success: rgba(30,132,127,1.0);
+$danger: rgba(255,110,64,1.0);
+$colorHeader: #ee7203;
+$grey: #a1a1a1;
+$font-size-button: 16px;
+
+.header{
+    height: 100px;
+    border-bottom: 0.3rem solid $colorHeader;
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .22), 0 1px 2px 0 rgba(0, 0, 0, .18);
+    display: flex;
+    flex-direction: row;
+    .header-logo{
+        height: 100%;
+        display: flex;
+        align-items: center;
+        img{
+            width: 300px;
+        }
+    }
+    .header-title{
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $colorHeader;
+        h2{
+            font-size: 1.7rem;
+        }
+    }
+    .header-sign-in{
+        height: 100%;
+        display: flex;
+        justify-content: right;
+        align-items: center;
+        color: $colorHeader;
+        padding-right: 40px;
+        h2{
+            font-size: 1.7rem;
+        }
+    }
+}
+
+.main{
+    padding: 2rem;
+    font-family: 'Open Sans';
+    width: 1400px;
+    margin: 0 auto;
+
+    .carrosell {
+        background-color: white;
+        border-color: $button ;
+        color: $button;
+        border: 1;
+        border-radius: 4px;
+        padding: 0 auto;
+        font-size: $font-size-button;
+        width: 140px;
+        &:hover{
+            color: $button-hover;
+        }
+        i{
+            margin-left: 10px;
+        }
+    }
+    .btn-outline-success{
+        border-color: $success;
+        &:hover{
+            background-color: $success;
+        }
+    }
+    .btn-outline-danger{
+        border-color: $danger;
+        &:hover{
+            background-color: $danger;
+        }
+    }
+    .search{
+        background-color: #ecf2f8;
+        margin-top: 10px;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        .form-group{
+            margin: 0 auto;
+        }
+        .footer{
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            button {
+                background-color: white;
+                border-color: $button ;
+                color: $button;
+                border: 1;
+                border-radius: 4px;
+                font-size: $font-size-button;
+                width: 140px;
+                &:hover{
+                    color: $button-hover;
+                }
+                i{
+                    margin-left: 10px;
+                }
+            }
+            .right{
+                margin-left: 3rem;
+            }
+        }
+    }
+    .dashboard{
+        #idChart{
+            max-width: 200px;
+            max-height: 200px;
+        }
+    }
+    .list{
+        margin-top: 5rem;
+        .head{
+            button{
+                background-color: white;
+                border-color: $button ;
+                color: $button;
+                border: 1;
+                border-radius: 4px;
+                padding: 0 auto;
+                font-size: $font-size-button;
+                width: 140px;
+                margin-left: 1rem;
+                &:hover{
+                    color: $button-hover;
+                }
+                i{
+                    margin-left: 10px;
+                }
+            }
+        }
+        table{
+            thead{
+                background-color: $button;
+                color: white;
+                text-align: center;
+                font-size: 12px;
+            }
+            tbody{
+                font-size: 14px;
+                .list-action{
+                    padding: 0;
+                    padding-top: 10px;
+                    .action{
+                        font-size: 12px;
+                    }
+                    .outline-btn{
+                        border: 0;
+                        background-color: white;
+                        .svg{
+                            width: 23px;
+                        }
+                        &:hover{
+                            .svg{
+                                stroke: $button-hover;
+                            }
+                        }
+                    }
+                    .btn{
+                        width: 71px;
+                    }
+                }
+                td{
+                    text-align: center;
+                    align-items: center ;
+                }
+            }
+        }
+        .list-footer{
+            display: flex;
+            justify-content: center;
+            button{
+                background-color: white;
+                border-color: $button ;
+                color: $button;
+                border: 1;
+                border-radius: 4px;
+                padding: 0 auto;
+                font-size: $font-size-button;
+                width: 140px;
+                margin-left: 1rem;
+                &:hover{
+                    color: $button-hover;
+                }
+                i{
+                    margin-left: 0.5rem;
+                }
+            }
+        }
+    }
+}
