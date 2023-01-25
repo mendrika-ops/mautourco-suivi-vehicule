@@ -1,1 +1,1 @@
-Python 3.10.2
+python -m venv /opt/venv && . /opt/venv/bin/activate && pip │ install -r requirements.txt
