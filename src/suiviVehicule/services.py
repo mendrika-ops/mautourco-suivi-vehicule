@@ -4,7 +4,7 @@ import requests
 from django.db import connection
 from humanfriendly import format_timespan
 
-from suiviVehicule.models import Statuspos, UidName, Statusposdetail
+from suiviVehicule.models import Statuspos, UidName, Statusposdetail, Trajetcoordonnee
 
 
 class services():
@@ -33,10 +33,8 @@ class services():
         setattr(status_detail, 'coordonnee', f"{lat},{long}")
         return status_detail
 
-    def get_direction(self):
-        origin = '-20.302738,57.366069'
-        destination = '-19.994282078890443,57.63655781308253'
-        waypoints = '-20.302738,57.366069|-19.994282078890443,57.63655781308253'
+    def get_direction(self, origin, destination):
+        waypoints = f'{origin}|{destination}'
         result = requests.get(
             'https://maps.googleapis.com/maps/api/directions/json?',
             params={
@@ -47,7 +45,6 @@ class services():
             })
 
         directions = result.json()
-        print(directions["routes"][0]["legs"])
         if directions["status"] == "OK":
 
             routes = directions["routes"][0]["legs"]
@@ -82,7 +79,7 @@ class services():
             "origin": origin,
             "destination": destination,
             "distance": f"{round(distance / 1000, 2)} Km",
-            "duration": format_timespan(duration)
+            "duration": duration
         }
 
     def gestion_status_pos(self):
@@ -126,4 +123,62 @@ class services():
         for row in cursor:
             data.append(row[0])
         return format_timespan(data[0])
+
+    def get_last_status(self):
+        data = []
+        cursor = connection.cursor()
+        cursor.execute("select id from suivivehicule_statuspos where `datetime` = (select max(`datetime`) from suivivehicule_statuspos ss )")
+        for row in cursor:
+            data.append(row[0])
+        return data[0]
+
+    def get_last_coordonneer(self, vehicleno):
+        data = []
+        idmere = self.get_last_status()
+        cursor = connection.cursor()
+        req = f"select * from suivivehicule_getlastcoordonnee where idmere_id='{idmere}' and vehicleno='{vehicleno}'"
+        print(req)
+        cursor.execute(req)
+        for row in cursor:
+            print("LOOZZZAAAA ", row[3])
+            data.append(row[3])
+        if len(data) == 0:
+            return False
+        return data[0]
+
+    def get_difference_date(self, duration, pick_up_time, trip_start_date):
+        date = f'{trip_start_date} {str(pick_up_time)}'
+        s = datetime.strptime(date, '%m/%d/%Y %H:%M:%S').timestamp()
+        now = datetime.now(timezone.utc)
+        prob = (now.timestamp() + duration)
+        print("CALCULE ", prob, "SEC ", s)
+        if prob == s:
+            return "on time"
+        elif prob > s:
+            return "late"
+        elif prob < s:
+            return "Risky"
+        elif duration == 0:
+            return "cancel"
+
+        print("duration : ", duration, "trip date ", str(prob))
+    def get_data(self):
+        data = Trajetcoordonnee.objects.all().order_by('-trip_start_date', '-pick_up_time')[0:10]
+        trajetcoord = []
+        for trajet in data:
+            last = self.get_last_coordonneer(trajet.vehicleno)
+            if last == False:
+                setattr(trajet, 'PickEnd_H_Pos',trajet.PickUp_H_Pos)
+            else:
+                setattr(trajet, 'PickEnd_H_Pos', last)
+            file = self.get_direction(trajet.PickEnd_H_Pos, trajet.PickUp_H_Pos)
+            calcdate = self.get_difference_date(file["duration"], trajet.pick_up_time, trajet.trip_start_date)
+            setattr(trajet, 'status', calcdate)
+            setattr(trajet, 'duration', format_timespan(file["duration"]))
+
+            print("Stat ", trajet.status)
+            trajetcoord.append(trajet)
+        return trajetcoord
+
+
 

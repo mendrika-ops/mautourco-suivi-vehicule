@@ -23,7 +23,7 @@
         <h2>SUIVI DE FLOTTE DE VEHICULE</h2>
     </div>
     <div class="col-md-4 header-sign-in">
-        <h5><i class="fa-solid fa-house-user"></i></h5>
+        <h5><a href="/dashboard" ><i class="fa-solid fa-house-user"></i></a></h5>
     </div>
 </div>
 
@@ -107,7 +107,7 @@
                     <th scope="col">From</th>
                     <th scope="col">To</th>
                     <th scope="col">Vehicule N°</th>
-                    <th scope="col">Start date</th>
+                    <th scope="col">End date</th>
                     <th scope="col">Pick up time</th>
                     <th scope="col" style="width: 200px;"></th>
                 </tr>
@@ -123,8 +123,7 @@
                     <td>{{ item.trip_start_date }}</td>
                     <td>{{ item.pick_up_time|time:"h:i a"}}</td>
                     <td class="list-action">
-
-                        <button class="btn btn-outline-success action">On time</button>
+                        <button class="btn btn-outline-success action">{{ item.status }} </button>
                         <a href="/refresh" class="outline-btn"><img class="svg" src="{% static '/reset.svg' %}" alt=""></a>
                         <a href="/map/{{ item.PickUp_H_Pos }}" class="outline-btn"><img class="svg" target="_blank"
                                                                                         src="{% static '/map.svg' %}"

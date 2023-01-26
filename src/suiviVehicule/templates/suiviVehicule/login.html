@@ -1,11 +1,12 @@
 {% extends "suiviVehicule/index.html" %}
 {% block content %}
-
+{% load static %}
 {% load crispy_forms_tags %}
 
 <!--Register-->
 <div class="container col-md-4 py-5">
     <div class="container-header">
+         <img src="{% static './image/logo.png' %}" alt="">
         <h1>Connexion</h1>
     </div>
     <form method="POST">

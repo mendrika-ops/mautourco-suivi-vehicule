@@ -10,14 +10,15 @@
 </head>
 <body>
 {% extends "suiviVehicule/index.html" %}
+{% load static %}
 {% block content %}
-
 {% load crispy_forms_tags %}
 
 <!--Register-->
 <div class="container col-md-4 py-5">
     <div class="container-header">
-        <h1>Register</h1>
+         <img src="{% static './image/logo.png' %}" alt="">
+        <h1>Connexion</h1>
     </div>
     <form method="POST">
         {% csrf_token %}
@@ -31,7 +32,7 @@
             <button class="btn btn-primary" type="submit">Register</button>
           </div>
     </form>
-    <p class="text-center">If you already have an account, <a href="/login">Sign up</a> instead.</p>
+    <p class="text-center">If you already have an account, <a href="/">Sign up</a> instead.</p>
 </div>
 
 {% endblock %}

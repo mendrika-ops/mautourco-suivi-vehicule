@@ -51,24 +51,22 @@ def register_request(request):
 
 def dashboard_request(request):
     form = dashboardForm()
-    data_list = form.get_data()
+    data_list = services().get_data()
     refresh =  services().get_last_refresh()
-    print("last data ",refresh)
+    print("last refresh ", refresh)
     return render(request, "suiviVehicule/dashboard.html", context={"data_list": data_list, "last_refresh": refresh})
 
 
 def googlemap_request(request, pos):
     serv = services()
-    map = serv.get_direction()
-    print("indro mapp ", map)
-    #data_list = dashboardForm().get_data()
+    #map = serv.get_direction()
+    #print("indro mapp ", map)
+
+    data_list = services().get_data()
     #return render(request, "suiviVehicule/dashboard.html", context={"data_list": data_list})
     return redirect("https://www.google.com/maps?q=" + pos)
 
 
 def refresh_request(request):
     status = services().gestion_status_pos()
-    data_list = dashboardForm().get_data()
-    refresh =  services().get_last_refresh()
-    print("last data ",refresh)
-    return render(request, "suiviVehicule/dashboard.html", context={"data_list": data_list, "last_refresh": refresh})
+    return redirect("/dashboard")

@@ -26,12 +26,17 @@ class Trajetcoordonnee(models.Model):
     trip_start_date = models.CharField(max_length=15, null=False)
     pick_up_time = models.TimeField()
     PickUp_H_Pos = models.CharField(max_length=100)
-
+    PickEnd_H_Pos = models.CharField(max_length=100, null=True)
+    status = models.CharField(max_length=100, null=True)
+    duration = models.CharField(max_length=100, null=True)
 
 class UidName(models.Model):
     vehicleno = models.CharField(max_length=100)
     Uid = models.CharField(max_length=50)
 
+    class Meta:
+        managed = False
+        db_table = 'UidName'
     def __init__(self, vehicleno, Uid):
         self.vehicleno = vehicleno
         self.Uid = Uid
