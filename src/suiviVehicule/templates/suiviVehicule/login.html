@@ -7,7 +7,6 @@
 <div class="container col-md-4 py-5">
     <div class="container-header">
          <img src="{% static './image/logo.png' %}" alt="">
-        <h1>Connexion</h1>
     </div>
     <form method="POST">
         {% csrf_token %}
@@ -23,7 +22,6 @@
         </div>
 
     </form>
-    <p class="text-center">If you haven't an account, <a href="/register">Sign in</a> instead.</p>
 </div>
 
 {% endblock %}

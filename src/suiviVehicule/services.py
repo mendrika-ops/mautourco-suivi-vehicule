@@ -1,10 +1,11 @@
 from datetime import datetime, timezone
 
+import pytz
 import requests
 from django.db import connection
 from humanfriendly import format_timespan
 
-from suiviVehicule.models import Statuspos, UidName, Statusposdetail, Trajetcoordonnee
+from suiviVehicule.models import Statuspos, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm
 
 
 class services():
@@ -87,15 +88,22 @@ class services():
         try:
             list_uid = self.get_join_table_trajetsummary()
             uid = '5CE7C3'
-            date_time = '25 January 2023 07:14:00'
-            now = datetime.now(timezone.utc)
+            #date_time = '26 January 2023 07:14:00'
+            now = datetime.now()
+            print("sitatut ", now.strftime("%d %B %Y %H:%M:%S"))
+            date_time = now.strftime("%d %B %Y %H:%M:%S")
             setattr(status, 'datetime', now)
-            setattr(status, 'desc', 'ceci')
+            setattr(status, 'desc', 'test')
             status.save()
             for row in list_uid:
                 status_detail = self.get_position_lat_long(row.Uid, date_time)
-                print("UID ", status_detail.uid , " COORDONNEE ", status_detail.coordonnee)
+                print("Id mere ", status_detail)
+                file = self.get_direction(row.coordonnee, status_detail.coordonnee)
+                print("UID ", status_detail.uid ,"coordonnee 000 ",row.coordonnee, " COORDONNEE 111 ", status_detail.coordonnee)
                 setattr(status_detail, 'idmere', status)
+                setattr(status_detail, 'duration', file["duration"])
+                setattr(status_detail, 'daty_time', now)
+                print("DURATIONNN ", format_timespan(file["duration"]))
                 status_detail.save()
             print("Status ---- ", status.id, status.datetime)
 
@@ -107,9 +115,9 @@ class services():
         solution = []
         try:
             cursor = connection.cursor()
-            cursor.execute("select * From suivivehicule_trajetcoordonneesummary limit 10")
+            cursor.execute("select Uid,vehicleno , PickUp_H_Pos  From suivivehicule_trajetcoordonneesummary limit 10")
             for row in cursor:
-                solution.append(UidName( row[1], row[0]))
+                solution.append(UidName( row[1], row[0], row[2]))
         except Exception as e:
             print("error", str(e))
         finally:
@@ -119,7 +127,7 @@ class services():
     def get_last_refresh(self):
         data = []
         cursor = connection.cursor()
-        cursor.execute("select TIMESTAMPDIFF(second , datetime, UTC_TIMESTAMP()) as datetime From suivivehicule_statuspos order by datetime asc")
+        cursor.execute("select TIMESTAMPDIFF(second , datetime, current_timestamp()) as datetime From suivivehicule_statuspos order by datetime asc")
         for row in cursor:
             data.append(row[0])
         return format_timespan(data[0])
@@ -137,7 +145,6 @@ class services():
         idmere = self.get_last_status()
         cursor = connection.cursor()
         req = f"select * from suivivehicule_getlastcoordonnee where idmere_id='{idmere}' and vehicleno='{vehicleno}'"
-        print(req)
         cursor.execute(req)
         for row in cursor:
             print("LOOZZZAAAA ", row[3])
@@ -146,39 +153,44 @@ class services():
             return False
         return data[0]
 
-    def get_difference_date(self, duration, pick_up_time, trip_start_date):
-        date = f'{trip_start_date} {str(pick_up_time)}'
-        s = datetime.strptime(date, '%m/%d/%Y %H:%M:%S').timestamp()
-        now = datetime.now(timezone.utc)
-        prob = (now.timestamp() + duration)
-        print("CALCULE ", prob, "SEC ", s)
-        if prob == s:
-            return "on time"
-        elif prob > s:
-            return "late"
-        elif prob < s:
+    def get_difference_date(self, estimate, picktime):
+        if picktime < estimate:
+            return "On time"
+        elif estimate > now:
+            return "Late"
+        elif estimate < now:
             return "Risky"
-        elif duration == 0:
-            return "cancel"
-
-        print("duration : ", duration, "trip date ", str(prob))
+    def get_couleur(self,prob):
+        if prob == "On time":
+            return "rgba(30,132,127,1.0)"
+        elif prob == "Risky":
+            return "rgba(255,192,59,1.0)"
+        elif prob == "Terminated":
+            return "rgba(196,196,196,1.0)"
+        elif prob == "Late":
+            return "rgba(255,110,64,1.0)"
+        elif prob == "Cancel":
+            return "rgba(30,61,89,1.0)"
     def get_data(self):
-        data = Trajetcoordonnee.objects.all().order_by('-trip_start_date', '-pick_up_time')[0:10]
+        data = TrajetcoordonneeSamm.objects.all().order_by('-trip_start_date', 'pick_up_time')[0:5]
         trajetcoord = []
         for trajet in data:
             last = self.get_last_coordonneer(trajet.vehicleno)
             if last == False:
-                setattr(trajet, 'PickEnd_H_Pos',trajet.PickUp_H_Pos)
+                setattr(trajet, 'PickEnd_H_Pos', '-20.43409,57.6750946')
             else:
                 setattr(trajet, 'PickEnd_H_Pos', last)
             file = self.get_direction(trajet.PickEnd_H_Pos, trajet.PickUp_H_Pos)
-            calcdate = self.get_difference_date(file["duration"], trajet.pick_up_time, trajet.trip_start_date)
+            #calcdate = self.get_difference_date(trajet.estimatetime,trajet.pick_up_time)
+            calcdate = "On time"
             setattr(trajet, 'status', calcdate)
-            setattr(trajet, 'duration', format_timespan(file["duration"]))
+            setattr(trajet, 'couleur', self.get_couleur(calcdate))
+            setattr(trajet, 'duration', str(trajet.duration))
 
             print("Stat ", trajet.status)
             trajetcoord.append(trajet)
         return trajetcoord
+
 
 
 

@@ -156,8 +156,9 @@
   width: 71px;
 }
 .main .list table tbody td {
-  text-align: center;
-  align-items: center;
+  font-size: 12px;
+  text-align: left;
+  align-items: left;
 }
 .main .list .list-footer {
   display: flex;
@@ -179,4 +180,8 @@
 }
 .main .list .list-footer button i {
   margin-left: 0.5rem;
+}
+
+.main .btn-outline-success {
+    border: none;
 }
