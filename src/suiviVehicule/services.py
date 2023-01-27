@@ -1,15 +1,16 @@
 from datetime import datetime, timezone
 
+import pytz
 import requests
 from django.db import connection
 from humanfriendly import format_timespan
 
-from suiviVehicule.models import Statuspos, UidName, Statusposdetail
+from suiviVehicule.models import Statuspos, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm
 
 
 class services():
     UserIdGuid = '3f55ba57-8a28-41cc-917d-718b9a754410'
-    SessionId = 'de70b2f5-c157-4e25-9456-620ec5c4e331'
+    SessionId = '2d86e36a-8a06-40b1-b398-2c4d5a729a49'
 
     def get_api_data(self):
         response = requests.get(
@@ -33,10 +34,8 @@ class services():
         setattr(status_detail, 'coordonnee', f"{lat},{long}")
         return status_detail
 
-    def get_direction(self):
-        origin = '-20.302738,57.366069'
-        destination = '-19.994282078890443,57.63655781308253'
-        waypoints = '-20.302738,57.366069|-19.994282078890443,57.63655781308253'
+    def get_direction(self, origin, destination):
+        waypoints = f'{origin}|{destination}'
         result = requests.get(
             'https://maps.googleapis.com/maps/api/directions/json?',
             params={
@@ -47,7 +46,7 @@ class services():
             })
 
         directions = result.json()
-        print(directions["routes"][0]["legs"])
+        print("Direction ::: ",directions)
         if directions["status"] == "OK":
 
             routes = directions["routes"][0]["legs"]
@@ -82,25 +81,28 @@ class services():
             "origin": origin,
             "destination": destination,
             "distance": f"{round(distance / 1000, 2)} Km",
-            "duration": format_timespan(duration)
+            "duration": duration
         }
 
     def gestion_status_pos(self):
         status = Statuspos()
         try:
             list_uid = self.get_join_table_trajetsummary()
-            uid = '5CE7C3'
-            date_time = '25 January 2023 07:14:00'
-            now = datetime.now(timezone.utc)
+            now = datetime.now()
+            #print("sitatut ", now.strftime("%d %B %Y %H:%M:%S"))
+            date_time = now.strftime("%d %B %Y %H:%M:%S")
             setattr(status, 'datetime', now)
-            setattr(status, 'desc', 'ceci')
+            setattr(status, 'desc', 'test')
             status.save()
             for row in list_uid:
                 status_detail = self.get_position_lat_long(row.Uid, date_time)
-                print("UID ", status_detail.uid , " COORDONNEE ", status_detail.coordonnee)
+                file = self.get_direction(row.coordonnee, status_detail.coordonnee)
+                print("UID ", status_detail.uid, "coordonnee 000 ", row.coordonnee, " COORDONNEE 111 ",
+                      status_detail.coordonnee)
                 setattr(status_detail, 'idmere', status)
+                setattr(status_detail, 'duration', file["duration"])
+                setattr(status_detail, 'daty_time', now)
                 status_detail.save()
-            print("Status ---- ", status.id, status.datetime)
 
         except Exception as e:
             print("error ", e)
@@ -110,9 +112,9 @@ class services():
         solution = []
         try:
             cursor = connection.cursor()
-            cursor.execute("select * From suivivehicule_trajetcoordonneesummary limit 10")
+            cursor.execute("select Uid,vehicleno , PickUp_H_Pos  From suivivehicule_trajetcoordonneesummary limit 10")
             for row in cursor:
-                solution.append(UidName( row[1], row[0]))
+                solution.append(UidName(row[1], row[0], row[2]))
         except Exception as e:
             print("error", str(e))
         finally:
@@ -122,8 +124,37 @@ class services():
     def get_last_refresh(self):
         data = []
         cursor = connection.cursor()
-        cursor.execute("select TIMESTAMPDIFF(second , datetime, UTC_TIMESTAMP()) as datetime From suivivehicule_statuspos order by datetime asc")
+        cursor.execute(
+            "select TIMESTAMPDIFF(second , datetime, current_timestamp()) as datetime From suivivehicule_statuspos order by datetime asc")
         for row in cursor:
             data.append(row[0])
         return format_timespan(data[0])
 
+    def get_last_status(self):
+        data = []
+        cursor = connection.cursor()
+        cursor.execute(
+            "select id from suivivehicule_statuspos where `datetime` = (select max(`datetime`) from suivivehicule_statuspos ss )")
+        for row in cursor:
+            data.append(row[0])
+        return data[0]
+
+    def get_last_coordonneer(self, vehicleno):
+        data = []
+        idmere = self.get_last_status()
+        cursor = connection.cursor()
+        req = f"select * from suivivehicule_getlastcoordonnee where idmere_id='{idmere}' and vehicleno='{vehicleno}'"
+        cursor.execute(req)
+        for row in cursor:
+            data.append(row[3])
+        if len(data) == 0:
+            return False
+        return data[0]
+
+    def get_data(self):
+        data = TrajetcoordonneeSamm.objects.all().order_by('-trip_start_date', 'pick_up_time')[0:10]
+        trajetcoord = []
+        for trajet in data:
+            setattr(trajet, 'duration', str(trajet.duration))
+            trajetcoord.append(trajet)
+        return trajetcoord

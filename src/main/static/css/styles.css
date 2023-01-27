@@ -6,8 +6,15 @@ body {
 }
 .container-header {
     text-align: center;
-    font-family: serif;
 }
+.container-header img {
+    width : 300px;
+}
+
+.container-header h1 {
+    font-size: 1.5rem;
+}
+
 .textinput {
 
 }
@@ -20,5 +27,6 @@ body {
 .container-button button{
     width: 150px;
     height: 50px;
+    background-color: #1a5a9f
 }
 

@@ -9,6 +9,7 @@ from django.db import connection
 from django.forms import ModelForm
 
 from suiviVehicule.models import User, Trajetcoordonnee
+from suiviVehicule.services import services
 
 list_sexe = [
     ('M', 'Masculin'),
@@ -42,8 +43,8 @@ class SigninForm(ModelForm):
 
 
 class LoginForm(ModelForm):
-    mail = forms.EmailField(required=True, label='email')
-    pswd = forms.CharField(required=True, label='Password', widget=forms.PasswordInput)
+    mail = forms.EmailField(required=False ,label='Email')
+    pswd = forms.CharField(required=False, label='Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -64,7 +65,7 @@ class dashboardForm(ModelForm):
                   "trip_start_date", "pick_up_time", "PickUp_H_Pos")
 
     def get_data(self):
-        data = Trajetcoordonnee.objects.all().order_by('trip_start_date', '-pick_up_time').values()
+        data = Trajetcoordonnee.objects.all().order_by('trip_start_date', '-pick_up_time')[0:10]
         return data
 
 
