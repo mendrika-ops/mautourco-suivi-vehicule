@@ -10,7 +10,7 @@ from suiviVehicule.models import Statuspos, UidName, Statusposdetail, Trajetcoor
 
 class services():
     UserIdGuid = '3f55ba57-8a28-41cc-917d-718b9a754410'
-    SessionId = '2d86e36a-8a06-40b1-b398-2c4d5a729a49'
+    SessionId = '84a0d514-f64d-4220-b887-73186e8661c8'
 
     def get_api_data(self):
         response = requests.get(
@@ -112,7 +112,7 @@ class services():
         solution = []
         try:
             cursor = connection.cursor()
-            cursor.execute("select Uid,vehicleno , PickUp_H_Pos  From suivivehicule_trajetcoordonneesummary limit 10")
+            cursor.execute("select Uid,vehicleno , PickUp_H_Pos  From suiviVehicule_trajetcoordonneesummary limit 10")
             for row in cursor:
                 solution.append(UidName(row[1], row[0], row[2]))
         except Exception as e:
@@ -125,7 +125,7 @@ class services():
         data = []
         cursor = connection.cursor()
         cursor.execute(
-            "select TIMESTAMPDIFF(second , datetime, current_timestamp()) as datetime From suivivehicule_statuspos order by datetime asc")
+            "select TIMESTAMPDIFF(second , datetime, current_timestamp()) as datetime From suiviVehicule_statuspos order by datetime asc")
         for row in cursor:
             data.append(row[0])
         return format_timespan(data[0])
@@ -134,7 +134,7 @@ class services():
         data = []
         cursor = connection.cursor()
         cursor.execute(
-            "select id from suivivehicule_statuspos where `datetime` = (select max(`datetime`) from suivivehicule_statuspos ss )")
+            "select id from suiviVehicule_statuspos where `datetime` = (select max(`datetime`) from suiviVehicule_statuspos ss )")
         for row in cursor:
             data.append(row[0])
         return data[0]
@@ -143,7 +143,7 @@ class services():
         data = []
         idmere = self.get_last_status()
         cursor = connection.cursor()
-        req = f"select * from suivivehicule_getlastcoordonnee where idmere_id='{idmere}' and vehicleno='{vehicleno}'"
+        req = f"select * from suiviVehicule_getlastcoordonnee where idmere_id='{idmere}' and vehicleno='{vehicleno}'"
         cursor.execute(req)
         for row in cursor:
             data.append(row[3])

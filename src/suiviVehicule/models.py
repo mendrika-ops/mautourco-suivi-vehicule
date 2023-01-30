@@ -36,7 +36,7 @@ class TrajetcoordonneeSamm(models.Model):
     datetime = models.CharField(max_length=15, null=False)
     class Meta:
         managed = False
-        db_table = 'suivivehicle_laststatus'
+        db_table = 'suiviVehicle_laststatus'
 
 
 class Trajetcoordonnee(models.Model):

@@ -7,7 +7,6 @@ django-crispy-forms==1.14.0
 django-database-view==0.3.0
 humanfriendly==10.0
 idna==3.4
-mysqlclient==2.1.1
 pyreadline3==3.4.1
 pytz==2022.7.1
 requests==2.28.2
