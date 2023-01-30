@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
-
+import json
 from suiviVehicule.forms import SigninForm, LoginForm, dashboardForm
 from suiviVehicule.services import services
 
@@ -53,9 +53,11 @@ def register_request(request):
 def dashboard_request(request):
     form = dashboardForm()
     data_list = services().get_data()
-    refresh =  services().get_last_refresh()
-    print("last refresh ", refresh)
-    return render(request, "suiviVehicule/dashboard.html", context={"data_list": data_list, "last_refresh": refresh})
+    refresh = services().get_last_refresh()
+    chart = services().data_chart(data_list)
+
+    print("last refresh ",chart)
+    return render(request, "suiviVehicule/dashboard.html", context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart)})
 
 
 def googlemap_request(request, pos):

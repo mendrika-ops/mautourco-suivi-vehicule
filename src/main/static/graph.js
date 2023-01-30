@@ -1,13 +1,10 @@
-var xValues = ["on Time", "Risky", "Terminated", "Late","cancel"];
-var yValues = [ 15, 16, 10, 14, 5];
+var graph = JSON.parse($('#myChart').attr('data'));
+console.log("COUCOU ",graph['label'])
+
+var xValues = graph['label'];
+var yValues = graph['data'];
 var click = true;
-var barColors = [
-    "rgba(30,132,127,1.0)",
-    "rgba(255,192,59,1.0)",
-    "rgba(196,196,196,1.0)",
-    "rgba(255,110,64,1.0)",
-    "rgba(30,61,89,1.0)",
-];
+var barColors = graph['couleur'];
 
 new Chart("myChart", {
     type: "pie",

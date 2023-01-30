@@ -332,4 +332,3 @@ INSERT INTO suiviVehicule_units (Uid,Name,IMEI,Status,GroupName,CompanyName,Phon
 INSERT INTO suiviVehicule_units (Uid,Name,IMEI,Status,GroupName,CompanyName,PhoneNumber,UnitType) VALUES ('52E47A','Y1711(e.x. 2068AP08)','352625699327225','Active','STAFFS BUS','Mautourco','+23058540914','Teltonika FMB9xx');
 
 
-select 

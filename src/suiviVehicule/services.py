@@ -158,3 +158,24 @@ class services():
             setattr(trajet, 'duration', str(trajet.duration))
             trajetcoord.append(trajet)
         return trajetcoord
+
+    def data_chart(self, data):
+        label = []
+        data = []
+        couleur =[]
+        cursor = connection.cursor()
+        req = "select sl.status , count(sl.status), sl.couleur from suivivehicle_laststatus sl group by sl.status,sl.couleur"
+        cursor.execute(req)
+        for row in cursor:
+            label.append(row[0])
+            data.append(row[1])
+            couleur.append(row[2])
+        if len(data) == 0:
+            return False
+        return {
+                "label": label,
+                "data" : data,
+                "couleur" : couleur
+                }
+
+
