@@ -43,8 +43,8 @@ class SigninForm(ModelForm):
 
 
 class LoginForm(ModelForm):
-    mail = forms.EmailField(required=False ,label='Email')
-    pswd = forms.CharField(required=False, label='Password', widget=forms.PasswordInput)
+    mail = forms.EmailField(required=True, label='Email')
+    pswd = forms.CharField(required=True, label='Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
