@@ -29,7 +29,8 @@ def login_request(request):
             error = "Your idenfiant or password is wrong, please verify! "
             return render(request=request, template_name="suiviVehicule/login.html",
                           context={"login_form": form, "error": error})
-    return render(request=request, template_name="suiviVehicule/login.html", context={"login_form": form})
+    else:
+        return render(request=request, template_name="suiviVehicule/login.html", context={"login_form": form})
 
 
 def register_request(request):
