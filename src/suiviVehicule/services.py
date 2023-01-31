@@ -11,7 +11,7 @@ from datetime import datetime
 class services():
     UserIdGuid = settings.USERIDGUID
     SessionId = settings.SESSIONID
-    currentdate = datetime.now()
+
 
     def get_api_data(self):
         response = requests.get(
@@ -88,11 +88,12 @@ class services():
     def set_one_refresh(self, idstatusdetail, id):
         data = Statusposdetail.objects.get(pk=idstatusdetail)
         trajet = Trajetcoordonnee.objects.get(pk=id)
+        currentdate = datetime.now()
         print("--------- ", trajet.PickUp_H_Pos)
-        date_time = self.currentdate.strftime("%d %B %Y %H:%M:%S")
+        date_time = currentdate.strftime("%d %B %Y %H:%M:%S")
         status_detail = self.get_position_lat_long(data.uid, date_time)
         file = self.get_direction(trajet.PickUp_H_Pos, status_detail.coordonnee)
-        setattr(data, 'daty_time', self.currentdate)
+        setattr(data, 'daty_time', currentdate)
         setattr(status_detail, 'duration', file["duration"])
         data.save()
 
@@ -100,7 +101,8 @@ class services():
         status = Statuspos()
         try:
             list_uid = self.get_data()
-            now = self.currentdate
+            currentdate = datetime.now()
+            now = currentdate
             date_time = now.strftime("%d %B %Y %H:%M:%S")
             setattr(status, 'datetime', now)
             setattr(status, 'desc', 'opp')
