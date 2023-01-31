@@ -164,7 +164,7 @@ class services():
         data = []
         couleur =[]
         cursor = connection.cursor()
-        req = "select sl.status , count(sl.status), sl.couleur from suivivehicle_laststatus sl group by sl.status,sl.couleur"
+        req = "select sl.status , count(sl.status), sl.couleur from suiviVehicle_laststatus sl group by sl.status,sl.couleur"
         cursor.execute(req)
         for row in cursor:
             label.append(row[0])
