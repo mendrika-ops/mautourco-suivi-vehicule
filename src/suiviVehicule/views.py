@@ -56,20 +56,18 @@ def dashboard_request(request):
     refresh = services().get_last_refresh()
     chart = services().data_chart(data_list)
 
-    print("last refresh ",chart)
+    print("last refresh ", chart)
     return render(request, "suiviVehicule/dashboard.html", context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart)})
 
 
 def googlemap_request(request, pos):
-    serv = services()
-    #map = serv.get_direction()
-    #print("indro mapp ", map)
-
-    data_list = services().get_data()
-    #return render(request, "suiviVehicule/dashboard.html", context={"data_list": data_list})
     return redirect("https://www.google.com/maps?q=" + pos)
 
 
 def refresh_request(request):
     status = services().gestion_status_pos()
+    return redirect("/dashboard")
+
+def one_refresh_request(request,idstatusposdetail,id):
+    status = services().set_one_refresh(idstatusposdetail,id)
     return redirect("/dashboard")

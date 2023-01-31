@@ -139,7 +139,7 @@
 
                     <td class="list-action">
                         <button class="btn btn-outline-success action" style="color:white;background-color:{{ item.couleur }}">{{ item.status }} </button>
-                        <a href="/refresh" class="outline-btn"><img class="svg" src="{% static '/reset.svg' %}" alt=""></a>
+                        <a href="/onerefresh/{{ item.idstatusposdetail }}/{{ item.id }}" class="outline-btn"><img class="svg" src="{% static '/reset.svg' %}" alt=""></a>
                         <a href="https://www.google.com/maps/dir/{{ item.PickUp_H_Pos }}/{{ item.PickEnd_H_Pos }}" target="_blank" class="outline-btn"><img class="svg" target="_blank"
                                                                                         src="{% static '/map.svg' %}"
                                                                                         alt=""></a>

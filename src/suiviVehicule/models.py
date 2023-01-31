@@ -34,6 +34,8 @@ class TrajetcoordonneeSamm(models.Model):
     couleur = models.CharField(max_length=100, null=True)
     estimatetime = models.CharField(max_length=50,null=True)
     datetime = models.CharField(max_length=15, null=False)
+    Uid = models.CharField(max_length=50, null=True)
+    idstatusposdetail = models.IntegerField(null=True)
     class Meta:
         managed = False
         db_table = 'suiviVehicle_laststatus'
@@ -54,8 +56,7 @@ class Trajetcoordonnee(models.Model):
     status = models.CharField(max_length=100, null=True)
     duration = models.CharField(max_length=100, null=True)
     couleur = models.CharField(max_length=100, null=True)
-    estimatetime = models.CharField(max_length=50,null=True)
-
+    estimatetime = models.CharField(max_length=50, null=True)
 
 class UidName(models.Model):
     vehicleno = models.CharField(max_length=100)

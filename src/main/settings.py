@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os.path
 from pathlib import Path
-
+from datetime import datetime
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +25,7 @@ SECRET_KEY = 'fk@ih--639=j%8x&e(7ukn-=!^81mkryt)u1^d_+yfh+5i8s(&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['appdev.mg']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -132,3 +132,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "main/static")
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
+
+USERIDGUID = '3f55ba57-8a28-41cc-917d-718b9a754410'
+SESSIONID = 'e8f4ac29-a214-4161-a1e7-c94aeb426121'
+CURRENT_DATE = datetime.now()

@@ -1,6 +1,6 @@
 from django.urls import path
 from suiviVehicule.views import index, article, register_request, login_request, dashboard_request, googlemap_request, \
-    refresh_request
+    refresh_request, one_refresh_request
 
 urlpatterns = [
     path('index/', index),
@@ -10,4 +10,5 @@ urlpatterns = [
     path("dashboard/", dashboard_request),
     path("map/<str:pos>", googlemap_request),
     path("refresh/", refresh_request),
+    path("onerefresh/<str:idstatusposdetail>/<str:id>", one_refresh_request),
 ]
