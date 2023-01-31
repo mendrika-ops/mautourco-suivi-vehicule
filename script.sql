@@ -82,7 +82,7 @@ join `suiviVehicule_statusposdetail` `su` on
 
 --suiviVehicule_laststatus
 create or replace
-algorithm = UNDEFINED view `suivivehicle_laststatus` as
+algorithm = UNDEFINED view `suiviVehicle_laststatus` as
 select
     `su`.`uid` as `Uid`,
     `stc`.`vehicleno` as `vehicleno`,
@@ -99,36 +99,37 @@ select
     `su`.`coordonnee` as `PickEnd_H_Pos`,
     addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)) as `estimatetime`,
     sec_to_time(`su`.`duration`) as `duration`,
-     (case
+    (case
         when ((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) <= 3600)
         and (time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) > 0)) then 'Risky'
         when (time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) < 0) then 'Late'
-        when (time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), addtime(curtime(), '-02:00:00') )) < 0) then 'Terminated'
-       
+        when (time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), addtime(curtime(), '-02:00:00'))) < 0) then 'Terminated'
         else 'On time'
     end) as `status`,
     (case
         when ((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) <= 3600)
         and (time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) > 0)) then 'rgba(255,192,59,1.0)'
         when (time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) < 0) then 'rgba(255,110,64,1.0)'
-        when (time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), addtime(curtime(), '-02:00:00') )) < 0) then 'rgba(196,196,196,1.0)'
+        when (time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), addtime(curtime(), '-02:00:00'))) < 0) then 'rgba(196,196,196,1.0)'
         else 'rgba(30,132,127,1.0)'
     end) as `couleur`,
     `su`.`daty_time` as `datetime`,
-    timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')) as `difftime`
+    timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')) as `difftime`,
+    `su`.`id` as `idstatusposdetail`
 from
-    (`suivivehicule_trajetcoordonneesummary` `stc`
-join `suivivehicule_statusposdetail` `su` on
+    (`suiviVehicule_trajetcoordonneesummary` `stc`
+join `suiviVehicule_statusposdetail` `su` on
     ((`stc`.`Uid` = `su`.`uid`)))
 where
     ((`su`.`idmere_id` = (
     select
         max(`ss`.`id`)
     from
-        `suivivehicule_statuspos` `ss`))
+        `suiviVehicule_statuspos` `ss`))
     and (str_to_date(`stc`.`trip_start_date`,
     '%m/%d/%Y') = curdate())
         and (`stc`.`pick_up_time` >= addtime(curtime(), '-02:00:00')))
 order by
     `stc`.`trip_start_date` desc,
-    addtime(`stc`.`pick_up_time`, '-01:00:00');
+    addtime(`stc`.`pick_up_time`, '-01:00:00')
+limit 10;
