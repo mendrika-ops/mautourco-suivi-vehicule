@@ -152,7 +152,7 @@ class services():
         return data[0]
 
     def get_data(self):
-        data = TrajetcoordonneeSamm.objects.all().order_by('-trip_start_date', 'pick_up_time')[0:10]
+        data = TrajetcoordonneeSamm.objects.all().order_by('-trip_start_date', 'pick_up_time')
         trajetcoord = []
         for trajet in data:
             setattr(trajet, 'duration', str(trajet.duration))
