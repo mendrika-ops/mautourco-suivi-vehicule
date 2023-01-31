@@ -6,12 +6,12 @@ from django.db import connection
 from humanfriendly import format_timespan
 from django.conf import settings
 from suiviVehicule.models import Statuspos, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm
-
+from datetime import datetime
 
 class services():
     UserIdGuid = settings.USERIDGUID
     SessionId = settings.SESSIONID
-    currentdate = settings.CURRENT_DATE
+    currentdate = datetime.now()
 
     def get_api_data(self):
         response = requests.get(
