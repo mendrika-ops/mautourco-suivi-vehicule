@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import json
-from suiviVehicule.forms import SigninForm, LoginForm, dashboardForm
+from suiviVehicule.forms import SigninForm, LoginForm, SearchForm
 from suiviVehicule.services import services
 
 
@@ -51,13 +51,22 @@ def register_request(request):
 
 
 def dashboard_request(request):
-    form = dashboardForm()
-    data_list = services().get_data()
+    data_list = []
+    if request.GET.get("reset") is None:
+        form = SearchForm(request.GET)
+    else:
+        form = SearchForm()
+
+    if form.is_valid():
+        data_list = services().get_data_search(form)
+    else:
+        data_list = services().get_data()
     refresh = services().get_last_refresh()
-    chart = services().data_chart(data_list)
+    chart = services().data_chart_calcule(data_list)
 
     print("last refresh ", chart)
-    return render(request, "suiviVehicule/dashboard.html", context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart)})
+    return render(request, "suiviVehicule/dashboard.html",
+                  context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form})
 
 
 def googlemap_request(request, pos):
@@ -65,9 +74,9 @@ def googlemap_request(request, pos):
 
 
 def refresh_request(request):
-    status = services().gestion_status_pos()
+    services().gestion_status_pos()
     return redirect("/dashboard")
 
 def one_refresh_request(request,idstatusposdetail,id):
-    status = services().set_one_refresh(idstatusposdetail,id)
+    services().set_one_refresh(idstatusposdetail,id)
     return redirect("/dashboard")

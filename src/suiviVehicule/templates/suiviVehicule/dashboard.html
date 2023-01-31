@@ -32,59 +32,62 @@
             aria-expanded="false" aria-controls="multiCollapseExample1">Search <i
             class="fa-solid fa-angle-right fa-rotate-90"></i>
     </button>
-
+<form method="GET">
     <div class="row collapse multi-collapse" id="multiCollapseExample1">
-        <div class="search col-md-6 ">
-            <div class="form-row">
-                <div class="form-group col-md-5">
-                    <label for="drive">Driver </label>
-                    <input type="text" name="drive" class="form-control">
+
+            <div class="search col-md-6 ">
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="from">Driver </label>
+                        {{ form_search.driver_oname }}
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="from">From </label>
+                         {{ form_search.FromPlace }}
+                    </div>
                 </div>
-                <div class="form-group col-md-5">
-                    <label for="from">From </label>
-                    <input type="text" name="from" class="form-control">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-5">
-                    <label for="drive_mobile">Driver mobile </label>
-                    <input type="text" name="drive_mobile" class="form-control">
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="drive_mobile">Driver mobile </label>
+                        {{ form_search.driver_mobile_number }}
                 </div>
                 <div class="form-group col-md-5">
                     <label for="to">To </label>
-                    <input type="text" name="to" class="form-control">
+                    {{ form_search.ToPlace }}
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-5">
                     <label for="vehicule">Vehicule </label>
-                    <input type="text" name="vehicule" class="form-control">
+                    {{ form_search.vehicleno }}
                 </div>
                 <div class="form-group col-md-5">
                     <label for="status">Status </label>
-                    <input type="text" name="status" class="form-control">
+                    {{ form_search.status }}
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-5">
                     <label for="trip_id">Trip </label>
-                    <input type="text" name="trip_id" class="form-control">
+                    {{ form_search.id_trip }}
                 </div>
                 <div class="form-group col-md-5">
                     <label for="trip">Trip N° </label>
-                    <input type="text" name="trip" class="form-control">
+                    {{ form_search.trip_no }}
                 </div>
             </div>
 
             <div class="footer row">
-                <button class="left ">Reset</button>
+                <button class="left " name="reset">Reset</button>
                 <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-        </div>
+            </div>
+
         <div class="dashboard col-md-6">
             <canvas id="myChart" data="{{ chart }}" ></canvas>
         </div>
     </div>
+     </form>
     <div class="list">
         <div class="row">
             <div class="col-md-12 head">

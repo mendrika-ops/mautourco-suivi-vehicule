@@ -1,5 +1,3 @@
-
-
 import pytz
 import requests
 from django.db import connection
@@ -8,10 +6,10 @@ from django.conf import settings
 from suiviVehicule.models import Statuspos, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm
 from datetime import datetime
 
+
 class services():
     UserIdGuid = settings.USERIDGUID
     SessionId = settings.SESSIONID
-
 
     def get_api_data(self):
         response = requests.get(
@@ -138,6 +136,23 @@ class services():
             trajetcoord.append(trajet)
         return trajetcoord
 
+    def get_data_search(self, form):
+        data = TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
+                                                   driver_mobile_number__icontains=form.cleaned_data[
+                                                       'driver_mobile_number'],
+                                                   vehicleno__icontains=form.cleaned_data['vehicleno'],
+                                                   id_trip__icontains=form.cleaned_data['id_trip'],
+                                                   FromPlace__icontains=form.cleaned_data['FromPlace'],
+                                                   ToPlace__icontains=form.cleaned_data['ToPlace'],
+                                                   status__icontains=form.cleaned_data['status'],
+                                                   trip_no__icontains=form.cleaned_data['trip_no']).order_by(
+            '-trip_start_date', 'pick_up_time')
+        trajetcoord = []
+        for trajet in data:
+            setattr(trajet, 'duration', str(trajet.duration))
+            trajetcoord.append(trajet)
+        return trajetcoord
+
     def data_chart(self, data):
         label = []
         data = []
@@ -154,5 +169,28 @@ class services():
         return {
             "label": label,
             "data": data,
+            "couleur": couleur
+        }
+
+    def data_chart_calcule(self, data):
+        late = 0
+        ontime = 0
+        risky = 0
+        terminated = 0
+        label = ['Risky', 'On time', 'Terminated', 'Late']
+        couleur = ['rgba(255,192,59,1.0)', 'rgba(30,132,127,1.0)', 'rgba(196,196,196,1.0)','rgba(255,110,64,1.0)']
+        for row in data:
+            if row.status == 'On time':
+                ontime += 1
+            elif row.status == 'Late':
+                late += 1
+            elif row.status == 'Risky':
+                risky += 1
+            elif row.status == 'Terminated':
+                terminated += 1
+
+        return {
+            "label": label,
+            "data": [risky, ontime, terminated, late],
             "couleur": couleur
         }

@@ -8,14 +8,21 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db import connection
 from django.forms import ModelForm
 
-from suiviVehicule.models import User, Trajetcoordonnee
+from suiviVehicule.models import User, Trajetcoordonnee, TrajetcoordonneeSamm
 from suiviVehicule.services import services
 
 list_sexe = [
     ('M', 'Masculin'),
     ('F', 'Feminin')
 ]
-
+list_statut = [
+    ('', 'Tous'),
+    ('On time', 'On time'),
+    ('Late', 'Late'),
+    ('Risky', 'Risky'),
+    ('Terminated', 'Terminated'),
+    ('Cancel', 'Cancel')
+]
 
 class SigninForm(ModelForm):
     mail = forms.EmailField(required=True, label='Email')
@@ -58,17 +65,6 @@ class LoginForm(ModelForm):
         return User.objects.filter(mail=self.cleaned_data['mail'], pswd=enc).exists()
 
 
-class dashboardForm(ModelForm):
-    class Meta:
-        model = Trajetcoordonnee
-        fields = ("vehicleno", "driver_oname", "driver_mobile_number", "FromPlace", "ToPlace", "id_trip", "trip_no",
-                  "trip_start_date", "pick_up_time", "PickUp_H_Pos")
-
-    def get_data(self):
-        data = Trajetcoordonnee.objects.all().order_by('trip_start_date', '-pick_up_time')[0:10]
-        return data
-
-
 class Form(ModelForm):
     mail = forms.EmailField(required=True, label='Email')
     pswd = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -89,3 +85,26 @@ class Form(ModelForm):
         if commit:
             user.save()
         return user
+
+
+class SearchForm(ModelForm):
+    driver_oname = forms.CharField(required=False, label='Driver', widget=forms.TextInput(
+                              attrs={'class': "form-control"}))
+    driver_mobile_number = forms.CharField(required=False,label='Driver mobile', widget=forms.TextInput(
+                              attrs={'class': "form-control"}))
+    vehicleno = forms.CharField(required=False,label='Vehicule', widget=forms.TextInput(
+                              attrs={'class': "form-control"}))
+    id_trip = forms.CharField(required=False, label='Trip', widget=forms.TextInput(
+        attrs={'class': "form-control"}))
+    FromPlace = forms.CharField(required=False, label='FromPlace', widget=forms.TextInput(
+        attrs={'class': "form-control"}))
+    ToPlace = forms.CharField(required=False, label='ToPlace', widget=forms.TextInput(
+        attrs={'class': "form-control"}))
+    status = forms.CharField(required=False, label='ToPlace',widget=forms.Select(choices=list_statut, attrs={'class': "form-control"}))
+    trip_no = forms.CharField(required=False, label='Trip N°', widget=forms.TextInput(
+        attrs={'class': "form-control"}))
+
+    class Meta:
+        model = TrajetcoordonneeSamm
+        fields = (
+        "driver_oname", "driver_mobile_number", "vehicleno", "id_trip", "FromPlace", "ToPlace", "status", "trip_no")
