@@ -1,4 +1,5 @@
 from datetime import date
+import datetime
 
 from django.db import models
 
@@ -36,6 +37,7 @@ class TrajetcoordonneeSamm(models.Model):
     datetime = models.CharField(max_length=15, null=False)
     Uid = models.CharField(max_length=50, null=True)
     idstatusposdetail = models.IntegerField(null=True)
+    trip_start_time = models.TimeField()
     class Meta:
         managed = False
         db_table = 'suiviVehicle_laststatus'
@@ -57,6 +59,7 @@ class Trajetcoordonnee(models.Model):
     duration = models.CharField(max_length=100, null=True)
     couleur = models.CharField(max_length=100, null=True)
     estimatetime = models.CharField(max_length=50, null=True)
+    trip_start_time = models.TimeField(default=datetime.time(00, 00))
 
 class UidName(models.Model):
     vehicleno = models.CharField(max_length=100)
@@ -83,4 +86,12 @@ class Statusposdetail(models.Model):
     coordonnee = models.CharField(max_length=100)
     daty_time = models.DateTimeField()
     duration = models.IntegerField(null=True)
+
+class Statusparameter(models.Model):
+    id = models.indexes
+    status = models.CharField(max_length=50)
+    min_percent = models.FloatField()
+    max_percent = models.FloatField()
+    couleur = models.CharField(max_length=50)
+    desce = models.CharField(max_length=50, null=True)
 

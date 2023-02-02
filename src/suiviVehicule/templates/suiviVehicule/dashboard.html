@@ -111,6 +111,7 @@
                     <th scope="col">To</th>
                     <th scope="col">Vehicule N°</th>
                     <th scope="col">Start date</th>
+                    <th scope="col">Start time</th>
                     <th scope="col">Last fetch</th>
                     <th scope="col" style="width: 100px;">Duration</th>
                     <th scope="col" style="width: 100px;">Estimate</th>
@@ -130,6 +131,7 @@
                     <td>{{ item.ToPlace }}</td>
                     <td>{{ item.vehicleno }}</td>
                     <td>{{ item.trip_start_date }}</td>
+                    <td>{{ item.trip_start_time |date:"H:i:s " }}</td>
                     <td>{{ item.datetime |date:"H:i:s " }}</td>
                     <td style="width: 100px;width: 90px;
     overflow: hidden;
