@@ -312,3 +312,10 @@ INSERT INTO suiviVehicule_units (Uid,Name,IMEI,Status,GroupName,CompanyName,Phon
 INSERT INTO suiviVehicule_units (Uid,Name,IMEI,Status,GroupName,CompanyName,PhoneNumber,UnitType) VALUES ('9BF27C','Trailer 7026AG17','352625699816839','Active','TRAILERS','Mautourco','+23059783586','Teltonika FMB9xx');
 INSERT INTO suiviVehicule_units (Uid,Name,IMEI,Status,GroupName,CompanyName,PhoneNumber,UnitType) VALUES ('46DF1C','Trailer 7029AG17','352625699816045','Active','TRAILERS','Mautourco','+23059783581','Teltonika FMB9xx');
 INSERT INTO suiviVehicule_units (Uid,Name,IMEI,Status,GroupName,CompanyName,PhoneNumber,UnitType) VALUES ('52E47A','Y1711(e.x. 2068AP08)','352625699327225','Active','STAFFS BUS','Mautourco','+23058540914','Teltonika FMB9xx');
+
+update suiviVehicule_trajetcoordonnee set trip_start_time ='10:00:00';
+
+INSERT INTO suiviVehicule_statusparameter (status,min_percent,max_percent,couleur,desce) VALUES
+	 ('Late',-100.0,0.0,'rgba(255,110,64,1.0)',NULL),
+	 ('Risky',0.0,20.0,'rgba(255,192,59,1.0)',NULL),
+	 ('On time',20.0,100.0,'rgba(30,132,127,1.0)',NULL);
