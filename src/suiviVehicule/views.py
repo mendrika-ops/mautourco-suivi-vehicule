@@ -49,24 +49,23 @@ def register_request(request):
     form = SigninForm()
     return render(request=request, template_name="suiviVehicule/signin.html", context={"register_form": form})
 
-
+def setForm(request):
+    if request.GET.get("reset") is None:
+        return SearchForm(request.GET)
+    else:
+        return SearchForm()
+        
 def dashboard_request(request):
     data_list = []
-    if request.GET.get("reset") is None:
-        form = SearchForm(request.GET)
-    else:
-        form = SearchForm()
-
-    if form.is_valid():
-        data_list = services().get_data_search(form)
-    else:
-        data_list = services().get_data()
+    load_value = 10
+    if request.GET.get("loadmore") is not None and request.GET.get("loadmore").isnumeric() == True:
+        load_value = int(request.GET.get("loadmore")) + 10
+       
+    form = setForm(request)
+    data_list = services().get_data(form)
     refresh = services().get_last_refresh()
     chart = services().data_chart_calcule(data_list)
-
-    print("last refresh ", chart)
-    return render(request, "suiviVehicule/dashboard.html",
-                  context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form})
+    return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value })
 
 
 def googlemap_request(request, pos):
@@ -74,7 +73,9 @@ def googlemap_request(request, pos):
 
 
 def refresh_request(request):
-    services().gestion_status_pos()
+    form = setForm(request)
+    data_list = services().get_data(form)
+    services().gestion_status_pos(data_list)
     return redirect("/dashboard")
 
 def one_refresh_request(request,idstatusposdetail,id):
