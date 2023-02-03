@@ -61,6 +61,22 @@ class Trajetcoordonnee(models.Model):
     estimatetime = models.CharField(max_length=50, null=True)
     trip_start_time = models.TimeField(default=datetime.time(00, 00))
 
+class TrajetcoordonneeWithUid(models.Model):
+    vehicleno = models.CharField(max_length=100)
+    driver_oname = models.CharField(max_length=150)
+    driver_mobile_number = models.CharField(max_length=50)
+    FromPlace = models.CharField(max_length=150)
+    ToPlace = models.CharField(max_length=150)
+    id_trip = models.IntegerField()
+    trip_no = models.IntegerField()
+    trip_start_date = models.CharField(max_length=15, null=False)
+    pick_up_time = models.TimeField()
+    PickUp_H_Pos = models.CharField(max_length=100)
+    Uid = models.CharField(max_length=50, null=True)
+    class Meta:
+        managed = False
+        db_table = 'suiviVehicule_trajetcoordonneesummary'
+
 class UidName(models.Model):
     vehicleno = models.CharField(max_length=100)
     Uid = models.CharField(max_length=50)

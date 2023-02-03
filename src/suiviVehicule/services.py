@@ -3,7 +3,7 @@ import requests
 from django.db import connection
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Statuspos, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm
+from suiviVehicule.models import Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm
 from datetime import datetime
 
 
@@ -95,10 +95,12 @@ class services():
         setattr(status_detail, 'duration', file["duration"])
         data.save()
 
-    def gestion_status_pos(self):
+    def gestion_status_pos(self,data):
         status = Statuspos()
         try:
-            list_uid = self.get_data()
+            list_uid = data
+            if len(list_uid) < 1:
+                list_uid = self.get_new_data()
             currentdate = datetime.now()
             now = currentdate
             date_time = now.strftime("%d %B %Y %H:%M:%S")
@@ -109,7 +111,7 @@ class services():
                 status_detail = self.get_position_lat_long(row.Uid, date_time)
                 file = self.get_direction(row.PickUp_H_Pos, status_detail.coordonnee)
                 print("UID ", row.Uid, "coordonnee 000 ", row.PickUp_H_Pos, " COORDONNEE 111 ",
-                      status_detail.coordonnee)
+                    status_detail.coordonnee)
                 setattr(status_detail, 'idmere', status)
                 setattr(status_detail, 'duration', file["duration"])
                 setattr(status_detail, 'daty_time', now)
@@ -128,16 +130,10 @@ class services():
             data.append(row[0])
         return format_timespan(data[0])
 
-    def get_data(self):
-        data = TrajetcoordonneeSamm.objects.all().order_by('-trip_start_date', 'pick_up_time')[0:10]
-        trajetcoord = []
-        for trajet in data:
-            setattr(trajet, 'duration', str(trajet.duration))
-            trajetcoord.append(trajet)
-        return trajetcoord
-
-    def get_data_search(self, form):
-        data = TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
+    def get_data(self, form):
+        data = []
+        if form.is_valid():
+            data = TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
                                                    driver_mobile_number__icontains=form.cleaned_data[
                                                        'driver_mobile_number'],
                                                    vehicleno__icontains=form.cleaned_data['vehicleno'],
@@ -147,12 +143,16 @@ class services():
                                                    status__icontains=form.cleaned_data['status'],
                                                    trip_no__icontains=form.cleaned_data['trip_no']).order_by(
             '-trip_start_date', 'pick_up_time')[0:10]
+        else :
+            data = TrajetcoordonneeSamm.objects.all().order_by('-trip_start_date', 'pick_up_time')[0:10]
         trajetcoord = []
         for trajet in data:
             setattr(trajet, 'duration', str(trajet.duration))
             trajetcoord.append(trajet)
         return trajetcoord
-
+    def get_new_data(self):
+        return TrajetcoordonneeWithUid.objects.all().order_by('-trip_start_date', 'pick_up_time')
+      
     def data_chart(self, data):
         label = []
         data = []
@@ -194,3 +194,4 @@ class services():
             "data": [risky, ontime, terminated, late],
             "couleur": couleur
         }
+        
