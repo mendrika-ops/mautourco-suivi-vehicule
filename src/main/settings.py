@@ -133,4 +133,4 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 USERIDGUID = '3f55ba57-8a28-41cc-917d-718b9a754410'
-SESSIONID = 'b8a61e33-7ecc-49b8-b1b1-b59be72a998c'
+SESSIONID = 'c0ff8f25-89d1-4f03-92ce-cc8541ae2557'
