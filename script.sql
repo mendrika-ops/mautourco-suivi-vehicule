@@ -108,7 +108,7 @@ select
 from
     ((`suiviVehicule_trajetcoordonneesummary` `stc`
 join `suiviVehicule_statusposdetail` `su` on
-    ((`stc`.`Uid` = `su`.`uid`)))
+    ((`stc`.`id_trip` = `su`.`id_trip`) and (`stc`.`Uid` = `su`.`uid`)))
 join `suiviVehicule_statusparameter` `spa` on
     (((((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100) >= `spa`.`min_percent`)
         and (`spa`.`max_percent` > ((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100)))))

@@ -114,6 +114,7 @@ class services():
                 setattr(status_detail, 'idmere', status)
                 setattr(status_detail, 'duration', file["duration"])
                 setattr(status_detail, 'daty_time', now)
+                setattr(status_detail, 'id_trip', row.id_trip)
                 status_detail.save()
 
         except Exception as e:

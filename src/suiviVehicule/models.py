@@ -102,6 +102,7 @@ class Statusposdetail(models.Model):
     coordonnee = models.CharField(max_length=100)
     daty_time = models.DateTimeField()
     duration = models.IntegerField(null=True)
+    id_trip = models.IntegerField(null=True)
 
 class Statusparameter(models.Model):
     id = models.indexes
