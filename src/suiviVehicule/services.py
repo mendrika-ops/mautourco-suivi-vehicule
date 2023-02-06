@@ -3,7 +3,7 @@ import requests
 from django.db import connection
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm
+from suiviVehicule.models import Statusparameter, Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm
 from datetime import datetime
 
 
@@ -87,7 +87,6 @@ class services():
         data = Statusposdetail.objects.get(pk=idstatusdetail)
         trajet = Trajetcoordonnee.objects.get(pk=id)
         currentdate = datetime.now()
-        print("--------- ", trajet.PickUp_H_Pos)
         date_time = currentdate.strftime("%d %B %Y %H:%M:%S")
         status_detail = self.get_position_lat_long(data.uid, date_time)
         file = self.get_direction(trajet.PickUp_H_Pos, status_detail.coordonnee)
@@ -182,8 +181,15 @@ class services():
         ontime = 0
         risky = 0
         terminated = 0
-        label = ['Risky', 'On time', 'Terminated', 'Late']
-        couleur = ['rgba(255,192,59,1.0)', 'rgba(30,132,127,1.0)', 'rgba(196,196,196,1.0)','rgba(255,110,64,1.0)']
+        label= []
+        couleur = []
+        stat = Statusparameter.objects.all().order_by('id')
+        for trajet in stat:
+            label.append(trajet.status)
+            couleur.append(trajet.couleur)
+
+        # label = ['Risky', 'On time', 'Terminated', 'Late']
+        # couleur = ['rgba(255,192,59,1.0)', 'rgba(30,132,127,1.0)', 'rgba(196,196,196,1.0)','rgba(255,110,64,1.0)']
         for row in data:
             if row.status == 'On time':
                 ontime += 1
