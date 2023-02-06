@@ -6,12 +6,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static './image/favicon.png' %}">
     <link rel="stylesheet" href="{% static './bootstrap-4.3.1/bootstrap-4.3.1/dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static './sass/dist/style.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open Sans">
     <title>Dashboard - Mautourco</title>
 </head>
-
 <body>
 {% load crispy_forms_tags %}
 {% csrf_token %}
@@ -26,7 +26,11 @@
         <h5><a href="/" ><i class="fa-solid fa-house-user"></i></a></h5>
     </div>
 </div>
-
+<div id="bg-spinner">
+    <div id="position-spinner">
+        <span id="spinner"></span>
+    </div>
+ </div>
 <div class="main">
     <button class="carrosell" data-toggle="collapse" href="#multiCollapseExample1" role="button" onclick="clickIcon()"
             aria-expanded="false" aria-controls="multiCollapseExample1">Search <i
@@ -88,12 +92,13 @@
         </div>
     </div>
      </form>
+    
     <div class="list">
         <div class="row">
             <div class="col-md-12 head">
                 <p>Last updated : {{ last_refresh }} ago
                     <a href="/refresh" class="btn" >
-                        <button>
+                        <button id="btn-send">
                             Refresh
                             <i class="fa-sharp fa-solid fa-arrows-rotate"></i>
                         </button>
@@ -144,7 +149,7 @@
 
                     <td class="list-action">
                         <button class="btn btn-outline-success action" style="color:white;background-color:{{ item.couleur }}">{{ item.status }} </button>
-                        <a href="/onerefresh/{{ item.idstatusposdetail }}/{{ item.id }}" class="outline-btn"><img class="svg" src="{% static '/reset.svg' %}" alt=""></a>
+                        <a id="btn-send" href="/onerefresh/{{ item.idstatusposdetail }}/{{ item.id }}" class="outline-btn" ><img class="svg" src="{% static '/reset.svg' %}" alt=""></a>
                         <a href="https://www.google.com/maps/dir/{{ item.PickUp_H_Pos }}/{{ item.PickEnd_H_Pos }}" target="_blank" class="outline-btn"><img class="svg" target="_blank"
                                                                                         src="{% static '/map.svg' %}"
                                                                                         alt=""></a>
@@ -167,7 +172,31 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <script src="{% static './graph.js' %}"></script>
 <script src="https://kit.fontawesome.com/2c856785c3.js" crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/jquery-3.6.3.js"
+  integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+  crossorigin="anonymous"></script>
+<script>
+    jQuery(function($){
+        $(document).ajaxSend(function(){
+            $("#bg-spinner").fadeIn(500);
+        });
 
+        $("#btn-send").click(function(){
+            $.ajax({
+                type: 'GET',
+                success: function(data){
+                    var d = $.parseJSON(data)
+                    alert(d.Test);
+                }
+            }).done(function(){
+                setTimeout(function(){
+                    $("#bg-spinner").fadeOut(500);
+                }, 700);
+            });
+        });
+    });
+</script>
 </body>
 
 </html>
