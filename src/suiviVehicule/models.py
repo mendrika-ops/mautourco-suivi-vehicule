@@ -59,7 +59,7 @@ class Trajetcoordonnee(models.Model):
     duration = models.CharField(max_length=100, null=True)
     couleur = models.CharField(max_length=100, null=True)
     estimatetime = models.CharField(max_length=50, null=True)
-    trip_start_time = models.TimeField(default=datetime.time(00, 00))
+    trip_start_time = models.TimeField()
 
 class TrajetcoordonneeWithUid(models.Model):
     vehicleno = models.CharField(max_length=100)

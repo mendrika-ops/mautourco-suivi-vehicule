@@ -123,12 +123,17 @@ class services():
 
     def get_last_refresh(self):
         data = []
+        obj = None
         cursor = connection.cursor()
         cursor.execute(
             "select TIMESTAMPDIFF(second , datetime, current_timestamp()) as datetime From suiviVehicule_statuspos order by datetime asc")
         for row in cursor:
             data.append(row[0])
-        return format_timespan(data[0])
+        if len(data) < 1:
+            obj = None
+        else:
+            obj = format_timespan(data[0])
+        return obj
 
     def get_data(self, form):
         data = []
