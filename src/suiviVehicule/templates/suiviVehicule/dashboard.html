@@ -159,6 +159,18 @@
                 </tbody>
             </table>
         </div>
+            {% for message in messages %}
+            <!-- pop-up dialog box, containing a form -->
+                <dialog id="favDialog" style="border: none;border-radius: 1rem;">  
+                    <hr></hr>             
+                    <p>{{ message }}</p>
+                    <hr></hr>
+                    <div>
+                        <button id="cancel" type="reset">Cancel</button>
+                    </div>
+                </dialog>
+
+            {% endfor %} 
         <div class="list-footer">
             <a href="/dashboard?loadmore={{ load_value }}" class="btn" >
                 <button name="loadmore" value="" >Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
@@ -196,6 +208,27 @@
                 }, 700);
             });
         });
+    });
+</script>
+<script>
+    const cancelButton = document.getElementById("cancel");
+    const dialog = document.getElementById("favDialog");
+    dialog.returnValue = "favAnimal";
+
+    function openCheck(dialog) {
+    if (dialog.open) {
+        console.log("Dialog open");
+    } else {
+        console.log("Dialog closed");
+    }
+    }
+
+    dialog.showModal();
+    openCheck(dialog);
+    cancelButton.addEventListener("click", () => {
+    dialog.close("animalNotChosen");
+    openCheck(dialog);
+    
     });
 </script>
 </body>

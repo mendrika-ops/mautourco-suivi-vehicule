@@ -15,13 +15,16 @@ class services():
         response = requests.get(
             f'https://api.3dtracking.net/api/v1.0/Units/Unit/List?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}')
         users = response.json()
-        print("data ---- ", users)
-        return False
+        if response.status_code == 400:
+            raise Exception("Error 400 ! Please check your connection")
+        return users
 
     def get_position_at_time(self, uid, date_time):
         req = f"https://api.3dtracking.net/api/v1.0/Units/{uid}/PositionAtTime?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}&PointInTimeDateTimeUTC={date_time}"
         response = requests.get(req)
         pos = response.json()
+        if response.status_code == 400:
+            raise Exception("Error 400 ! Please check your connection")
         return pos
 
     def get_position_lat_long(self, uid, date_time):
@@ -75,7 +78,6 @@ class services():
                 }
 
                 route_list.append(route_step)
-
         return {
             "origin": origin,
             "destination": destination,
@@ -84,41 +86,41 @@ class services():
         }
 
     def set_one_refresh(self, idstatusdetail, id):
-        data = Statusposdetail.objects.get(pk=idstatusdetail)
-        trajet = Trajetcoordonnee.objects.get(pk=id)
-        currentdate = datetime.now()
-        date_time = currentdate.strftime("%d %B %Y %H:%M:%S")
-        status_detail = self.get_position_lat_long(data.uid, date_time)
-        file = self.get_direction(trajet.PickUp_H_Pos, status_detail.coordonnee)
-        setattr(data, 'daty_time', currentdate)
-        setattr(status_detail, 'duration', file["duration"])
-        data.save()
+        try:
+            data = Statusposdetail.objects.get(pk=idstatusdetail)
+            trajet = Trajetcoordonnee.objects.get(pk=id)
+            currentdate = datetime.now()
+            date_time = currentdate.strftime("%d %B %Y %H:%M:%S")
+            status_detail = self.get_position_lat_long(data.uid, date_time)
+            file = self.get_direction(trajet.PickUp_H_Pos, status_detail.coordonnee)
+            setattr(data, 'daty_time', currentdate)
+            setattr(status_detail, 'duration', file["duration"])
+            data.save()
+        except Exception as e:
+            raise e
 
     def gestion_status_pos(self,data):
         status = Statuspos()
-        try:
-            list_uid = data
-            if len(list_uid) < 1:
-                list_uid = self.get_new_data()
-            currentdate = datetime.now()
-            now = currentdate
-            date_time = now.strftime("%d %B %Y %H:%M:%S")
-            setattr(status, 'datetime', now)
-            setattr(status, 'desc', 'opp')
-            status.save()
-            for row in list_uid:
-                status_detail = self.get_position_lat_long(row.Uid, date_time)
-                file = self.get_direction(row.PickUp_H_Pos, status_detail.coordonnee)
-                print("UID ", row.Uid, "coordonnee 000 ", row.PickUp_H_Pos, " COORDONNEE 111 ",
-                    status_detail.coordonnee)
-                setattr(status_detail, 'idmere', status)
-                setattr(status_detail, 'duration', file["duration"])
-                setattr(status_detail, 'daty_time', now)
-                setattr(status_detail, 'id_trip', row.id_trip)
-                status_detail.save()
+        list_uid = data
+        if len(list_uid) < 1:
+            list_uid = self.get_new_data()
+        currentdate = datetime.now()
+        now = currentdate
+        date_time = now.strftime("%d %B %Y %H:%M:%S")
+        setattr(status, 'datetime', now)
+        setattr(status, 'desc', 'opp')
+        status.save()
+        for row in list_uid:
+            status_detail = self.get_position_lat_long(row.Uid, date_time)
+            file = self.get_direction(row.PickUp_H_Pos, status_detail.coordonnee)
+            print("UID ", row.Uid, "coordonnee 000 ", row.PickUp_H_Pos, " COORDONNEE 111 ",
+                status_detail.coordonnee)
+            setattr(status_detail, 'idmere', status)
+            setattr(status_detail, 'duration', file["duration"])
+            setattr(status_detail, 'daty_time', now)
+            setattr(status_detail, 'id_trip', row.id_trip)
+            status_detail.save()
 
-        except Exception as e:
-            print("error ", e)
         return status
 
     def get_last_refresh(self):
@@ -170,7 +172,7 @@ class services():
             data.append(row[1])
             couleur.append(row[2])
         if len(data) == 0:
-            return False
+            raise Exception(" Table or Data not found ")
         return {
             "label": label,
             "data": data,
@@ -178,29 +180,34 @@ class services():
         }
 
     def data_chart_calcule(self, data):
-        late = 0
-        ontime = 0
-        risky = 0
-        terminated = 0
-        label= []
-        couleur = []
-        stat = Statusparameter.objects.all().order_by('id')
-        for trajet in stat:
-            label.append(trajet.status)
-            couleur.append(trajet.couleur)
+        try:
+            late = 0
+            ontime = 0
+            risky = 0
+            terminated = 0
+            label= []
+            couleur = []
+            stat = Statusparameter.objects.all().order_by('id')
+            if len(stat) < 1:
+                raise Exception("Status data not found")
+            for trajet in stat:
+                label.append(trajet.status)
+                couleur.append(trajet.couleur)
 
-        # label = ['Risky', 'On time', 'Terminated', 'Late']
-        # couleur = ['rgba(255,192,59,1.0)', 'rgba(30,132,127,1.0)', 'rgba(196,196,196,1.0)','rgba(255,110,64,1.0)']
-        for row in data:
-            if row.status == 'On time':
-                ontime += 1
-            elif row.status == 'Late':
-                late += 1
-            elif row.status == 'Risky':
-                risky += 1
-            elif row.status == 'Terminated':
-                terminated += 1
+            # label = ['Risky', 'On time', 'Terminated', 'Late']
+            # couleur = ['rgba(255,192,59,1.0)', 'rgba(30,132,127,1.0)', 'rgba(196,196,196,1.0)','rgba(255,110,64,1.0)']
+            for row in data:
+                if row.status == 'On time':
+                    ontime += 1
+                elif row.status == 'Late':
+                    late += 1
+                elif row.status == 'Risky':
+                    risky += 1
+                elif row.status == 'Terminated':
+                    terminated += 1
 
+        except Exception as e:
+            raise e
         return {
             "label": label,
             "data": [risky, ontime, terminated, late],
