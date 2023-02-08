@@ -101,9 +101,10 @@ class services():
 
     def gestion_status_pos(self,data):
         status = Statuspos()
-        list_uid = data
-        if len(list_uid) < 1:
-            list_uid = self.get_new_data()
+        # list_uid = data
+        # if len(list_uid) < 1:
+        #     list_uid = self.get_new_data()
+        list_uid = self.get_new_data()
         currentdate = datetime.now()
         now = currentdate
         date_time = now.strftime("%d %B %Y %H:%M:%S")
