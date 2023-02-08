@@ -22,7 +22,7 @@ def article(request, numpage):
 
 def login_request(request):
     form = LoginForm(request.POST)
-    if form.is_valid() and request.POST.get("mail") != None and request.POST.get("pswd") != None:
+    if form.is_valid():
         if form.checkUser():
             return redirect("/dashboard")
         else:
@@ -65,7 +65,7 @@ def dashboard_request(request):
     data_list = services().get_data(form)
     refresh = services().get_last_refresh()
     chart = services().data_chart_calcule(data_list)
-    return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value})
+    return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value })
 
 
 def googlemap_request(request, pos):
@@ -73,18 +73,11 @@ def googlemap_request(request, pos):
 
 
 def refresh_request(request):
-    try:
-        form = setForm(request)
-        data_list = services().get_data(form)
-        services().gestion_status_pos(data_list)
-    except Exception as e:
-        messages.error(request, e)
+    form = setForm(request)
+    data_list = services().get_data(form)
+    services().gestion_status_pos(data_list)
     return redirect("/dashboard")
 
 def one_refresh_request(request,idstatusposdetail,id):
-    try:
-        services().set_one_refresh(idstatusposdetail,id)
-    except Exception as e:
-        if e != 'Message':
-            messages.error(request,e)
+    services().set_one_refresh(idstatusposdetail,id)
     return redirect("/dashboard")
