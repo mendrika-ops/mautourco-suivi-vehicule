@@ -38,9 +38,10 @@ class TrajetcoordonneeSamm(models.Model):
     Uid = models.CharField(max_length=50, null=True)
     idstatusposdetail = models.IntegerField(null=True)
     trip_start_time = models.TimeField()
+    idstatusparameter = models.IntegerField(null=True)
     class Meta:
         managed = False
-        db_table = 'suiviVehicle_laststatus'
+        db_table = 'suiviVehicule_laststatuswithorder'
 
 
 class Trajetcoordonnee(models.Model):

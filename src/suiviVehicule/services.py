@@ -99,7 +99,7 @@ class services():
         except Exception as e:
             raise e
 
-    def gestion_status_pos(self,data):
+    def gestion_status_pos(self):
         status = Statuspos()
         # list_uid = data
         # if len(list_uid) < 1:
@@ -149,10 +149,10 @@ class services():
                                                    FromPlace__icontains=form.cleaned_data['FromPlace'],
                                                    ToPlace__icontains=form.cleaned_data['ToPlace'],
                                                    status__icontains=form.cleaned_data['status'],
-                                                   trip_no__icontains=form.cleaned_data['trip_no']).order_by(
+                                                   trip_no__icontains=form.cleaned_data['trip_no']).order_by('idstatusparameter',
             '-trip_start_date', 'pick_up_time')[0:10]
         else :
-            data = TrajetcoordonneeSamm.objects.all().order_by('-trip_start_date', 'pick_up_time')[0:10]
+            data = TrajetcoordonneeSamm.objects.all().order_by('-trip_start_date', 'pick_up_time')
         trajetcoord = []
         for trajet in data:
             setattr(trajet, 'duration', str(trajet.duration))
@@ -211,7 +211,7 @@ class services():
             raise e
         return {
             "label": label,
-            "data": [risky, ontime, terminated, late],
+            "data": [risky, terminated, late],
             "couleur": couleur
         }
-        
+    

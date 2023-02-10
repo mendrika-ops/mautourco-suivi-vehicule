@@ -108,4 +108,4 @@ class SearchForm(ModelForm):
     class Meta:
         model = TrajetcoordonneeSamm
         fields = (
-        "driver_oname", "driver_mobile_number", "vehicleno", "id_trip", "FromPlace", "ToPlace", "status", "trip_no")
+        "driver_oname", "driver_mobile_number", "vehicleno", "id_trip", "FromPlace", "ToPlace", "status", "trip_no", "idstatusparameter")
