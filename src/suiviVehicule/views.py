@@ -74,9 +74,7 @@ def googlemap_request(request, pos):
 
 def refresh_request(request):
     try:
-        form = setForm(request)
-        data_list = services().get_data(form)
-        services().gestion_status_pos(data_list)
+        services().gestion_status_pos()
     except Exception as e:
         messages.error(request, e)
     return redirect("/dashboard")

@@ -81,7 +81,7 @@ join `suiviVehicule_statusposdetail` `su` on
 
 --suiviVehicule_laststatus
 create or replace
-algorithm = UNDEFINED view `suiviVehicle_laststatus` as
+algorithm = UNDEFINED view `suivivehicle_laststatus` as
 select
     `su`.`uid` as `Uid`,
     `stc`.`vehicleno` as `vehicleno`,
@@ -104,11 +104,13 @@ select
     timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')) as `difftime`,
     `su`.`id` as `idstatusposdetail`,
     `stc`.`trip_start_time` as `trip_start_time`,
-    ((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100) as `pourcentage`
+    ((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100) as `pourcentage`,
+    `spa`.`id` as `idstatusparameter`
 from
     ((`suiviVehicule_trajetcoordonneesummary` `stc`
 join `suiviVehicule_statusposdetail` `su` on
-    ((`stc`.`id_trip` = `su`.`id_trip`) and (`stc`.`Uid` = `su`.`uid`)))
+    (((`stc`.`id_trip` = `su`.`id_trip`)
+        and (`stc`.`Uid` = `su`.`uid`))))
 join `suiviVehicule_statusparameter` `spa` on
     (((((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100) >= `spa`.`min_percent`)
         and (`spa`.`max_percent` > ((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100)))))
@@ -122,5 +124,32 @@ where
     '%m/%d/%Y') = curdate())
         and (`stc`.`pick_up_time` >= addtime(curtime(), '-02:00:00')))
 order by
+    `spa`.`id`,
     `stc`.`trip_start_date` desc,
     addtime(`stc`.`pick_up_time`, '-01:00:00');
+
+create view suiviVehicule_laststatuswithorder as 
+ select  `st`.`uid` as `Uid`,
+    `st`.`vehicleno` as `vehicleno`,
+    `st`.`id` as `id`,
+    `st`.`driver_oname` as `driver_oname`,
+    `st`.`driver_mobile_number` as `driver_mobile_number`,
+    `st`.`FromPlace` as `FromPlace`,
+    `st`.`ToPlace` as `ToPlace`,
+    `st`.`id_trip` as `id_trip`,
+    `st`.`trip_no` as `trip_no`,
+    `st`.`trip_start_date` as `trip_start_date`,
+    `st`.`pick_up_time` as `pick_up_time`,
+    `st`.`PickUp_H_Pos` as `PickUp_H_Pos`,
+    `st`.`PickEnd_H_Pos` as `PickEnd_H_Pos`,
+     st.estimatetime  as `estimatetime`,
+     st.duration as `duration`,
+    `st`.`status` as `status`,
+    `st`.`couleur` as `couleur`,
+    `st`.`datetime` as `datetime`,
+    st.difftime  as `difftime`,
+    `st`.`id` as `idstatusposdetail`,
+    `st`.`trip_start_time` as `trip_start_time`,
+    st.pourcentage as `pourcentage`
+	,st.idstatusparameter as  idstatusparameter 
+	from suiviVehicle_laststatus st where st.status like 'Late' or st.status like 'Risky' ;
