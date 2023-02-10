@@ -24,7 +24,7 @@ SECRET_KEY = 'fk@ih--639=j%8x&e(7ukn-=!^81mkryt)u1^d_+yfh+5i8s(&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['appdev.mg']
 
 # Application definition
 
