@@ -152,7 +152,7 @@ class services():
                                                    trip_no__icontains=form.cleaned_data['trip_no']).order_by('idstatusparameter',
             '-trip_start_date', 'pick_up_time')[0:10]
         else :
-            data = TrajetcoordonneeSamm.objects.all().order_by('-trip_start_date', 'pick_up_time')
+            data = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')[0:10]
         trajetcoord = []
         for trajet in data:
             setattr(trajet, 'duration', str(trajet.duration))
