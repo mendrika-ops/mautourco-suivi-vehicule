@@ -24,11 +24,12 @@ SECRET_KEY = 'fk@ih--639=j%8x&e(7ukn-=!^81mkryt)u1^d_+yfh+5i8s(&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['appdev.mg']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -133,4 +134,42 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 USERIDGUID = '3f55ba57-8a28-41cc-917d-718b9a754410'
-SESSIONID = 'f751b575-5a53-4105-bc4c-a2e88622cf97'
+SESSIONID = 'bf28ce2c-227e-401f-ab65-87b536fdeba7'
+
+CRONJOBS = [
+    ('*/5 * * * *', 'suiviVehicule.cron.test')
+]
+
+
+import logging
+import os
+
+APP_LOG_FILENAME = os.path.join(BASE_DIR, 'log/app.log')
+ERROR_LOG_FILENAME = os.path.join(BASE_DIR, 'log/errors.log')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'console': {
+            'format': '%(name)- 12s %(levelname)-8s %(message)s'
+        },
+        'file': {
+            'format': '%(asctime)s %(name)- 12s %(levelname) -8s %(message)s'
+        }
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': APP_LOG_FILENAME,
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
