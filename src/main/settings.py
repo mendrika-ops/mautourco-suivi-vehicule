@@ -135,9 +135,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 USERIDGUID = '3f55ba57-8a28-41cc-917d-718b9a754410'
 SESSIONID = 'bf28ce2c-227e-401f-ab65-87b536fdeba7'
+JOB_MINUTE = 30
 
 CRONJOBS = [
-    ('*/5 * * * *', 'suiviVehicule.cron.test')
+    ('*/'+str(JOB_MINUTE)+' * * * *', 'suiviVehicule.cron.test')
 ]
 
 
