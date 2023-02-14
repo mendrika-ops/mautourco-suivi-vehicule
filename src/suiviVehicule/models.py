@@ -113,3 +113,28 @@ class Statusparameter(models.Model):
     couleur = models.CharField(max_length=50)
     desce = models.CharField(max_length=50, null=True)
 
+class Recordcomment(models.Model):
+    id = models.indexes
+    id_trip = models.IntegerField(null=False)
+    comment = models.TextField(max_length=500)
+    datetime = models.DateTimeField()
+    etat = models.IntegerField(default=0)
+
+class Recordcommenttrajet(models.Model):
+    id = models.indexes
+    id_trip = models.IntegerField(null=False)
+    comment = models.TextField(max_length=500)
+    vehicleno = models.CharField(max_length=100)
+    driver_oname = models.CharField(max_length=150)
+    FromPlace = models.CharField(max_length=150)
+    ToPlace = models.CharField(max_length=150)
+    trip_start_time = models.TimeField()
+    trip_start_date = models.CharField(max_length=15, null=False)
+    daterecord = models.DateField()
+    etat = models.IntegerField(default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'suiviVehicule_recordtrajet'
+
+

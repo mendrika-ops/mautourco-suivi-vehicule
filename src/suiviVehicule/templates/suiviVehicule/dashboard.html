@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{% static './bootstrap-4.3.1/bootstrap-4.3.1/dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static './sass/dist/style.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open Sans">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>Dashboard - Mautourco</title>
 </head>
 <body>
@@ -36,6 +38,32 @@
             aria-expanded="false" aria-controls="multiCollapseExample1">Search <i
             class="fa-solid fa-angle-right fa-rotate-90"></i>
     </button>
+    <button class="carrosell" data-toggle="collapse" href="#multiCollapseExample2" role="button" onclick="clickIcon()"
+    aria-expanded="false" aria-controls="multiCollapseExample2">View log <i
+    class="fa-solid fa-angle-right fa-rotate-90"></i>
+</button>
+
+<form action="/record/listes" method="GET" >
+    <div class="row collapse multi-collapse" id="multiCollapseExample2">
+        <div class="search col-md-6 ">
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label for="from">Date</label>
+                    <input type="date" class="form-control" name="date" value="" >
+                </div>
+                <div class="form-group col-md-5">
+                </div>
+            </div>
+       
+        <div class="footer row">
+            <button class="left " name="reset">Reset</button>
+            <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+        </div>
+    </div>
+</form>
+
+
 <form method="GET">
     <div class="row collapse multi-collapse" id="multiCollapseExample1">
 
@@ -124,7 +152,7 @@
                         Pick up time</th>
 
 
-                    <th scope="col" style="width: 150px;"></th>
+                    <th scope="col" style="width: 160px;"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -153,6 +181,7 @@
                         <a href="https://www.google.com/maps/dir/{{ item.PickUp_H_Pos }}/{{ item.PickEnd_H_Pos }}" target="_blank" class="outline-btn"><img class="svg" target="_blank"
                                                                                         src="{% static '/map.svg' %}"
                                                                                         alt=""></a>
+                        <a href="" class="btnannulation outline-btn" data-id="{{ item.id_trip }}" data-toggle="modal" data-target="#myModal" ><img  class="svg" src="{% static '/garbage.svg' %}" alt=""></a>                                                
                     </td>
                 </tr>
                 {% endfor %}
@@ -161,16 +190,53 @@
         </div>
             {% for message in messages %}
             <!-- pop-up dialog box, containing a form -->
-                <dialog id="favDialog" style="border: none;border-radius: 1rem;">  
+                <dialog id="favDialog" style="border: none;border-radius: 0.2rem;">  
                     <hr></hr>             
                     <p>{{ message }}</p>
                     <hr></hr>
                     <div>
-                        <button id="cancel" type="reset">Cancel</button>
+                        <button id="cancel" class="btn btn-default" type="reset">Cancel</button>
                     </div>
                 </dialog>
 
-            {% endfor %} 
+            {% endfor %}        
+            <script>
+                $(document).on("click", ".btnannulation", function () {
+                var trip_Id = $(this).data('id');
+                $(".modal-body #id_trip").val(trip_Id);
+            });
+            </script>
+            <div class="container">
+                <h2></h2>
+                <!-- Trigger the modal with a button -->
+                 <!-- Modal -->
+                <div class="modal fade" id="myModal" role="dialog">
+                  <div class="modal-dialog">
+                  
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>     
+                        <p id="id_trip"></p>
+                      </div>
+                      <form action="record/save" method="GET">
+                        <div class="modal-body">                      
+                            <!--<textarea type="textarea" class="form-control" name="" placeholder="comments"></textarea>-->
+                            {{ record.comment }}
+                            <input type="hidden" name="id_trip" id="id_trip" value=""/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-outline-success" >Save</button>
+                        </div>
+                    </form>
+                    </div>
+                    
+                  </div>
+                </div>
+                
+              </div>
+              
         <div class="list-footer">
             <a href="/dashboard?loadmore={{ load_value }}" class="btn" >
                 <button name="loadmore" value="" >Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
@@ -188,6 +254,7 @@
   src="https://code.jquery.com/jquery-3.6.3.js"
   integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
   crossorigin="anonymous"></script>
+
 <script>
     jQuery(function($){
         $(document).ajaxSend(function(){
