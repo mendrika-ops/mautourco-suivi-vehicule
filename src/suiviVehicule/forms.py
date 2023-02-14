@@ -91,7 +91,7 @@ class Form(ModelForm):
 
 class SearchForm(ModelForm):
     driver_oname = forms.CharField(required=False, label='Driver', widget=forms.TextInput(
-                              attrs={'class': "form-control"}))
+                              attrs={'class': "form-control", 'id': "driver"}))
     driver_mobile_number = forms.CharField(required=False,label='Driver mobile', widget=forms.TextInput(
                               attrs={'class': "form-control"}))
     vehicleno = forms.CharField(required=False,label='Vehicule', widget=forms.TextInput(
@@ -109,7 +109,7 @@ class SearchForm(ModelForm):
     class Meta:
         model = TrajetcoordonneeSamm
         fields = (
-        "driver_oname", "driver_mobile_number", "vehicleno", "id_trip", "FromPlace", "ToPlace", "status", "trip_no", "idstatusparameter")
+        "driver_oname", "driver_mobile_number", "vehicleno", "id_trip", "FromPlace", "ToPlace", "status", "trip_no")
 
 class CommentFrom(ModelForm):
     comment = forms.CharField(widget=forms.Textarea(
