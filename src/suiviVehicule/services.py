@@ -95,6 +95,8 @@ class services():
             file = self.get_direction(trajet.PickUp_H_Pos, status_detail.coordonnee)
             setattr(data, 'daty_time', currentdate)
             setattr(status_detail, 'duration', file["duration"])
+            print("paaaainnnnnnnt", idstatusdetail)
+            print("paaaainnnnnnnt idd", status_detail.id)
             data.save()
         except Exception as e:
             raise e
@@ -138,7 +140,7 @@ class services():
             obj = format_timespan(data[0])
         return obj
 
-    def get_data(self, form):
+    def get_data(self, form, page):
         data = []
         if form.is_valid():
             data = TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
@@ -150,9 +152,9 @@ class services():
                                                    ToPlace__icontains=form.cleaned_data['ToPlace'],
                                                    status__icontains=form.cleaned_data['status'],
                                                    trip_no__icontains=form.cleaned_data['trip_no']).order_by('idstatusparameter',
-            '-trip_start_date', 'pick_up_time')[0:10]
+            '-trip_start_date', 'pick_up_time')[0:page]
         else :
-            data = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')[0:10]
+            data = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
         trajetcoord = []
         for trajet in data:
             setattr(trajet, 'duration', str(trajet.duration))
@@ -188,7 +190,7 @@ class services():
             terminated = 0
             label= []
             couleur = []
-            stat = Statusparameter.objects.all().order_by('id')
+            stat = Statusparameter.objects.filter(desce=1).order_by('id')
             if len(stat) < 1:
                 raise Exception("Status data not found")
             for trajet in stat:
@@ -206,12 +208,11 @@ class services():
                     risky += 1
                 elif row.status == 'Terminated':
                     terminated += 1
-
         except Exception as e:
             raise e
         return {
             "label": label,
-            "data": [risky, terminated, late],
+            "data": [risky, ontime, late],
             "couleur": couleur
         }
     

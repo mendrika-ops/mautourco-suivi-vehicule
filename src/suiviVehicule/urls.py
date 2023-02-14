@@ -8,6 +8,7 @@ urlpatterns = [
     path("register", register_request, name="signin"),
     path("", login_request, name="login"),
     path("dashboard", dashboard_request),
+    path("dashboard/", dashboard_request),
     path("map/<str:pos>", googlemap_request),
     path("refresh", refresh_request),
     path("onerefresh/<str:idstatusposdetail>/<str:id>", one_refresh_request),
