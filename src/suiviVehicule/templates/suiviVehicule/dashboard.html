@@ -22,7 +22,7 @@
         <img src="{% static './image/logo.png' %}" alt="">
     </div>
     <div class="col-md-4 header-title">
-        <h2>SUIVI DE FLOTTE DE VEHICULE</h2>
+        <h2>VEHICLE FLEET TRACKING</h2>
     </div>
     <div class="col-md-4 header-sign-in">
         <h5><a href="/" ><i class="fa-solid fa-house-user"></i></a></h5>
@@ -143,7 +143,6 @@
                     <th scope="col">From</th>
                     <th scope="col">To</th>
                     <th scope="col">Vehicule N°</th>
-                    <th scope="col">Start date</th>
                     <th scope="col">Start time</th>
                     <th scope="col">Last fetch</th>
                     <th scope="col" style="width: 100px;">Duration</th>
@@ -163,7 +162,6 @@
                     <td>{{ item.FromPlace }}</td>
                     <td>{{ item.ToPlace }}</td>
                     <td>{{ item.vehicleno }}</td>
-                    <td>{{ item.trip_start_date }}</td>
                     <td>{{ item.trip_start_time |date:"H:i:s " }}</td>
                     <td>{{ item.datetime |date:"H:i:s " }}</td>
                     <td style="width: 100px;width: 90px;
