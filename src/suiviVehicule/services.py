@@ -3,7 +3,7 @@ import requests
 from django.db import connection
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Statusparameter, Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm
+from suiviVehicule.models import Statusparameter, Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
 from datetime import datetime
 
 
@@ -214,4 +214,10 @@ class services():
             "data": [risky, terminated, late],
             "couleur": couleur
         }
+    
+    def get_listes_record(self,date):
+        datein = datetime. strptime(date, '%Y-%m-%d')
+        liste = Recordcommenttrajet.objects.filter(daterecord = datein)
+        return liste
+        
     
