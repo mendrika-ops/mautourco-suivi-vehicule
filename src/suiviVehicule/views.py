@@ -58,12 +58,12 @@ def setForm(request):
 def dashboard_request(request):
     data_list = []
     load_value = 10
-    if request.GET.get("loadmore") is not None and request.GET.get("loadmore").isnumeric() == True:
-        load_value = int(request.GET.get("loadmore")) + 10
+    if request.GET.get("page") is not None and request.GET.get("page").isnumeric() == True:
+        load_value = int(request.GET.get("page")) + 10
        
     form = setForm(request)
+    data_list = services().get_data(form, load_value)
     record = CommentFrom(request.GET)
-    data_list = services().get_data(form)
     refresh = services().get_last_refresh()
     chart = services().data_chart_calcule(data_list)
     return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value, "record": record})
@@ -84,8 +84,7 @@ def one_refresh_request(request,idstatusposdetail,id):
     try:
         services().set_one_refresh(idstatusposdetail,id)
     except Exception as e:
-        if e != 'Message':
-            messages.error(request,e)
+        messages.error(request,e)
     return redirect("/dashboard")
 
 def comment_request(request):
