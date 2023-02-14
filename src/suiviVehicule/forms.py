@@ -8,8 +8,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db import connection
 from django.forms import ModelForm
 
-from suiviVehicule.models import User, Trajetcoordonnee, TrajetcoordonneeSamm
+from suiviVehicule.models import User, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcomment
 from suiviVehicule.services import services
+from datetime import datetime
 
 list_sexe = [
     ('M', 'Masculin'),
@@ -109,3 +110,27 @@ class SearchForm(ModelForm):
         model = TrajetcoordonneeSamm
         fields = (
         "driver_oname", "driver_mobile_number", "vehicleno", "id_trip", "FromPlace", "ToPlace", "status", "trip_no", "idstatusparameter")
+
+class CommentFrom(ModelForm):
+    comment = forms.CharField(widget=forms.Textarea(
+        attrs={'class': "form-control",'placeholder': "Comments", 'style': 'height: 5em;'}))
+
+    class Meta:
+        model = Recordcomment
+        fields = ("comment", "id_trip")
+
+    def save(self):
+        comment = self.cleaned_data['comment']
+        id_trip = self.cleaned_data['id_trip']
+        if self.checkexist():
+            raise Exception("Error ! object already canceled")
+        else:
+            record = Recordcomment()
+            record.comment = self.cleaned_data['comment']
+            record.id_trip = self.cleaned_data['id_trip']
+            record.datetime = datetime.now() 
+            record.etat = 1
+            record.save()
+    def checkexist(self):
+        return Recordcomment.objects.filter(id_trip=self.cleaned_data['id_trip']).exists()
+

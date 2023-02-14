@@ -122,7 +122,7 @@ where
         `suiviVehicule_statuspos` `ss`))
     and (str_to_date(`stc`.`trip_start_date`,
     '%m/%d/%Y') = curdate())
-        and (`stc`.`pick_up_time` >= addtime(curtime(), '-02:00:00')))
+        and (`stc`.`pick_up_time` > stc.trip_start_time))
 order by
     `spa`.`id`,
     `stc`.`trip_start_date` desc,
@@ -153,3 +153,19 @@ create view suiviVehicule_laststatuswithorder as
     st.pourcentage as `pourcentage`
 	,st.idstatusparameter as  idstatusparameter 
 	from suiviVehicle_laststatus st where st.status like 'Late' or st.status like 'Risky' ;
+
+
+
+create or replace view suiviVehicule_recordtrajet as select 	
+ 	`svt`.`vehicleno` as `vehicleno`,
+    `svt`.`driver_oname` as `driver_oname`,
+    `svt`.`FromPlace` as `FromPlace`,
+    `svt`.`ToPlace` as `ToPlace`,
+    `svt`.`id_trip` as `id_trip`,
+    `svt`.`trip_start_date` as `trip_start_date`,
+    `svt`.`trip_start_time` as `trip_start_time`,
+    `svr`.`comment` as `comment`,
+    date_format(`svr`.`datetime`,'%Y-%m-%d') as `daterecord`,
+    `svr`.`etat` as `etat`,
+    `svr`.`id` as `id`
+from suiviVehicule_recordcomment svr join suiviVehicule_trajetcoordonnee svt on svr.id_trip = svt.id_trip ;

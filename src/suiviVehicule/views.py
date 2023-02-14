@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import json
-from suiviVehicule.forms import SigninForm, LoginForm, SearchForm
+from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom
 from suiviVehicule.services import services
 
 
@@ -62,10 +62,11 @@ def dashboard_request(request):
         load_value = int(request.GET.get("loadmore")) + 10
        
     form = setForm(request)
+    record = CommentFrom(request.GET)
     data_list = services().get_data(form)
     refresh = services().get_last_refresh()
     chart = services().data_chart_calcule(data_list)
-    return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value})
+    return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value, "record": record})
 
 
 def googlemap_request(request, pos):
@@ -86,3 +87,22 @@ def one_refresh_request(request,idstatusposdetail,id):
         if e != 'Message':
             messages.error(request,e)
     return redirect("/dashboard")
+
+def comment_request(request):
+    try:
+        record = CommentFrom(request.GET)
+        if record.is_valid():
+            record.save()
+    except Exception as e:
+        messages.error(request, e)
+    return redirect("/dashboard")
+
+def log_request(request):
+    records = []
+    date = request.GET.get('date')
+    try:
+        records = services().get_listes_record(date)
+       
+    except Exception as e:
+        messages.error(request, e)
+    return render(request, "suiviVehicule/logrecord.html",context={"data_list": records})
