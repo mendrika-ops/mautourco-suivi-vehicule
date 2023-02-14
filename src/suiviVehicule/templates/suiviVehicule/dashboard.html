@@ -119,7 +119,7 @@
             <canvas id="myChart" data="{{ chart }}" ></canvas>
         </div>
     </div>
-     </form>
+</form>
     
     <div class="list">
         <div class="row">
@@ -236,7 +236,7 @@
               </div>
               
         <div class="list-footer">
-            <a href="/dashboard?loadmore={{ load_value }}" class="btn" >
+            <a href="/dashboard?page={{ load_value }}" class="btn" >
                 <button name="loadmore" value="" >Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
             </a>
         </div>
@@ -248,11 +248,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <script src="{% static './graph.js' %}"></script>
 <script src="https://kit.fontawesome.com/2c856785c3.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+</script>
+
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
+    type="text/css" />
 <script
   src="https://code.jquery.com/jquery-3.6.3.js"
   integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
   crossorigin="anonymous"></script>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+</script>
+
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
+    type="text/css" />
+
+  
 <script>
     jQuery(function($){
         $(document).ajaxSend(function(){
@@ -295,6 +313,18 @@
     openCheck(dialog);
     
     });
+</script>
+<script>
+    $(function () {
+        var availableTags = [
+        {% for item in data_list %}
+            "{{item.driver_oname}}",
+        {% endfor %}
+        ];
+        $("#driver").autocomplete({
+            source: availableTags
+        });
+    } );
 </script>
 </body>
 
