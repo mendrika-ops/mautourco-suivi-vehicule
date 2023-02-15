@@ -79,33 +79,32 @@ from
 join `suiviVehicule_statusposdetail` `su` on
     ((`stc`.`Uid` = `su`.`uid`)));
 
---suiviVehicule_laststatus
 create or replace
 algorithm = UNDEFINED view `suivivehicle_laststatus` as
 select
-    `su`.`uid` as `Uid`,
-    `stc`.`vehicleno` as `vehicleno`,
-    `stc`.`id` as `id`,
-    `stc`.`driver_oname` as `driver_oname`,
-    `stc`.`driver_mobile_number` as `driver_mobile_number`,
-    `stc`.`FromPlace` as `FromPlace`,
-    `stc`.`ToPlace` as `ToPlace`,
-    `stc`.`id_trip` as `id_trip`,
-    `stc`.`trip_no` as `trip_no`,
-    `stc`.`trip_start_date` as `trip_start_date`,
-    addtime(`stc`.`pick_up_time`, '-01:00:00') as `pick_up_time`,
-    `stc`.`PickUp_H_Pos` as `PickUp_H_Pos`,
-    `su`.`coordonnee` as `PickEnd_H_Pos`,
-    addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)) as `estimatetime`,
-    sec_to_time(`su`.`duration`) as `duration`,
-    `spa`.`status` as `status`,
-    `spa`.`couleur` as `couleur`,
-    `su`.`daty_time` as `datetime`,
-    timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')) as `difftime`,
-    `su`.`id` as `idstatusposdetail`,
-    `stc`.`trip_start_time` as `trip_start_time`,
-    ((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100) as `pourcentage`,
-    `spa`.`id` as `idstatusparameter`
+    `su`.`uid` AS `Uid`,
+    `stc`.`vehicleno` AS `vehicleno`,
+    `stc`.`id` AS `id`,
+    `stc`.`driver_oname` AS `driver_oname`,
+    `stc`.`driver_mobile_number` AS `driver_mobile_number`,
+    `stc`.`FromPlace` AS `FromPlace`,
+    `stc`.`ToPlace` AS `ToPlace`,
+    `stc`.`id_trip` AS `id_trip`,
+    `stc`.`trip_no` AS `trip_no`,
+    `stc`.`trip_start_date` AS `trip_start_date`,
+    addtime(`stc`.`pick_up_time`, '-01:00:00') AS `pick_up_time`,
+    `stc`.`PickUp_H_Pos` AS `PickUp_H_Pos`,
+    `su`.`coordonnee` AS `PickEnd_H_Pos`,
+    addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)) AS `estimatetime`,
+    sec_to_time(`su`.`duration`) AS `duration`,
+    `spa`.`status` AS `status`,
+    `spa`.`couleur` AS `couleur`,
+    `su`.`daty_time` AS `datetime`,
+    timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')) AS `difftime`,
+    `su`.`id` AS `idstatusposdetail`,
+    `stc`.`trip_start_time` AS `trip_start_time`,
+    ((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100) AS `pourcentage`,
+    `spa`.`id` AS `idstatusparameter`
 from
     ((`suiviVehicule_trajetcoordonneesummary` `stc`
 join `suiviVehicule_statusposdetail` `su` on
@@ -122,11 +121,13 @@ where
         `suiviVehicule_statuspos` `ss`))
     and (str_to_date(`stc`.`trip_start_date`,
     '%m/%d/%Y') = curdate())
-        and (`stc`.`pick_up_time` > stc.trip_start_time))
+     and (`stc`.`pick_up_time` > `stc`.`trip_start_time`)       
+     and `stc`.`id_trip` not in (select svr.id_trip from suiviVehicule_recordcomment svr))
 order by
     `spa`.`id`,
     `stc`.`trip_start_date` desc,
     addtime(`stc`.`pick_up_time`, '-01:00:00');
+
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `suiviVehicule_laststatuswithorder` AS

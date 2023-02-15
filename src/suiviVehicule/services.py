@@ -103,10 +103,10 @@ class services():
 
     def gestion_status_pos(self):
         status = Statuspos()
-        # list_uid = data
-        # if len(list_uid) < 1:
-        #     list_uid = self.get_new_data()
-        list_uid = self.get_new_data()
+        list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
+        if len(list_uid) < 1:
+            list_uid = self.get_new_data()
+        #list_uid = self.get_new_data()
         currentdate = datetime.now()
         now = currentdate
         date_time = now.strftime("%d %B %Y %H:%M:%S")
@@ -212,7 +212,7 @@ class services():
             raise e
         return {
             "label": label,
-            "data": [risky, ontime, late],
+            "data": [risky, late],
             "couleur": couleur
         }
     
