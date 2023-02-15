@@ -35,25 +35,43 @@
  </div>
 <div class="main">    
     <div class="list">
+        <div class="title-rec row">
+            <div class="col-md-1 icon ">
+               <a href="/dashboard" ><i class="fa-regular fa-circle-left fa-xl"></i></a>
+            </div>       
+            <div class="col-md-10 title-rec-head">
+                <h2>Cancelled trip record</h2>
+            </div>        
+        </div> 
         <div class="row table-responsive">
             <table class="table table-borderless col-md-12">
                 <thead>
                   <tr>
-                    <th scope="col">ID Trip</th>
-                    <th scope="col">Driver name</th>
+                   <th scope="col">Driver name</th>
                     <th scope="col">Vehicule</th>
+                    <th scope="col">From</th>
+                    <th scope="col">To</th>
+                    <th scope="col">Start time</th>
+                    <th scope="col">Pick up time</th>
                     <th scope="col">Comments</th>
-                    <th scope="col">Date time</th>
+                    <th scope="col">Cancelled</th>
+                    <th scope="col">Status</th>
                   </tr>
                 </thead>
                 <tbody>
                 {% for item in data_list %}
-                <tr>
-                    <td style="text-align: center;">{{ item.id_trip }}</td>
+                <tr>             
                     <td style="text-align: center;">{{ item.driver_oname }}</td>
                     <td style="text-align: center;">{{ item.vehicleno }}</td>
+                    <td style="text-align: center;">{{ item.FromPlace }}</td>
+                    <td style="text-align: center;">{{ item.ToPlace }}</td>
+                    <td style="text-align: center;">{{ item.trip_start_time|date:"H:i:s " }}</td>
+                    <td style="text-align: center;">{{ item.pick_up_time |date:"H:i:s" }}</td>                  
                     <td style="text-align: center;text-transform: uppercase;">{{ item.comment }}</td>
                     <td style="text-align: center;">{{ item.daterecord }}</td>
+                    <td class="list-action">
+                        <button class="btn btn-outline-success action" style="color:white;background-color:{{ item.couleur }}">Cancel</button>
+                    </td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -73,9 +91,9 @@
             {% endfor %}        
             
         <div class="list-footer">
-            <a href="/dashboard?loadmore={{ load_value }}" class="btn" >
+          <!--  <a href="/record/listes?page={{ load_value }}" class="btn" >
                 <button name="loadmore" value="" >Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
-            </a>
+            </a>-->
         </div>
     </div>
 </div>
