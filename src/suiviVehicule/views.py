@@ -5,7 +5,7 @@ from django.utils.datetime_safe import datetime
 import json
 from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom
 from suiviVehicule.services import services
-
+from django.conf import settings
 
 # Create your views here.
 def index(request):
@@ -66,7 +66,7 @@ def dashboard_request(request):
     record = CommentFrom(request.GET)
     refresh = services().get_last_refresh()
     chart = services().data_chart_calcule(data_list)
-    return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value, "record": record})
+    return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value, "record": record, "cron_minute":settings.JOB_MINUTE})
 
 
 def googlemap_request(request, pos):
