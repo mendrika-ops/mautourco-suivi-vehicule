@@ -24,6 +24,23 @@ new Chart("myChart", {
         legend: {
             position: 'left',
         },
+        plugins: {
+            datalabels: {
+              formatter: (value, ctx) => {
+                let datasets = ctx.chart.data.datasets;
+                if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
+                  return value;
+                } else {
+                  return percentage;
+                }
+              },
+                display: true,
+                color: 'black',
+                style: {
+                   fontWeight: 'bold'
+                }
+            }
+        }
     },
 });
 
