@@ -130,6 +130,9 @@ class Recordcommenttrajet(models.Model):
     ToPlace = models.CharField(max_length=150)
     trip_start_time = models.TimeField()
     trip_start_date = models.CharField(max_length=15, null=False)
+    pick_up_time = models.TimeField()
+    status = models.CharField(max_length=100, null=True)
+    couleur = models.CharField(max_length=100, null=True)
     daterecord = models.DateField()
     etat = models.IntegerField(default=0)
 

@@ -1,5 +1,4 @@
 var graph = JSON.parse($('#myChart').attr('data'));
-console.log("COUCOU ",graph['label'])
 
 var xValues = graph['label'];
 var yValues = graph['data'];

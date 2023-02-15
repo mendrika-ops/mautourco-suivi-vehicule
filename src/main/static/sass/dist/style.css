@@ -217,3 +217,12 @@
       transform: rotate(360deg);
   }
 }
+
+.title-rec {
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.title-rec .title-rec-head {
+  text-align: center;
+}

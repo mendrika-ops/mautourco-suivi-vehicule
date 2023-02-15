@@ -155,18 +155,24 @@ ALGORITHM = UNDEFINED VIEW `suiviVehicule_laststatuswithorder` AS
 	,st.idstatusparameter as  idstatusparameter 
 	from suivivehicle_laststatus st where st.status like 'Late' or st.status like 'Risky' ;
 
-
-
-create or replace view suiviVehicule_recordtrajet as select 	
- 	`svt`.`vehicleno` as `vehicleno`,
-    `svt`.`driver_oname` as `driver_oname`,
-    `svt`.`FromPlace` as `FromPlace`,
-    `svt`.`ToPlace` as `ToPlace`,
-    `svt`.`id_trip` as `id_trip`,
-    `svt`.`trip_start_date` as `trip_start_date`,
-    `svt`.`trip_start_time` as `trip_start_time`,
-    `svr`.`comment` as `comment`,
-    date_format(`svr`.`datetime`,'%Y-%m-%d') as `daterecord`,
-    `svr`.`etat` as `etat`,
-    `svr`.`id` as `id`
-from suiviVehicule_recordcomment svr join suiviVehicule_trajetcoordonnee svt on svr.id_trip = svt.id_trip ;
+CREATE OR REPLACE
+ALGORITHM = UNDEFINED VIEW `suiviVehicule_recordtrajet` AS
+select
+    `svt`.`vehicleno` AS `vehicleno`,
+    `svt`.`driver_oname` AS `driver_oname`,
+    `svt`.`FromPlace` AS `FromPlace`,
+    `svt`.`ToPlace` AS `ToPlace`,
+    `svt`.`id_trip` AS `id_trip`,
+    `svt`.`trip_start_date` AS `trip_start_date`,
+    `svt`.`trip_start_time` AS `trip_start_time`,
+    `svt`.`pick_up_time` AS `pick_up_time`,
+     'Cancel' AS `status`,
+     'rgba(30,61,89,1.0)' AS `couleur`,
+    `svr`.`comment` AS `comment`,
+    date_format(`svr`.`datetime`, '%Y-%m-%d') AS `daterecord`,
+    `svr`.`etat` AS `etat`,
+    `svr`.`id` AS `id`
+from
+    (`suiviVehicule_recordcomment` `svr`
+join `suiviVehicule_trajetcoordonnee` `svt` on
+    ((`svr`.`id_trip` = `svt`.`id_trip`)));
