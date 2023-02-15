@@ -128,7 +128,8 @@ order by
     `stc`.`trip_start_date` desc,
     addtime(`stc`.`pick_up_time`, '-01:00:00');
 
-create view suiviVehicule_laststatuswithorder as 
+CREATE OR REPLACE
+ALGORITHM = UNDEFINED VIEW `suiviVehicule_laststatuswithorder` AS
  select  `st`.`uid` as `Uid`,
     `st`.`vehicleno` as `vehicleno`,
     `st`.`id` as `id`,
@@ -152,7 +153,7 @@ create view suiviVehicule_laststatuswithorder as
     `st`.`trip_start_time` as `trip_start_time`,
     st.pourcentage as `pourcentage`
 	,st.idstatusparameter as  idstatusparameter 
-	from suiviVehicle_laststatus st where st.status like 'Late' or st.status like 'Risky' ;
+	from suivivehicle_laststatus st where st.status like 'Late' or st.status like 'Risky' ;
 
 
 
