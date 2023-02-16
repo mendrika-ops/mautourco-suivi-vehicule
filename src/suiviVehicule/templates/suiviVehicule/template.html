@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="{% static './image/favicon.png' %}">
+        <link rel="stylesheet" href="{% static './bootstrap-4.3.1/bootstrap-4.3.1/dist/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static './sass/dist/style.css' %}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open Sans">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <title>Dashboard - Mautourco</title>
+    </head>
+ <body>
+    {% load crispy_forms_tags %}
+    {% csrf_token %}
+    <div class="header row">
+        <div class=" col-md-4 header-logo">
+            <img src="{% static './image/logo.png' %}" alt="">
+        </div>
+        <div class="col-md-4 header-title">
+            <h2>VEHICLE FLEET TRACKING</h2>
+        </div>
+        <div class="col-md-4 header-sign-in">
+            <h5><a href="/" ><i class="fa-solid fa-house-user"></i></a></h5>
+        </div>
+    </div>
+    <div id="bg-spinner">
+        <div id="position-spinner">
+            <span id="spinner"></span>
+        </div>
+    </div>
+    {% block content %}
+    
+    {% endblock %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+    <script src="{% static './bootstrap-4.3.1/bootstrap-4.3.1/dist/js/bootstrap.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script> 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script> 
+    <script type="text/javascript"></script>
+    <script src="{% static './graph.js' %}"></script>
+    <script src="https://kit.fontawesome.com/2c856785c3.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
+        type="text/css" />
+    <script
+    src="https://code.jquery.com/jquery-3.6.3.js"
+    integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+    crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
+        type="text/css" />
+  </body>
+</html>

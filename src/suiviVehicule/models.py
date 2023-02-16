@@ -113,6 +113,10 @@ class Statusparameter(models.Model):
     couleur = models.CharField(max_length=50)
     desce = models.CharField(max_length=50, null=True)
 
+    def getListeParameters(self):
+
+        return Statusparameter.objects.all().order_by('id')
+
 class Recordcomment(models.Model):
     id = models.indexes
     id_trip = models.IntegerField(null=False)
