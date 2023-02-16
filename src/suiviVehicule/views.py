@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import json
-from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom
+from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom, ParameterForm
 from suiviVehicule.services import services
 from django.conf import settings
 
@@ -65,7 +65,7 @@ def dashboard_request(request):
     data_list = services().get_data(form, load_value)
     record = CommentFrom(request.GET)
     refresh = services().get_last_refresh()
-    chart = services().data_chart_calcule(data_list)
+    chart = services().data_chart(data_list)
     return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value, "record": record, "cron_minute":settings.JOB_MINUTE})
 
 
@@ -105,3 +105,24 @@ def log_request(request):
     except Exception as e:
         messages.error(request, e)
     return render(request, "suiviVehicule/logrecord.html",context={"data_list": records})
+
+def parameter_update_request(request,id):
+    param = ParameterForm(request.POST)  
+    try:
+        parameter = services().get_liste_parameter_byId(id)
+        if request.method == 'POST': 
+            param = ParameterForm(request.POST)
+            if param.is_valid() :
+                if param.isExist(): 
+                    raise Exception("Object already existed")
+                else:
+                    param.update(parameter)
+                    parameter = services().get_liste_parameter_byId(id)
+        param = ParameterForm(instance=parameter) 
+    except Exception as e:
+        messages.error(request, e)
+    return render(request, "suiviVehicule/update-parameter.html",context={"form": param})
+
+def parameter_liste_request(request):
+    data = services().get_liste_parameter()
+    return render(request, "suiviVehicule/liste-parameter.html",context={"data_list": data})

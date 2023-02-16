@@ -1,0 +1,66 @@
+{% extends "suiviVehicule/template.html" %}
+{% block content %}
+<div class="main">    
+  <div class="list">
+      <div class="title-rec row">
+          <div class="col-md-1 icon ">
+             <a href="/dashboard" ><i class="fa-regular fa-circle-left fa-lg"></i></a>
+          </div>       
+          <div class="col-md-10 title-rec-head" style="text-align: center;">
+              <h2>Parameters</h2>
+          </div>        
+      </div> 
+      <div class="row table-responsive">
+          <table class="table table-borderless col-md-12">
+              <thead>
+                <tr>
+                 <th scope="col">Status</th>
+                  <th scope="col">Couleur</th>
+                  <th scope="col">Min value</th>
+                  <th scope="col">Max value</th>
+                  <th scope="col">Etat</th>
+                  <th scope="col"></th>
+                 </tr>
+              </thead>
+              <tbody>
+              {% for item in data_list %}
+              <tr>             
+                  <td >{{ item.status }}</td>
+                  <td class="list-action" style="text-align: center;">
+                    <button class="btn btn-outline-success action" style="color:white;background-color:{{ item.couleur }}"></button>
+                  </td>
+                  <td style="text-align: center;">{{ item.min_percent }} %</td>
+                  <td style="text-align: center;">{{ item.max_percent }} %</td>
+                  <td style="text-align: center;">{{ item.desce }}</td>
+                  <td style="text-align: center;">
+                    <a href="/parameter/update/{{ item.id }}">
+                      <i class="fa-regular fa-pen-to-square fa-lg"></i>
+                    </a>
+                  </td>
+              </tr>
+              {% endfor %}
+              </tbody>
+          </table>
+      </div>
+          {% for message in messages %}
+          <!-- pop-up dialog box, containing a form -->
+              <dialog id="favDialog" style="border: none;border-radius: 0.2rem;">  
+                  <hr></hr>             
+                  <p>{{ message }}</p>
+                  <hr></hr>
+                  <div>
+                      <button id="cancel" class="btn btn-default" type="reset">Cancel</button>
+                  </div>
+              </dialog>
+
+          {% endfor %}        
+          
+      <div class="list-footer">
+        <!--  <a href="/record/listes?page={{ load_value }}" class="btn" >
+              <button name="loadmore" value="" >Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
+          </a>-->
+      </div>
+  </div>
+</div>
+
+{% endblock %}

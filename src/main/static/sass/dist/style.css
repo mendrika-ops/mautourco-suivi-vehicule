@@ -227,3 +227,32 @@
 .title-rec .title-rec-head {
   text-align: center;
 }
+
+.main .parameter {
+  display: flex;
+  justify-content: center;
+}
+
+
+.main .update {
+  margin-top: 10px;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+.main .update .form-group {
+  margin: 0 auto;
+}
+.main .update .footer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+.main .update .footer button {
+  background-color: white;
+  border-color: #1a5a9f;
+  color: #1a5a9f;
+  border: 1;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 140px;
+}

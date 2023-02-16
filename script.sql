@@ -129,32 +129,35 @@ order by
     addtime(`stc`.`pick_up_time`, '-01:00:00');
 
 
+
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `suiviVehicule_laststatuswithorder` AS
- select  `st`.`uid` as `Uid`,
-    `st`.`vehicleno` as `vehicleno`,
-    `st`.`id` as `id`,
-    `st`.`driver_oname` as `driver_oname`,
-    `st`.`driver_mobile_number` as `driver_mobile_number`,
-    `st`.`FromPlace` as `FromPlace`,
-    `st`.`ToPlace` as `ToPlace`,
-    `st`.`id_trip` as `id_trip`,
-    `st`.`trip_no` as `trip_no`,
-    `st`.`trip_start_date` as `trip_start_date`,
-    `st`.`pick_up_time` as `pick_up_time`,
-    `st`.`PickUp_H_Pos` as `PickUp_H_Pos`,
-    `st`.`PickEnd_H_Pos` as `PickEnd_H_Pos`,
-     st.estimatetime  as `estimatetime`,
-     st.duration as `duration`,
-    `st`.`status` as `status`,
-    `st`.`couleur` as `couleur`,
-    `st`.`datetime` as `datetime`,
-    st.difftime  as `difftime`,
-    `st`.`id` as `idstatusposdetail`,
-    `st`.`trip_start_time` as `trip_start_time`,
-    st.pourcentage as `pourcentage`
-	,st.idstatusparameter as  idstatusparameter 
+select
+    `st`.`Uid` AS `Uid`,
+    `st`.`vehicleno` AS `vehicleno`,
+    `st`.`id` AS `id`,
+    `st`.`driver_oname` AS `driver_oname`,
+    `st`.`driver_mobile_number` AS `driver_mobile_number`,
+    `st`.`FromPlace` AS `FromPlace`,
+    `st`.`ToPlace` AS `ToPlace`,
+    `st`.`id_trip` AS `id_trip`,
+    `st`.`trip_no` AS `trip_no`,
+    `st`.`trip_start_date` AS `trip_start_date`,
+    `st`.`pick_up_time` AS `pick_up_time`,
+    `st`.`PickUp_H_Pos` AS `PickUp_H_Pos`,
+    `st`.`PickEnd_H_Pos` AS `PickEnd_H_Pos`,
+    `st`.`estimatetime` AS `estimatetime`,
+    `st`.`duration` AS `duration`,
+    `st`.`status` AS `status`,
+    `st`.`couleur` AS `couleur`,
+    `st`.`datetime` AS `datetime`,
+    `st`.`difftime` AS `difftime`,
+    `st`.`idstatusposdetail` AS `idstatusposdetail`,
+    `st`.`trip_start_time` AS `trip_start_time`,
+    `st`.`pourcentage` AS `pourcentage`,
+    `st`.`idstatusparameter` AS `idstatusparameter`
 	from suivivehicle_laststatus st where st.status like 'Late' or st.status like 'Risky' ;
+
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `suiviVehicule_recordtrajet` AS
