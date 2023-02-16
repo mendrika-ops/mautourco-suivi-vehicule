@@ -113,11 +113,8 @@ def parameter_update_request(request,id):
         if request.method == 'POST': 
             param = ParameterForm(request.POST)
             if param.is_valid() :
-                if param.isExist(): 
-                    raise Exception("Object already existed")
-                else:
-                    param.update(parameter)
-                    parameter = services().get_liste_parameter_byId(id)
+                param.update(parameter)
+                parameter = services().get_liste_parameter_byId(id)
         param = ParameterForm(instance=parameter) 
     except Exception as e:
         messages.error(request, e)
