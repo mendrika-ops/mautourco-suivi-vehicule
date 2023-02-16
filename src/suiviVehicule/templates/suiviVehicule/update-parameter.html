@@ -1,0 +1,73 @@
+{% extends "suiviVehicule/template.html" %}
+{% block content %}
+<div class="main">    
+  <div class="list">
+      <div class="title-rec row">
+          <div class="col-md-1 icon ">
+             <a href="/dashboard" ><i class="fa-regular fa-circle-left fa-lg"></i></a>
+          </div>       
+          <div class="col-md-10 title-rec-head" style="text-align: center;">
+              <h2>Update Parameter</h2>
+          </div>        
+      </div> 
+      <form method="POST">
+        {% csrf_token %}
+        <div class="row parameter">
+              <div class="update col-md-6">
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="from">Status </label>
+                        {{ form.status }}
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="from">Couleur </label>
+                        {{ form.couleur }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="drive_mobile">Min value</label>
+                        {{ form.min_percent }}
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="to">Max value</label>
+                        {{ form.max_percent }}
+                    </div>
+              </div>
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label for="vehicule">Etat </label>
+                    {{ form.desce }}
+                </div>
+                <div class="form-group col-md-5">
+                  
+              </div>
+            </div>
+            <div class="footer row">
+                <button class="right">Update <i class="fa-regular fa-pen-to-square fa-lg"></i></button>
+            </div>
+        
+        </div>
+            {% for message in messages %}
+            <!-- pop-up dialog box, containing a form -->
+                <dialog id="favDialog" style="border: none;border-radius: 0.2rem;">  
+                    <hr></hr>             
+                    <p>{{ message }}</p>
+                    <hr></hr>
+                    <div>
+                        <button id="cancel" class="btn btn-default" type="reset">Cancel</button>
+                    </div>
+                </dialog>
+
+            {% endfor %}        
+            
+        <div class="list-footer">
+          <!--  <a href="/record/listes?page={{ load_value }}" class="btn" >
+                <button name="loadmore" value="" >Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
+            </a>-->
+        </div>
+      </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -8,7 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db import connection
 from django.forms import ModelForm
 
-from suiviVehicule.models import User, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcomment
+from suiviVehicule.models import User, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcomment, Statusparameter
 from suiviVehicule.services import services
 from datetime import datetime
 
@@ -23,6 +23,10 @@ list_statut = [
     ('Risky', 'Risky'),
     ('Terminated', 'Terminated'),
     ('Cancel', 'Cancel')
+]
+list_active = [
+    ('1', 'Active'),
+    ('0', 'Desactivate')
 ]
 
 class SigninForm(ModelForm):
@@ -133,4 +137,30 @@ class CommentFrom(ModelForm):
             record.save()
     def checkexist(self):
         return Recordcomment.objects.filter(id_trip=self.cleaned_data['id_trip']).exists()
+    
 
+class ParameterForm(ModelForm):
+    status = forms.CharField(required=True, label='Status', widget=forms.TextInput(
+                              attrs={'class': "form-control",'readonly':'True'}))
+    min_percent  = forms.FloatField(required=True, label='Min value', widget=forms.NumberInput(
+                              attrs={'class': "form-control", 'style':"width: 100px"}))
+    max_percent = forms.FloatField(required=True, label='Max value', widget=forms.NumberInput(
+                              attrs={'class': "form-control", 'style':"width: 100px"}))
+    couleur = forms.CharField(required=False, label='Status', widget=forms.TextInput(
+                              attrs={'class': "form-control"}))
+    desce = forms.CharField(required=True, label='Etat', widget=forms.Select(choices=list_active, 
+                              attrs={'class': "form-control"}))
+    
+    class Meta:
+        model = Statusparameter
+        fields = '__all__'
+
+    def update(self,parameter):
+        parameter.status = self.cleaned_data['status']
+        parameter.min_percent = self.cleaned_data['min_percent']
+        parameter.max_percent = self.cleaned_data['max_percent']
+        parameter.desce = self.cleaned_data['desce']
+        parameter.save()
+
+    def isExist(self):
+        return Statusparameter.objects.filter(status=self.cleaned_data['status']).exists()

@@ -93,10 +93,9 @@ class services():
             date_time = currentdate.strftime("%d %B %Y %H:%M:%S")
             status_detail = self.get_position_lat_long(data.uid, date_time)
             file = self.get_direction(trajet.PickUp_H_Pos, status_detail.coordonnee)
+            setattr(data, 'id', idstatusdetail)
             setattr(data, 'daty_time', currentdate)
-            setattr(status_detail, 'duration', file["duration"])
-            print("paaaainnnnnnnt", idstatusdetail)
-            print("paaaainnnnnnnt idd", status_detail.id)
+            setattr(data, 'duration', file["duration"])
             data.save()
         except Exception as e:
             raise e
@@ -168,7 +167,7 @@ class services():
         data = []
         couleur = []
         cursor = connection.cursor()
-        req = "select sl.status , count(sl.status), sl.couleur from suiviVehicle_laststatus sl group by sl.status,sl.couleur"
+        req = "select sl.status , count(sl.status), sl.couleur from suiviVehicule_laststatuswithorder sl group by sl.status,sl.couleur"
         cursor.execute(req)
         for row in cursor:
             label.append(row[0])
@@ -220,5 +219,19 @@ class services():
         datein = datetime. strptime(date, '%Y-%m-%d')
         liste = Recordcommenttrajet.objects.filter(daterecord = datein)
         return liste
+    
+    def get_liste_parameter(self):
+        return Statusparameter().getListeParameters()
+    
+    def get_liste_parameter_byId(self, id):
+        tab = []
+        try:
+            if(id is None):
+                raise Exception("Id not found")
+            tab = Statusparameter.objects.get(id=id)
+        except Exception as e:
+            raise e
+        return tab
+    
         
     
