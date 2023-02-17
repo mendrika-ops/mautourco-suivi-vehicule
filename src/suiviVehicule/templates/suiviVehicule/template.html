@@ -24,8 +24,20 @@
             <h2>VEHICLE FLEET TRACKING</h2>
         </div>
         <div class="col-md-4 header-sign-in">
-            <h5><a href="/" ><i class="fa-solid fa-house-user"></i></a></h5>
+           <!-- Example single danger button -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   <i class="fa-solid fa-house-user"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" >
+                <a class="dropdown-item" href="/dashboard">Dashboard</a>
+                <a class="dropdown-item" href="/parameter/list">Configuration</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/">Deconnexion</a>
+                </div>
+            </div>    
         </div>
+    
     </div>
     <div id="bg-spinner">
         <div id="position-spinner">
