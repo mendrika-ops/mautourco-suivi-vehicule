@@ -79,8 +79,9 @@ from
 join `suiviVehicule_statusposdetail` `su` on
     ((`stc`.`Uid` = `su`.`uid`)));
 
-create or replace
-algorithm = UNDEFINED view `suivivehicle_laststatus` as
+
+CREATE OR REPLACE
+ALGORITHM = UNDEFINED VIEW `suivivehicle_laststatus` AS
 select
     `su`.`uid` AS `Uid`,
     `stc`.`vehicleno` AS `vehicleno`,
@@ -92,7 +93,7 @@ select
     `stc`.`id_trip` AS `id_trip`,
     `stc`.`trip_no` AS `trip_no`,
     `stc`.`trip_start_date` AS `trip_start_date`,
-    addtime(`stc`.`pick_up_time`, '-01:00:00') AS `pick_up_time`,
+    `stc`.`pick_up_time` AS `pick_up_time`,
     `stc`.`PickUp_H_Pos` AS `PickUp_H_Pos`,
     `su`.`coordonnee` AS `PickEnd_H_Pos`,
     addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)) AS `estimatetime`,
@@ -103,7 +104,7 @@ select
     timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')) AS `difftime`,
     `su`.`id` AS `idstatusposdetail`,
     `stc`.`trip_start_time` AS `trip_start_time`,
-    ((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100) AS `pourcentage`,
+    ((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(`stc`.`pick_up_time`, `stc`.`trip_start_time`))) * 100) AS `pourcentage`,
     `spa`.`id` AS `idstatusparameter`
 from
     ((`suiviVehicule_trajetcoordonneesummary` `stc`
@@ -111,8 +112,9 @@ join `suiviVehicule_statusposdetail` `su` on
     (((`stc`.`id_trip` = `su`.`id_trip`)
         and (`stc`.`Uid` = `su`.`uid`))))
 join `suiviVehicule_statusparameter` `spa` on
-    (((((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100) >= `spa`.`min_percent`)
-        and (`spa`.`max_percent` > ((time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(addtime(`stc`.`pick_up_time`, '-01:00:00'), `stc`.`trip_start_time`))) * 100)))))
+    (((((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(`stc`.`pick_up_time`, `stc`.`trip_start_time`))) * 100) >= `spa`.`min_percent`)
+        and (`spa`.`max_percent` > ((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(`stc`.`pick_up_time`, `stc`.`trip_start_time`))) * 100))
+            and (`spa`.`desce` = 1))))
 where
     ((`su`.`idmere_id` = (
     select
@@ -121,12 +123,16 @@ where
         `suiviVehicule_statuspos` `ss`))
     and (str_to_date(`stc`.`trip_start_date`,
     '%m/%d/%Y') = curdate())
-     and (`stc`.`pick_up_time` > `stc`.`trip_start_time`)       
-     and `stc`.`id_trip` not in (select svr.id_trip from suiviVehicule_recordcomment svr))
+        and (`stc`.`pick_up_time` > `stc`.`trip_start_time`)
+            and `stc`.`id_trip` in (
+            select
+                `svr`.`id_trip`
+            from
+                `suiviVehicule_recordcomment` `svr`) is false)
 order by
     `spa`.`id`,
     `stc`.`trip_start_date` desc,
-    addtime(`stc`.`pick_up_time`, '-01:00:00');
+    `stc`.`pick_up_time`;
 
 
 
@@ -180,3 +186,20 @@ from
     (`suiviVehicule_recordcomment` `svr`
 join `suiviVehicule_trajetcoordonnee` `svt` on
     ((`svr`.`id_trip` = `svt`.`id_trip`)));
+
+
+
+CREATE OR REPLACE
+ALGORITHM = UNDEFINED VIEW `suiviVehicule_statusparameterlib` AS
+select
+    `svs`.`id` AS `id`,
+    `svs`.`status` AS `status`,
+    `svs`.`min_percent` AS `min_percent`,
+    `svs`.`max_percent` AS `max_percent`,
+    `svs`.`couleur` AS `couleur`,
+    (case
+        when (`svs`.`desce` = 0) then 'Disable'
+        else 'Enable'
+    end) AS `desce`
+from
+    `suiviVehicule_statusparameter` `svs`;

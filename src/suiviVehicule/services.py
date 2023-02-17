@@ -3,7 +3,7 @@ import requests
 from django.db import connection
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Statusparameter, Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
+from suiviVehicule.models import Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
 from datetime import datetime
 
 
@@ -219,7 +219,7 @@ class services():
         return liste
     
     def get_liste_parameter(self):
-        return Statusparameter().getListeParameters()
+        return Statusparameterlib().getListeParameters()
     
     def get_liste_parameter_byId(self, id):
         tab = []

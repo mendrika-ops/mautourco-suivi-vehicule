@@ -147,7 +147,7 @@ class ParameterForm(ModelForm):
     max_percent = forms.FloatField(required=True, label='Max value', widget=forms.NumberInput(
                               attrs={'class': "form-control", 'style':"width: 100px"}))
     couleur = forms.CharField(required=False, label='Status', widget=forms.TextInput(
-                              attrs={'class': "form-control"}))
+                              attrs={'type':"color", 'class': "form-control"}))
     desce = forms.CharField(required=True, label='Etat', widget=forms.Select(choices=list_active, 
                               attrs={'class': "form-control"}))
     
@@ -160,6 +160,7 @@ class ParameterForm(ModelForm):
         parameter.min_percent = self.cleaned_data['min_percent']
         parameter.max_percent = self.cleaned_data['max_percent']
         parameter.desce = self.cleaned_data['desce']
+        parameter.couleur = self.cleaned_data['couleur']
         parameter.save()
 
     def isExist(self):
