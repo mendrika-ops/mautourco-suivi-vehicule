@@ -173,8 +173,6 @@ class services():
             label.append(row[0])
             data.append(row[1])
             couleur.append(row[2])
-        if len(data) == 0:
-            raise Exception(" Table or Data not found ")
         return {
             "label": label,
             "data": data,
