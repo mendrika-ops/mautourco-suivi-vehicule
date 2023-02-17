@@ -63,10 +63,11 @@ def dashboard_request(request):
        
     form = setForm(request)
     data_list = services().get_data(form, load_value)
+    data_search = services().get_new_data()
     record = CommentFrom(request.GET)
     refresh = services().get_last_refresh()
     chart = services().data_chart(data_list)
-    return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value, "record": record, "cron_minute":settings.JOB_MINUTE})
+    return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "data_auto": data_search, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value, "record": record, "cron_minute":settings.JOB_MINUTE})
 
 
 def googlemap_request(request, pos):
@@ -115,6 +116,7 @@ def parameter_update_request(request,id):
             if param.is_valid() :
                 param.update(parameter)
                 parameter = services().get_liste_parameter_byId(id)
+                return redirect("/parameter/list")
         param = ParameterForm(instance=parameter) 
     except Exception as e:
         messages.error(request, e)
