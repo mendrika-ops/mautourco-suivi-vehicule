@@ -112,10 +112,20 @@ class Statusparameter(models.Model):
     max_percent = models.FloatField()
     couleur = models.CharField(max_length=50)
     desce = models.CharField(max_length=50, null=True)
-
+    
+class Statusparameterlib(models.Model):
+    id = models.indexes
+    status = models.CharField(max_length=50)
+    min_percent = models.FloatField()
+    max_percent = models.FloatField()
+    couleur = models.CharField(max_length=50)
+    desce = models.CharField(max_length=50, null=True)
+    class Meta:
+        managed = False
+        db_table = 'suiviVehicule_statusparameterlib'
+        
     def getListeParameters(self):
-
-        return Statusparameter.objects.all().order_by('id')
+        return Statusparameterlib.objects.all().order_by('id')
 
 class Recordcomment(models.Model):
     id = models.indexes
