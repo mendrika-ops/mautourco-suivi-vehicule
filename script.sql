@@ -190,7 +190,8 @@ select
     `svr`.`comment` AS `comment`,
     date_format(`svr`.`datetime`, '%Y-%m-%d') AS `daterecord`,
     `svr`.`etat` AS `etat`,
-    `svr`.`id` AS `id`
+    `svr`.`id` AS `id`,
+    `svt`.`driver_mobile_number` AS `driver_mobile_number`
 from
     ((`suiviVehicule_recordcomment` `svr`
 join `suiviVehicule_trajetcoordonnee` `svt` on

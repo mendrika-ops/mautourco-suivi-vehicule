@@ -150,7 +150,8 @@ class Recordcommenttrajet(models.Model):
     couleur = models.CharField(max_length=100, null=True)
     daterecord = models.DateField()
     etat = models.IntegerField(default=0)
-
+    driver_mobile_number = models.CharField(max_length=50)
+    
     class Meta:
         managed = False
         db_table = 'suiviVehicule_recordtrajet'
