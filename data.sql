@@ -321,3 +321,16 @@ INSERT INTO suiviVehicule_statusparameter (status,min_percent,max_percent,couleu
 	 ('On time',20.0,100.0,'rgba(30,132,127,1.0)',NULL),
 	  ('Terminated',0.0,0.0,'rgba(196,196,196,1.0)',NULL),
 	   ('Late',-100.0,0.0,'rgba(255,110,64,1.0)',NULL);
+
+UPDATE suiviVehicule_statusparameter
+SET status='Risky', min_percent=0.0, max_percent=15.0, couleur='#d8db33', desce='1'
+WHERE id=1;
+UPDATE suiviVehicule_statusparameter
+SET status='On Track', min_percent=26.0, max_percent=1000.0, couleur='rgba(30,132,127,1.0)', desce='1'
+WHERE id=2;
+UPDATE suiviVehicule_statusparameter
+SET status='Off Track', min_percent=-1000.0, max_percent=0.0, couleur='rgba(196,196,196,1.0)', desce='1'
+WHERE id=3;
+UPDATE suiviVehicule_statusparameter
+SET status='Late', min_percent=16.0, max_percent=25.0, couleur='#e3544a', desce='1'
+WHERE id=4;

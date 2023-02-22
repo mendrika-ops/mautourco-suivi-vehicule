@@ -133,6 +133,7 @@ class Recordcomment(models.Model):
     comment = models.TextField(max_length=500)
     datetime = models.DateTimeField()
     etat = models.IntegerField(default=0)
+    
 
 class Recordcommenttrajet(models.Model):
     id = models.indexes

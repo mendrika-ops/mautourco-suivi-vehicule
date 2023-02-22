@@ -133,15 +133,14 @@ class CommentFrom(ModelForm):
             record.comment = self.cleaned_data['comment']
             record.id_trip = self.cleaned_data['id_trip']
             record.datetime = datetime.now() 
-            record.etat = 1
+            record.etat = 0
             record.save()
     def checkexist(self):
-        return Recordcomment.objects.filter(id_trip=self.cleaned_data['id_trip']).exists()
+        return Recordcomment.objects.filter(id_trip=self.cleaned_data['id_trip'],etat=0).exists()
     
-
 class ParameterForm(ModelForm):
     status = forms.CharField(required=True, label='Status', widget=forms.TextInput(
-                              attrs={'class': "form-control",'readonly':'True'}))
+                              attrs={'class': "form-control"}))
     min_percent  = forms.FloatField(required=True, label='Min value', widget=forms.NumberInput(
                               attrs={'class': "form-control", 'style':"width: 100px"}))
     max_percent = forms.FloatField(required=True, label='Max value', widget=forms.NumberInput(

@@ -3,7 +3,7 @@ import requests
 from django.db import connection
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
+from suiviVehicule.models import Recordcomment, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
 from datetime import datetime
 
 
@@ -122,7 +122,8 @@ class services():
             setattr(status_detail, 'daty_time', now)
             setattr(status_detail, 'id_trip', row.id_trip)
             status_detail.save()
-
+            if isinstance(row, TrajetcoordonneeSamm):
+                self.create_comment(row.id_trip,row.idstatusparameter, now)
         return status
 
     def get_last_refresh(self):
@@ -159,6 +160,7 @@ class services():
             setattr(trajet, 'duration', str(trajet.duration))
             trajetcoord.append(trajet)
         return trajetcoord
+    
     def get_new_data(self):
         return TrajetcoordonneeWithUid.objects.all().order_by('-trip_start_date', 'pick_up_time')
       
@@ -178,6 +180,30 @@ class services():
             "data": data,
             "couleur": couleur
         }
+    def check_comment(self, id_trip):
+        return Recordcomment.objects.filter(id_trip=id_trip)
+    def boolean_parameter_for_log(self, idstatus):
+        return Statusparameter.objects.filter(id=idstatus).exclude(status__icontains="On Track").exists()
+    def create_comment(self, id_trip, idstatus, now):
+        try:
+            #print("BOOOLEANN ", self.boolean_parameter_for_log(idstatus))
+            if self.boolean_parameter_for_log(idstatus) is True:
+                check = self.check_comment(id_trip) 
+                #print("length for comment ", len(check))
+                if len(check) > 0:
+                    if check[0].etat != 0: 
+                        check[0].etat = idstatus
+                        check[0].datetime = now
+                        check[0].save()
+                else:
+                    record = Recordcomment()
+                    record.comment = ""
+                    record.id_trip = id_trip
+                    record.datetime = now 
+                    record.etat = idstatus
+                    record.save()
+        except Exception as e:
+            raise e
 
     def data_chart_calcule(self, data):
         try:
