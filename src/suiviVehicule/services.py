@@ -88,7 +88,7 @@ class services():
     def set_one_refresh(self, idstatusdetail, id):
         try:
             data = Statusposdetail.objects.get(pk=idstatusdetail)
-            trajet = Trajetcoordonnee.objects.get(pk=id)
+            trajet = TrajetcoordonneeSamm.objects.get(pk=id)
             currentdate = datetime.now()
             date_time = currentdate.strftime("%d %B %Y %H:%M:%S")
             status_detail = self.get_position_lat_long(data.uid, date_time)
@@ -97,6 +97,7 @@ class services():
             setattr(data, 'daty_time', currentdate)
             setattr(data, 'duration', file["duration"])
             data.save()
+            self.create_comment(data.id_trip,trajet.idstatusparameter, currentdate)
         except Exception as e:
             raise e
 
@@ -186,10 +187,10 @@ class services():
         return Statusparameter.objects.filter(id=idstatus).exclude(status__icontains="On Track").exists()
     def create_comment(self, id_trip, idstatus, now):
         try:
-            #print("BOOOLEANN ", self.boolean_parameter_for_log(idstatus))
+            print("BOOOLEANN ", self.boolean_parameter_for_log(idstatus))
             if self.boolean_parameter_for_log(idstatus) is True:
                 check = self.check_comment(id_trip) 
-                #print("length for comment ", len(check))
+                print("length for comment ", len(check))
                 if len(check) > 0:
                     if check[0].etat != 0: 
                         check[0].etat = idstatus

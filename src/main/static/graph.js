@@ -5,7 +5,9 @@ var yValues = graph['data'];
 var click = true;
 var barColors = graph['couleur'];
 
-new Chart("myChart", {
+var canvasP = document.getElementById("myChart");
+
+let myChart = new Chart("myChart", {
     type: "pie",
     data: {
         labels: xValues,
@@ -53,4 +55,12 @@ function clickIcon(){
         click = true;
     }
     
+}
+
+canvasP.onclick = function(e) {
+   var slice = myChart.getElementAtEvent(e);
+   if (!slice.length) return; 
+   console.log(slice[0]._model.value)
+   let label = slice[0]._model.label;
+   location.href = "/dashboard?driver_oname=&FromPlace=&driver_mobile_number=&ToPlace=&vehicleno=&status="+label+"&id_trip=&trip_no=";
 }
