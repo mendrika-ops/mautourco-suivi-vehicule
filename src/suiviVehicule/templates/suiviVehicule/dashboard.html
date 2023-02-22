@@ -116,7 +116,7 @@
                         <th scope="col" style="width: 100px;">
                             Pick up time</th>
                         <th scope="col">Actual time</th>
-                        <th scope="col" style="width: 100px;">Duration in minutes</th>
+                        <th scope="col" style="width: 100px;">Duration time</th>
                         <th scope="col" style="width: 100px;">ETA time</th>
                         <th scope="col" style="width: 100px;">
                             Status</th>
@@ -270,8 +270,6 @@
 });
 </script>
 <script>
-    console.log("Log ", "{{ last_refresh|date:'Y-m-d H:i:s'}}")
-    console.log("Minute ", {{ cron_minute }})
     var countDownDate = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}").getTime();
     var x = setInterval(function() {
         var now = new Date().getTime();
