@@ -99,9 +99,10 @@ def comment_request(request):
 
 def log_request(request):
     records = []
-    date = request.GET.get('date')
+    datefrom = request.GET.get('datefrom')
+    dateto = request.GET.get('dateto')
     try:
-        records = services().get_listes_record(date)
+        records = services().get_listes_record(datefrom ,dateto)
        
     except Exception as e:
         messages.error(request, e)
