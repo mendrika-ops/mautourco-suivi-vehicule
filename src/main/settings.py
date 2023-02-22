@@ -136,7 +136,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 APPEND_SLASH = False
 
 USERIDGUID = '3f55ba57-8a28-41cc-917d-718b9a754410'
-SESSIONID = 'b57dded4-8b57-49bb-b461-8fc5ec173dea'
+SESSIONID = '78fba00d-d658-4d28-82e9-2c5f62b9697c'
 JOB_MINUTE = 5
 
 CRONJOBS = [
