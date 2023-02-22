@@ -102,6 +102,9 @@ select
     `spa`.`couleur` AS `couleur`,
     `su`.`daty_time` AS `datetime`,
     timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')) AS `difftime`,
+    (`spa`.`min_percent` * 60) AS `spa.min_percent*60`,
+    (`spa`.`max_percent` * 60) AS `spa.max_percent*60`,
+    time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) AS `sec`,
     `su`.`id` AS `idstatusposdetail`,
     `stc`.`trip_start_time` AS `trip_start_time`,
     ((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(`stc`.`pick_up_time`, `stc`.`trip_start_time`))) * 100) AS `pourcentage`,
@@ -112,9 +115,8 @@ join `suiviVehicule_statusposdetail` `su` on
     (((`stc`.`id_trip` = `su`.`id_trip`)
         and (`stc`.`Uid` = `su`.`uid`))))
 join `suiviVehicule_statusparameter` `spa` on
-    (((((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(`stc`.`pick_up_time`, `stc`.`trip_start_time`))) * 100) >= `spa`.`min_percent`)
-        and (`spa`.`max_percent` > ((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(`stc`.`pick_up_time`, `stc`.`trip_start_time`))) * 100))
-            and (`spa`.`desce` = 1))))
+    ((((`spa`.`min_percent` * 60) < time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))))
+        and ((`spa`.`max_percent` * 60) > time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')))))))
 where
     ((`su`.`idmere_id` = (
     select
@@ -128,12 +130,13 @@ where
             select
                 `svr`.`id_trip`
             from
-                `suiviVehicule_recordcomment` `svr`) is false)
+                `suiviVehicule_recordcomment` `svr`
+            where
+                (`svr`.`etat` = 0)) is false)
 order by
     `spa`.`id`,
     `stc`.`trip_start_date` desc,
     `stc`.`pick_up_time`;
-
 
 
 CREATE OR REPLACE
@@ -162,7 +165,7 @@ select
     `st`.`trip_start_time` AS `trip_start_time`,
     `st`.`pourcentage` AS `pourcentage`,
     `st`.`idstatusparameter` AS `idstatusparameter`
-	from suivivehicle_laststatus st where st.status like 'Late' or st.status like 'Risky' ;
+	from suivivehicle_laststatus st;
 
 
 CREATE OR REPLACE
@@ -176,17 +179,24 @@ select
     `svt`.`trip_start_date` AS `trip_start_date`,
     `svt`.`trip_start_time` AS `trip_start_time`,
     `svt`.`pick_up_time` AS `pick_up_time`,
-     'Cancel' AS `status`,
-     'rgba(30,61,89,1.0)' AS `couleur`,
+    (case
+        when (`svr`.`etat` = 0) then 'Cancel'
+        else `svs`.`status`
+    end) AS `status`,
+    (case
+        when (`svr`.`etat` = 0) then 'rgba(30,61,89,1.0)'
+        else `svs`.`couleur`
+    end) AS `couleur`,
     `svr`.`comment` AS `comment`,
     date_format(`svr`.`datetime`, '%Y-%m-%d') AS `daterecord`,
     `svr`.`etat` AS `etat`,
     `svr`.`id` AS `id`
 from
-    (`suiviVehicule_recordcomment` `svr`
+    ((`suiviVehicule_recordcomment` `svr`
 join `suiviVehicule_trajetcoordonnee` `svt` on
-    ((`svr`.`id_trip` = `svt`.`id_trip`)));
-
+    ((`svr`.`id_trip` = `svt`.`id_trip`)))
+left join `suiviVehicule_statusparameter` `svs` on
+    ((`svs`.`id` = `svr`.`etat`)));
 
 
 CREATE OR REPLACE

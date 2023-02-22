@@ -105,19 +105,21 @@
         <div class="row table-responsive">
             <table class="table table-borderless col-md-12">
                 <thead>
-                <tr>
-                    <th scope="col">Driver name</th>
-                    <th scope="col">Driver mobile</th>
-                    <th scope="col">From</th>
-                    <th scope="col">To</th>
-                    <th scope="col">Vehicule N°</th>
-                    <th scope="col">Start time</th>
-                    <th scope="col" style="width: 100px;">
-                        Pick up time</th>
-                    <th scope="col" style="width: 100px;">
-                        Status</th>
-                    <th scope="col" style="width: 90px;"></th>
-                </tr>
+                    <tr>
+                        <th scope="col">Driver name</th>
+                        <th scope="col">Driver mobile</th>
+                        <th scope="col">From</th>
+                        <th scope="col">To</th>
+                        <th scope="col">Vehicule N°</th>
+                        <th scope="col" style="width: 100px;">
+                            Pick up time</th>
+                        <th scope="col">Actual time</th>
+                        <th scope="col" style="width: 100px;">Duration in minutes</th>
+                        <th scope="col" style="width: 100px;">ETA time</th>
+                        <th scope="col" style="width: 100px;">
+                            Status</th>
+                        <th scope="col" style="width: 90px;"></th>
+                    </tr>
                 </thead>
                 <tbody>
                 {% for item in data_list %}
@@ -127,8 +129,15 @@
                     <td>{{ item.FromPlace }}</td>
                     <td>{{ item.ToPlace }}</td>
                     <td>{{ item.vehicleno }}</td>
-                    <td>{{ item.trip_start_time |date:"H:i:s " }}</td>
                     <td>{{ item.pick_up_time|date:"H:i:s "}}</td>
+                    <td>{{ item.datetime |date:"H:i:s " }}</td>
+                    <td style="width: 100px;width: 90px;
+    overflow: hidden;
+    height: 30px;
+    display: flex;
+    flex-wrap: nowrap;">{{ item.duration }}</td>
+                    <td>{{ item.estimatetime|date:"H:i:s " }}</td>
+                  
                     <td class="list-action">
                         <button class="btn btn-outline-success action" style="color:white;background-color:{{ item.couleur }}">{{ item.status }} </button>
                     </td>
