@@ -33,13 +33,12 @@
     </div>
 </form>
 
-
 <form method="GET">
     <div class="row collapse multi-collapse" id="multiCollapseExample1">
 
             <div class="search col-md-6 ">
                 <div class="form-row">
-                    <div class="form-group col-md-5">
+                    <div class="form-group col-md-5 autocomplete">
                         <label for="from">Driver </label>
                         {{ form_search.driver_oname }}
                     </div>
@@ -207,7 +206,7 @@
     </div>
     
   </div>
-  
+<script src="{% static './autocomplete.js' %}"></script>
 <script>
     jQuery(function($){
         $(document).ajaxSend(function(){
@@ -252,18 +251,6 @@
     });
 </script>
 <script>
-    $(function () {
-        var availableTags = [
-        {% for item in data_auto %}
-            "{{item.driver_oname}}",
-        {% endfor %}
-        ];
-        $("#driver").autocomplete({
-            source: availableTags
-        });
-    } );
-</script>
-<script>
     $(document).on("click", ".btnannulation", function () {
     var trip_Id = $(this).data('id');
     $(".modal-body #id_trip").val(trip_Id);
@@ -281,5 +268,13 @@
             countDownDate = now
         }
     }, 1000);
+</script>
+<script>
+    var availableTags = [
+      {% for item in data_auto %}
+          "{{item.driver_oname}}",
+      {% endfor %}
+      ];
+    autocomplete(document.getElementById("driver"), availableTags);
 </script>
 {% endblock %}
