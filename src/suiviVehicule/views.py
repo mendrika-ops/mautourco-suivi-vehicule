@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import json
 from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom, ParameterForm
+from suiviVehicule.models import TrajetcoordonneeSamm
 from suiviVehicule.services import services
 from django.conf import settings
 
@@ -58,6 +59,8 @@ def setForm(request):
 def dashboard_request(request):
     data_list = []
     load_value = 10
+    is_disable = ""
+    opacity = ""
     if request.GET.get("page") is not None and request.GET.get("page").isnumeric() == True:
         load_value = int(request.GET.get("page")) + 10
        
@@ -67,7 +70,22 @@ def dashboard_request(request):
     record = CommentFrom(request.GET)
     refresh = services().get_last_refresh()
     chart = services().data_chart(data_list)
-    return render(request, "suiviVehicule/dashboard.html",context={"data_list": data_list, "data_auto": data_search, "last_refresh": refresh, "chart": json.dumps(chart), "form_search": form, "load_value": load_value, "record": record, "cron_minute":settings.JOB_MINUTE})
+    count = services().getall_data_count()
+    print("lennn ",count, load_value)
+    if load_value >= count:
+        is_disable = "disabled"
+        opacity = "opacity: 0.3"
+    return render(request, "suiviVehicule/dashboard.html",
+                  context={"data_list": data_list, 
+                           "data_auto": data_search, 
+                           "last_refresh": refresh, 
+                           "chart": json.dumps(chart), 
+                           "form_search": form, 
+                           "load_value": load_value, 
+                           "record": record, 
+                           "cron_minute":settings.JOB_MINUTE,
+                           "is_disable": is_disable,
+                           "opacity": opacity})
 
 
 def googlemap_request(request, pos):

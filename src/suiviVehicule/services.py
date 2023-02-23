@@ -181,10 +181,16 @@ class services():
             "data": data,
             "couleur": couleur
         }
+    
     def check_comment(self, id_trip):
         return Recordcomment.objects.filter(id_trip=id_trip)
+    
     def boolean_parameter_for_log(self, idstatus):
         return Statusparameter.objects.filter(id=idstatus).exclude(status__icontains="On Track").exists()
+    
+    def getall_data_count(self):
+        return TrajetcoordonneeSamm.objects.all().count()
+    
     def create_comment(self, id_trip, idstatus, now):
         try:
             print("BOOOLEANN ", self.boolean_parameter_for_log(idstatus))
