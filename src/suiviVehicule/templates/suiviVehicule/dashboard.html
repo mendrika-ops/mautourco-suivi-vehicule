@@ -143,11 +143,11 @@
                         <button class="btn btn-outline-success action" style="color:white;background-color:{{ item.couleur }}">{{ item.status }} </button>
                     </td>
                     <td class="list-action">
-                        <a id="btn-send-2" href="/onerefresh/{{ item.idstatusposdetail }}/{{ item.id }}" class="outline-btn btn-send" ><img  class="svg" src="{% static '/reset.svg' %}" alt=""></a>
-                        <a href="https://www.google.com/maps/dir/{{ item.PickUp_H_Pos }}/{{ item.PickEnd_H_Pos }}" target="_blank" class="outline-btn"><img class="svg" target="_blank"
+                        <a id="btn-send-2" href="/onerefresh/{{ item.idstatusposdetail }}/{{ item.id }}" class="outline-btn btn-send" data-toggle="tooltip" title="Refresh trip" ><img  class="svg" src="{% static '/reset.svg' %}" alt=""></a>
+                        <a href="https://www.google.com/maps/dir/{{ item.PickUp_H_Pos }}/{{ item.PickEnd_H_Pos }}" target="_blank" class="outline-btn" data-toggle="tooltip" title="Google map"><img class="svg" target="_blank"
                                                                                         src="{% static '/map.svg' %}"
                                                                                         alt=""></a>
-                        <a href="" class="btnannulation outline-btn" data-id="{{ item.id_trip }}" data-toggle="modal" data-target="#myModal" ><img  class="svg" src="{% static '/garbage.svg' %}" alt=""></a>                                                
+                        <a href="" class="btnannulation outline-btn" data-id="{{ item.id_trip }}" data-toggle="modal" data-target="#myModal" data-toggle="tooltip"  title="Cancel trip"><img  class="svg" src="{% static '/garbage.svg' %}" alt=""></a>                                                
                     </td>
                 </tr>
                 {% endfor %}
