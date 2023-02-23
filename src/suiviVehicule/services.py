@@ -249,7 +249,7 @@ class services():
     def get_listes_record(self,datefrom,dateto):
         dateinfrom = datetime. strptime(datefrom, '%Y-%m-%d')
         dateinto = datetime. strptime(dateto, '%Y-%m-%d')
-        liste = Recordcommenttrajet.objects.filter(daterecord__range = [dateinfrom,dateinto])
+        liste = Recordcommenttrajet.objects.filter(daterecord__range = [dateinfrom,dateinto]).order_by('-daterecord')
         return liste
     
     def get_liste_parameter(self):

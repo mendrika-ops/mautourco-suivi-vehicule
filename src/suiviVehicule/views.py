@@ -71,7 +71,6 @@ def dashboard_request(request):
     refresh = services().get_last_refresh()
     chart = services().data_chart(data_list)
     count = services().getall_data_count()
-    print("lennn ",count, load_value)
     if load_value >= count:
         is_disable = "disabled"
         opacity = "opacity: 0.3"
