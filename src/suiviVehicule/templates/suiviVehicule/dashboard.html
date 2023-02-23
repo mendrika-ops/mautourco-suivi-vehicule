@@ -154,10 +154,11 @@
                 </tbody>
             </table>
         </div>   
-        <div class="list-footer">
-            <a href="/dashboard?page={{ load_value }}" class="btn" >
-                <button name="loadmore" value="" {{is_disable}} style="{{opacity}}">Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
-            </a>
+        <div class="list-footer">            
+            <form action="/dashboard" method="get">
+                <input type="hidden" name="page" value="{{ load_value }}">
+                <button type="submit" value="" {{is_disable}} style="{{opacity}}">Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
+            </form>
         </div>
     </div>
 </div>
