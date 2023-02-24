@@ -26,7 +26,7 @@
             </div>
        
         <div class="footer row">
-            <button class="left " name="reset">Reset</button>
+            <a href="/dashboard?reset" class="btn left">Reset</a>
             <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
         </div>
@@ -115,15 +115,16 @@
                 <thead>
                     <tr>
                         <th scope="col">Driver name</th>
-                        <th scope="col">Driver mobile</th>
-                        <th scope="col">From</th>
-                        <th scope="col">To</th>
                         <th scope="col">Vehicule N°</th>
+                        <th scope="col">Driver Mob N°</th>
+                        <th scope="col">Pickup Place</th>
+                        <th scope="col">Destination</th>
+                        <th scope="col">Current Position</th>
                         <th scope="col" style="width: 100px;">
                             Pick up time</th>
-                        <th scope="col" style="width: 100px;">Trip duration effectuate</th>
-                        <th scope="col" style="width: 100px;">ETA time</th>
-                        <th scope="col" style="width: 100px;">Duration remains</th>
+                        <th scope="col" style="width: 100px;" data-toggle="tooltip" title="Trip duration from current position to pickup place" >Trip duration (minutes)</th>
+                        <th scope="col" style="width: 100px;" data-toggle="tooltip" title="Estimate time to reach pickup place from current position" >ETA time</th>
+                        <th scope="col" style="width: 100px;" data-toggle="tooltip" title="Difference between pickup time and ETA Time" >Difference (minutes)</th>
                         <th scope="col" style="width: 100px;">
                             Status</th>
                         <th scope="col" style="width: 90px;"></th>
@@ -133,10 +134,11 @@
                 {% for item in data_list %}
                 <tr>
                     <td>{{ item.driver_oname }}</td>
+                    <td>{{ item.vehicleno }}</td>
                     <td>{{ item.driver_mobile_number }}</td>
                     <td>{{ item.FromPlace }}</td>
                     <td>{{ item.ToPlace }}</td>
-                    <td>{{ item.vehicleno }}</td>
+                    <td>{{ item.PickEnd_H_Pos }}</td>
                     <td>{{ item.pick_up_time|date:"H:i:s "}}</td>
                     <td style="text-align: center;">{{ item.difftimestart |floatformat:0}}</td>
                     <td>{{ item.estimatetime|date:"H:i:s " }}</td>
@@ -279,11 +281,23 @@
     }, 1000);
 </script>
 <script>
-    var availableTags = [
+    /*var availableTags = [
       {% for item in data_auto %}
           "{{item.driver_oname}}",
       {% endfor %}
       ];
-    autocomplete(document.getElementById("driver"), availableTags);
+    autocomplete(document.getElementById("driver"), availableTags);*/
+</script>
+<script>
+    $(function () {
+        var availableTags = [
+        {% for item in data_auto %}
+            "{{item.driver_oname}}",
+        {% endfor %}
+        ];
+        $("#driver").autocomplete({
+            source: availableTags
+        });
+    } );
 </script>
 {% endblock %}
