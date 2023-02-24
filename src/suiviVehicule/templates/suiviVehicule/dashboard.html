@@ -103,6 +103,13 @@
                 </p>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12 head">
+                <p>Actual time : 
+                    <span>{{last_refresh|time:"H:i:s"}}</span>
+                </p>
+            </div>
+        </div>
         <div class="row table-responsive">
             <table class="table table-borderless col-md-12">
                 <thead>
@@ -114,9 +121,9 @@
                         <th scope="col">Vehicule N°</th>
                         <th scope="col" style="width: 100px;">
                             Pick up time</th>
-                        <th scope="col">Actual time</th>
-                        <th scope="col" style="width: 100px;">Duration time</th>
+                        <th scope="col" style="width: 100px;">Trip duration effectuate</th>
                         <th scope="col" style="width: 100px;">ETA time</th>
+                        <th scope="col" style="width: 100px;">Duration remains</th>
                         <th scope="col" style="width: 100px;">
                             Status</th>
                         <th scope="col" style="width: 90px;"></th>
@@ -131,13 +138,9 @@
                     <td>{{ item.ToPlace }}</td>
                     <td>{{ item.vehicleno }}</td>
                     <td>{{ item.pick_up_time|date:"H:i:s "}}</td>
-                    <td>{{ item.datetime |date:"H:i:s " }}</td>
-                    <td style="width: 100px;width: 90px;
-    overflow: hidden;
-    height: 30px;
-    display: flex;
-    flex-wrap: nowrap;">{{ item.duration }}</td>
+                    <td style="text-align: center;">{{ item.difftimestart |floatformat:0}}</td>
                     <td>{{ item.estimatetime|date:"H:i:s " }}</td>
+                    <td style="text-align: center;">{{ item.difftimepickup |floatformat:0}}</td>
                   
                     <td class="list-action">
                         <button class="btn btn-outline-success action" style="color:white;background-color:{{ item.couleur }}">{{ item.status }} </button>
@@ -157,7 +160,12 @@
         <div class="list-footer">            
             <form action="/dashboard" method="get">
                 <input type="hidden" name="page" value="{{ load_value }}">
-                <button type="submit" value="" {{is_disable}} style="{{opacity}}">Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
+                {% if is_disable %}
+                    <button type="submit" value="" disabled style="opacity: 0.3">Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
+                {% else %}
+                    <button type="submit" value="" >Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
+                {% endif %}
+               
             </form>
         </div>
     </div>

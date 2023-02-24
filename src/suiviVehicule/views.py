@@ -59,7 +59,7 @@ def setForm(request):
 def dashboard_request(request):
     data_list = []
     load_value = 10
-    is_disable = ""
+    is_disable = False
     opacity = ""
     if request.GET.get("page") is not None and request.GET.get("page").isnumeric() == True:
         load_value = int(request.GET.get("page")) + 10
@@ -72,8 +72,7 @@ def dashboard_request(request):
     chart = services().data_chart(data_list)
     count = services().getall_data_count()
     if load_value >= count:
-        is_disable = "disabled"
-        opacity = "opacity: 0.3"
+        is_disable = True
     return render(request, "suiviVehicule/dashboard.html",
                   context={"data_list": data_list, 
                            "data_auto": data_search, 
@@ -83,8 +82,7 @@ def dashboard_request(request):
                            "load_value": load_value, 
                            "record": record, 
                            "cron_minute":settings.JOB_MINUTE,
-                           "is_disable": is_disable,
-                           "opacity": opacity})
+                           "is_disable": is_disable})
 
 
 def googlemap_request(request, pos):
