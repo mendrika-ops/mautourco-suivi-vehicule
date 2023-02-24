@@ -102,21 +102,19 @@ select
     `spa`.`couleur` AS `couleur`,
     `su`.`daty_time` AS `datetime`,
     timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')) AS `difftime`,
-    (`spa`.`min_percent` * 60) AS `spa.min_percent*60`,
-    (`spa`.`max_percent` * 60) AS `spa.max_percent*60`,
-    time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) AS `sec`,
     `su`.`id` AS `idstatusposdetail`,
     `stc`.`trip_start_time` AS `trip_start_time`,
     ((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(`stc`.`pick_up_time`, `stc`.`trip_start_time`))) * 100) AS `pourcentage`,
-    `spa`.`id` AS `idstatusparameter`
+    `spa`.`id` AS `idstatusparameter`,
+    TIME_TO_SEC(timediff(date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'),`stc`.`trip_start_time`))/60 as difftimestart,
+    TIME_TO_SEC(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')))/60 as difftimepickup
 from
     ((`suiviVehicule_trajetcoordonneesummary` `stc`
 join `suiviVehicule_statusposdetail` `su` on
     (((`stc`.`id_trip` = `su`.`id_trip`)
         and (`stc`.`Uid` = `su`.`uid`))))
 join `suiviVehicule_statusparameter` `spa` on
-    ((((`spa`.`min_percent` * 60) < time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))))
-        and ((`spa`.`max_percent` * 60) > time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')))))))
+     ((spa.min_percent*60) < time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) and (spa.max_percent*60) > time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')))))
 where
     ((`su`.`idmere_id` = (
     select
@@ -130,9 +128,7 @@ where
             select
                 `svr`.`id_trip`
             from
-                `suiviVehicule_recordcomment` `svr`
-            where
-                (`svr`.`etat` = 0)) is false)
+                `suiviVehicule_recordcomment` `svr` where etat=0) is false)
 order by
     `spa`.`id`,
     `stc`.`trip_start_date` desc,
