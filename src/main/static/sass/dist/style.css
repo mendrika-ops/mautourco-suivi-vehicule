@@ -102,6 +102,23 @@
 .main .search .footer .right {
   margin-left: 3rem;
 }
+
+.main .search .footer a {
+  background-color: white;
+  border-color: #1a5a9f;
+  color: #1a5a9f;
+  border: 1;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 140px;
+}
+.main .search .footer a:hover {
+  color: #f58220;
+}
+.main .search .footer a {
+  margin-left: 10px;
+}
+
 .main .dashboard #idChart {
   max-width: 200px;
   max-height: 200px;
@@ -178,6 +195,8 @@
   width: 140px;
   margin-left: 1rem;
 }
+
+
 .main .list .list-footer button:hover {
   color: #f58220;
 }
