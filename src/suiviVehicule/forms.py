@@ -17,11 +17,11 @@ list_sexe = [
     ('F', 'Feminin')
 ]
 list_statut = [
-    ('', 'Tous'),
-    ('On time', 'On time'),
-    ('Late', 'Late'),
+    ('', 'All'),
     ('Risky', 'Risky'),
-    ('Terminated', 'Terminated'),
+    ('On Track', 'On Track'),
+    ('Off Track', 'Off Track'),
+    ('Late', 'Late'),
     ('Cancel', 'Cancel')
 ]
 list_active = [
