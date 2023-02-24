@@ -120,6 +120,9 @@
   width: 140px;
   margin-left: 1rem;
 }
+.main .list .head {
+  height: 40px;
+}
 .main .list .head button:hover {
   color: #f58220;
 }
