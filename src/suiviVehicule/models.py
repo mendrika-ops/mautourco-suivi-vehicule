@@ -127,7 +127,7 @@ class Statusparameterlib(models.Model):
         db_table = 'suiviVehicule_statusparameterlib'
         
     def getListeParameters(self):
-        return Statusparameterlib.objects.all().order_by('id')
+        return Statusparameterlib.objects.all().order_by('min_percent')
 
 class Recordcomment(models.Model):
     id = models.indexes
