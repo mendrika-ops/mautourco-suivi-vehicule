@@ -71,6 +71,7 @@ def dashboard_request(request):
     refresh = services().get_last_refresh()
     chart = services().data_chart(data_list)
     count = services().getall_data_count()
+    legend = services().get_liste_parameter()
     if load_value >= count:
         is_disable = True
     return render(request, "suiviVehicule/dashboard.html",
@@ -82,7 +83,8 @@ def dashboard_request(request):
                            "load_value": load_value, 
                            "record": record, 
                            "cron_minute":settings.JOB_MINUTE,
-                           "is_disable": is_disable})
+                           "is_disable": is_disable,
+                           "legend":legend})
 
 
 def googlemap_request(request, pos):
