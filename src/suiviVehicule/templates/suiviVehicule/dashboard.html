@@ -103,11 +103,56 @@
                 </p>
             </div>
         </div>
+        {% for lg in legend %}
+                  <!--   <div class="d-inline-block legend-item">
+                        <p> <span style="list-action"><button class="btn btn-outline-success action" style="color:white;background-color:{{lg.couleur}}">{{lg.status}}</button></span> < 0min</p>
+                    </div>
+                {% endfor %}-->
+               <!-- <div class="d-inline-block legend-item">
+                    <p> <span style="list-action"><button class="btn btn-outline-success action" style="color:white;background-color:#ff0000">Off Track </button></span> < 0min</p>
+                </div>
+                <div class="d-inline-block legend-item">
+                    <p><span style="list-action"><button class="btn btn-outline-success action" style="color:white;background-color:#ffa500">Risky</button></span> 0-15min</p>
+                </div>
+                <div class="d-inline-block legend-item">
+                    <p><span style="list-action"><button class="btn btn-outline-success action" style="color:white;background-color:#ffea00">Late</button></span> 16-25min</p>
+                </div>
+                <div class="d-inline-block legend-item">
+                    <p><span style="list-action"><button class="btn btn-outline-success action" style="color:white;background-color:#3cb371">On Track</button></span> > 25min</p>
+                </div> -->
         <div class="row">
-            <div class="col-md-12 head">
+            <div class="col-md-5 head">
                 <p>Actual time : 
                     <span>{{last_refresh|time:"H:i:s"}}</span>
                 </p>
+            </div>
+            <div class="col-md-7 legend">
+                <div class="d-inline-block legend-item" >
+                    <p>Legend :</p>
+                </div>
+                {% for lg in legend %}
+                <div class="d-inline-block legend-item">
+                    {% if lg.id == 3 %}
+                    <p> <span style="color:{{lg.couleur}}">{{lg.status}} : </span> < {{lg.max_percent|floatformat:0}}min</p>
+                    {% elif lg.id == 2 %}
+                    <p> <span style="color:{{lg.couleur}}">{{lg.status}} : </span> > {{lg.min_percent|floatformat:0}}min</p>
+                    {% else %}
+                    <p> <span style="color:{{lg.couleur}}">{{lg.status}} : </span>{{lg.min_percent|floatformat:0}}-{{lg.max_percent|floatformat:0}}min</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+               <!-- <div class="d-inline-block legend-item">
+                    <p> <span style="color:#ff0000">Off Track : </span> < 0min</p>
+                </div>
+                <div class="d-inline-block legend-item">
+                    <p ><span style="color:#ffa500">Risky :</span> 0-15min</p>
+                </div>
+                <div class="d-inline-block legend-item">
+                    <p><span style="color: #ffea00">Late : </span>> 16-25min</p>
+                </div>
+                <div class="d-inline-block legend-item">
+                    <p><span style="color:#3cb371">On Track : </span> > 25min</p>
+                </div>-->
             </div>
         </div>
         <div class="row table-responsive">
