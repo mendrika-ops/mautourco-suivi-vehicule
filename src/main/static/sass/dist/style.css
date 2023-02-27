@@ -183,7 +183,7 @@
 }
 .main .list .list-footer {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 }
 .main .list .list-footer button {
   background-color: white;
@@ -311,4 +311,9 @@
 
 .main .list .legend-item {
   margin-left: 20px;
+}
+
+.list-footer .footer-pagine {
+  margin-right: 35px;
+  font-size: 15px;
 }
