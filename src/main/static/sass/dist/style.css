@@ -104,6 +104,7 @@
 }
 
 .main .search .footer a {
+  border: 2px solid;
   background-color: white;
   border-color: #1a5a9f;
   color: #1a5a9f;
