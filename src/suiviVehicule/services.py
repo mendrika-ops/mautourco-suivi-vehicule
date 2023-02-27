@@ -141,7 +141,7 @@ class services():
             obj = data[0]
         return obj
 
-    def get_data(self, form, page):
+    def get_data(self, form, page,defaut):
         data = []
         if form.is_valid():
             data = TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
@@ -153,7 +153,7 @@ class services():
                                                    ToPlace__icontains=form.cleaned_data['ToPlace'],
                                                    status__icontains=form.cleaned_data['status'],
                                                    trip_no__icontains=form.cleaned_data['trip_no']).order_by('idstatusparameter',
-            '-trip_start_date', 'pick_up_time')[0:page]
+            '-trip_start_date', 'pick_up_time')[page-defaut:page]
         else :
             data = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
         trajetcoord = []
