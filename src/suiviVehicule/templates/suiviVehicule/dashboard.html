@@ -93,7 +93,7 @@
     <div class="list">
         <div class="row">
             <div class="col-md-12 head">
-                <p>Last updated : <span id="demo"></span> ago
+                <p>Last updated : <span id="demo"> </span> mn ago
                     <a href="/refresh" class="btn" >
                         <button class="btn-send" c>
                             Refresh
@@ -204,16 +204,23 @@
                 </tbody>
             </table>
         </div>   
-        <div class="list-footer">            
-            <form action="/dashboard" method="get">
-                <input type="hidden" name="page" value="{{ load_value }}">
-                {% if is_disable %}
-                    <button type="submit" value="" disabled style="opacity: 0.3">Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
-                {% else %}
-                    <button type="submit" value="" >Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
-                {% endif %}
-               
-            </form>
+        <div class="list-footer">   
+            <div class=""></div>
+            <div class="">
+                <form action="/dashboard" method="get">
+                    <input type="hidden" name="page" value="{{ load_value }}">
+                    {% if is_disable %}
+                        <button type="submit" value="" disabled style="opacity: 0.3">Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
+                    {% else %}
+                        <button type="submit" value="" >Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
+                    {% endif %}
+                   
+                </form>
+            </div>         
+           
+            <div class="footer-pagine" >
+                <p>{{ load_value }} / {{total_page}}</p>
+            </div>
         </div>
     </div>
 </div>
@@ -242,6 +249,7 @@
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
+            <h4>Trip Cancellation screen</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>     
             <p id="id_trip"></p>
           </div>
@@ -311,6 +319,7 @@
     var trip_Id = $(this).data('id');
     $(".modal-body #id_trip").val(trip_Id);
 });
+    
 </script>
 <script>
     var countDownDate = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}").getTime();
@@ -319,13 +328,22 @@
         var distance = now - countDownDate;
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);    
-        document.getElementById("demo").innerHTML = minutes + " mn ";
+        document.getElementById("demo").innerHTML = minutes;   
         if (minutes >= {{ cron_minute }}) {
-            countDownDate = now
+            countDownDate = now;        
         }
+        // if(parseInt(minutes) == 1 && localStorage.getItem("load") == 0){
+        //      localStorage.setItem("load", 1);
+        //     window.location.reload(true);
+        //   }
+        // if(parseInt(minutes) != 1) {
+        //     localStorage.setItem("load", 0);
+        // }
+        console.log("local ", localStorage.getItem("load"));
     }, 1000);
 </script>
 <script>
+   
     /*var availableTags = [
       {% for item in data_auto %}
           "{{item.driver_oname}}",
