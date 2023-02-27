@@ -106,7 +106,7 @@ select
     `stc`.`trip_start_time` AS `trip_start_time`,
     ((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(`stc`.`pick_up_time`, `stc`.`trip_start_time`))) * 100) AS `pourcentage`,
     `spa`.`id` AS `idstatusparameter`,
-    TIME_TO_SEC(timediff(date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'),`stc`.`trip_start_time`))/60 as difftimestart,
+    `su`.`duration`/60 as difftimestart,
     TIME_TO_SEC(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')))/60 as difftimepickup
 from
     ((`suiviVehicule_trajetcoordonneesummary` `stc`
@@ -130,10 +130,8 @@ where
             from
                 `suiviVehicule_recordcomment` `svr` where etat=0) is false)
 order by
-    `spa`.`id`,
-    `stc`.`trip_start_date` desc,
-    `stc`.`pick_up_time`;
-
+    `stc`.`pick_up_time`,
+    `spa`.`id`;
 
 CREATE OR REPLACE
 ALGORITHM = UNDEFINED VIEW `suiviVehicule_laststatuswithorder` AS
