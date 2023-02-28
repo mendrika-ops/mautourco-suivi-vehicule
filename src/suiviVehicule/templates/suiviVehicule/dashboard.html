@@ -133,11 +133,11 @@
                 {% for lg in legend %}
                 <div class="d-inline-block legend-item">
                     {% if lg.id == 3 %}
-                    <p> <span style="color:{{lg.couleur}}">{{lg.status}} : </span> < {{lg.max_percent|floatformat:0}}min</p>
+                    <p><span style="list-action" ><button class="btn btn-outline-success action" style="color:white;background-color:{{lg.couleur}}">{{lg.status}}</button></span> < {{lg.max_percent|floatformat:0}}min</p>
                     {% elif lg.id == 2 %}
-                    <p> <span style="color:{{lg.couleur}}">{{lg.status}} : </span> > {{lg.min_percent|floatformat:0}}min</p>
+                    <p><span style="list-action" ><button class="btn btn-outline-success action" style="color:white;background-color:{{lg.couleur}}">{{lg.status}}</button></span> > {{lg.min_percent|floatformat:0}}min</p>
                     {% else %}
-                    <p> <span style="color:{{lg.couleur}}">{{lg.status}} : </span>{{lg.min_percent|floatformat:0}}-{{lg.max_percent|floatformat:0}}min</p>
+                    <p><span style="list-action" ><button class="btn btn-outline-success action" style="color:white;background-color:{{lg.couleur}}">{{lg.status}}</button></span> {{lg.min_percent|floatformat:0}}-{{lg.max_percent|floatformat:0}}min</p>
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -171,7 +171,16 @@
                         <th scope="col" style="width: 100px;" data-toggle="tooltip" title="Estimate time to reach pickup place from current position" >ETA time</th>
                         <th scope="col" style="width: 100px;" data-toggle="tooltip" title="Difference between pickup time and ETA Time" >Difference (minutes)</th>
                         <th scope="col" style="width: 100px;">
-                            Status</th>
+                           <!-- <form id="form" action="/dashboard" method="get">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="check" value="0"  onchange="document.getElementById('form').submit()" id="flexCheckDefault" >
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Status
+                                    </label>
+                                </div>
+                            </form>-->
+                            Status
+                        </th>
                         <th scope="col" style="width: 90px;"></th>
                     </tr>
                 </thead>
