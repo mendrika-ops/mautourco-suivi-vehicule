@@ -58,16 +58,19 @@ def setForm(request):
         
 def dashboard_request(request):
     data_list = []
-    load_value = 10
+    load_value = 0
     defaut = 10
     service = services()
     is_disable = False
-    print("check box ",request.GET.get("check"))
-    if request.GET.get("page") is not None and request.GET.get("page").isnumeric() == True:
-        load_value = int(request.GET.get("page"))
-       
     form = setForm(request)
-    data_list = service.get_data(form, load_value,defaut)
+    data_list = []
+    if request.GET.get("page") is not None and request.GET.get("page").isnumeric() == True:
+        data_list = service.get_data(form, int(request.GET.get("page")) ,defaut)
+        load_value = int(request.GET.get("page")) + len(data_list)
+    else:
+        data_list = service.get_data(form, load_value,defaut)
+        load_value = len(data_list)
+
     data_search = service.get_new_data()
     record = CommentFrom(request.GET)
     refresh = service.get_last_refresh()
