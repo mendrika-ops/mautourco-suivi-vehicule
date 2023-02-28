@@ -153,7 +153,7 @@ class services():
                                                    ToPlace__icontains=form.cleaned_data['ToPlace'],
                                                    status__icontains=form.cleaned_data['status'],
                                                    trip_no__icontains=form.cleaned_data['trip_no']).order_by('idstatusparameter',
-            '-trip_start_date', 'pick_up_time')[page-defaut:page]
+            '-trip_start_date', 'pick_up_time')[page:page+defaut]
         else :
             data = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
         trajetcoord = []
