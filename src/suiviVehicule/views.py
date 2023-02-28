@@ -62,9 +62,9 @@ def dashboard_request(request):
     defaut = 10
     service = services()
     is_disable = False
-    opacity = ""
+    print("check box ",request.GET.get("check"))
     if request.GET.get("page") is not None and request.GET.get("page").isnumeric() == True:
-        load_value = int(request.GET.get("page")) + defaut
+        load_value = int(request.GET.get("page"))
        
     form = setForm(request)
     data_list = service.get_data(form, load_value,defaut)

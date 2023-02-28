@@ -313,6 +313,11 @@
   margin-left: 20px;
 }
 
+.main .list .legend-item .action{
+  font-size: 12px;
+  width: 80px;
+}
+
 .list-footer .footer-pagine {
   margin-right: 35px;
   font-size: 15px;
