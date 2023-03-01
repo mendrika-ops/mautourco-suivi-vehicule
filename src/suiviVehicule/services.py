@@ -155,7 +155,6 @@ class services():
                                                    trip_no__icontains=form.cleaned_data['trip_no']).order_by('idstatusparameter',
             '-trip_start_date', 'pick_up_time')[page:page+defaut]
         elif form.is_valid() and checked != 'on':
-            print("atoo" , checked)
             data = TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
                                                    driver_mobile_number__icontains=form.cleaned_data[
                                                        'driver_mobile_number'],
