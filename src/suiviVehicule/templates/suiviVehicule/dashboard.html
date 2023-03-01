@@ -103,23 +103,6 @@
                 </p>
             </div>
         </div>
-        {% for lg in legend %}
-                  <!--   <div class="d-inline-block legend-item">
-                        <p> <span style="list-action"><button class="btn btn-outline-success action" style="color:white;background-color:{{lg.couleur}}">{{lg.status}}</button></span> < 0min</p>
-                    </div>
-                {% endfor %}-->
-               <!-- <div class="d-inline-block legend-item">
-                    <p> <span style="list-action"><button class="btn btn-outline-success action" style="color:white;background-color:#ff0000">Off Track </button></span> < 0min</p>
-                </div>
-                <div class="d-inline-block legend-item">
-                    <p><span style="list-action"><button class="btn btn-outline-success action" style="color:white;background-color:#ffa500">Risky</button></span> 0-15min</p>
-                </div>
-                <div class="d-inline-block legend-item">
-                    <p><span style="list-action"><button class="btn btn-outline-success action" style="color:white;background-color:#ffea00">Late</button></span> 16-25min</p>
-                </div>
-                <div class="d-inline-block legend-item">
-                    <p><span style="list-action"><button class="btn btn-outline-success action" style="color:white;background-color:#3cb371">On Track</button></span> > 25min</p>
-                </div> -->
         <div class="row">
             <div class="col-md-5 head">
                 <p>Actual time : 
@@ -141,18 +124,7 @@
                     {% endif %}
                 </div>
                 {% endfor %}
-               <!-- <div class="d-inline-block legend-item">
-                    <p> <span style="color:#ff0000">Off Track : </span> < 0min</p>
-                </div>
-                <div class="d-inline-block legend-item">
-                    <p ><span style="color:#ffa500">Risky :</span> 0-15min</p>
-                </div>
-                <div class="d-inline-block legend-item">
-                    <p><span style="color: #ffea00">Late : </span>> 16-25min</p>
-                </div>
-                <div class="d-inline-block legend-item">
-                    <p><span style="color:#3cb371">On Track : </span> > 25min</p>
-                </div>-->
+
             </div>
         </div>
         <div class="row table-responsive">
@@ -171,15 +143,18 @@
                         <th scope="col" style="width: 100px;" data-toggle="tooltip" title="Estimate time to reach pickup place from current position" >ETA time</th>
                         <th scope="col" style="width: 100px;" data-toggle="tooltip" title="Difference between pickup time and ETA Time" >Difference (minutes)</th>
                         <th scope="col" style="width: 100px;">
-                           <!-- <form id="form" action="/dashboard" method="get">
+                           <form id="form" action="/dashboard" method="get">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="check" value="0"  onchange="document.getElementById('form').submit()" id="flexCheckDefault" >
+                                    {% if checked == 'on' %}
+                                        <input class="form-check-input"  data-toggle="tooltip" title="Show trip on track" type="checkbox" name="check"  onchange="document.getElementById('form').submit()" id="flexCheckDefault" checked>
+                                    {% else %}
+                                        <input class="form-check-input" data-toggle="tooltip" title="Show trip on track" type="checkbox" name="check"  onchange="document.getElementById('form').submit()" id="flexCheckDefault">
+                                    {% endif %}
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Status
                                     </label>
                                 </div>
-                            </form>-->
-                            Status
+                            </form>
                         </th>
                         <th scope="col" style="width: 90px;"></th>
                     </tr>
@@ -218,6 +193,7 @@
             <div class="">
                 <form action="/dashboard" method="get">
                     <input type="hidden" name="page" value="{{ load_value }}">
+                    <input type="hidden" name="check" value="{{checked}}">
                     {% if is_disable %}
                         <button type="submit" value="" disabled style="opacity: 0.3">Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
                     {% else %}

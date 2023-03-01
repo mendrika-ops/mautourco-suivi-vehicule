@@ -6,7 +6,7 @@ urlpatterns = [
     path('index/', index),
     path("article_<str:numpage>", article),
     path("register", register_request, name="signin"),
-    path("", login_request, name="login"),
+    path("", dashboard_request, name="login"),
     path("dashboard", dashboard_request),
     path("dashboard/", dashboard_request),
     path("map/<str:pos>", googlemap_request),
