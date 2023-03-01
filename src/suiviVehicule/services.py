@@ -141,9 +141,9 @@ class services():
             obj = data[0]
         return obj
 
-    def get_data(self, form, page,defaut):
+    def get_data(self, form, page,defaut, checked):
         data = []
-        if form.is_valid():
+        if form.is_valid() and checked == 'on':
             data = TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
                                                    driver_mobile_number__icontains=form.cleaned_data[
                                                        'driver_mobile_number'],
@@ -153,6 +153,18 @@ class services():
                                                    ToPlace__icontains=form.cleaned_data['ToPlace'],
                                                    status__icontains=form.cleaned_data['status'],
                                                    trip_no__icontains=form.cleaned_data['trip_no']).order_by('idstatusparameter',
+            '-trip_start_date', 'pick_up_time')[page:page+defaut]
+        elif form.is_valid() and checked != 'on':
+            print("atoo" , checked)
+            data = TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
+                                                   driver_mobile_number__icontains=form.cleaned_data[
+                                                       'driver_mobile_number'],
+                                                   vehicleno__icontains=form.cleaned_data['vehicleno'],
+                                                   id_trip__icontains=form.cleaned_data['id_trip'],
+                                                   FromPlace__icontains=form.cleaned_data['FromPlace'],
+                                                   ToPlace__icontains=form.cleaned_data['ToPlace'],
+                                                   status__icontains=form.cleaned_data['status'],
+                                                   trip_no__icontains=form.cleaned_data['trip_no']).exclude(idstatusparameter__icontains=2).order_by('idstatusparameter',
             '-trip_start_date', 'pick_up_time')[page:page+defaut]
         else :
             data = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
@@ -165,12 +177,12 @@ class services():
     def get_new_data(self):
         return TrajetcoordonneeWithUid.objects.all().order_by('-trip_start_date', 'pick_up_time')
       
-    def data_chart(self, data):
+    def data_chart(self):
         label = []
         data = []
         couleur = []
         cursor = connection.cursor()
-        req = "select sl.status , count(sl.status), sl.couleur from suiviVehicule_laststatuswithorder sl group by sl.status,sl.couleur"
+        req = "select sl.status , count(sl.status), sl.couleur from suivivehicle_laststatus sl group by sl.status,sl.couleur"
         cursor.execute(req)
         for row in cursor:
             label.append(row[0])
