@@ -55,30 +55,42 @@ def setForm(request):
         return SearchForm(request.GET)
     else:
         return SearchForm()
-        
+
+def check(checked):
+    obj = "checked"
+    if checked == 'on' :
+        return obj
+    return ""
+
 def dashboard_request(request):
     data_list = []
     load_value = 0
     defaut = 10
+    valuecheck = request.GET.get("check")
     service = services()
     is_disable = False
     form = setForm(request)
     data_list = []
+    
     if request.GET.get("page") is not None and request.GET.get("page").isnumeric() == True:
-        data_list = service.get_data(form, int(request.GET.get("page")) ,defaut)
+        data_list = service.get_data(form, int(request.GET.get("page")) ,defaut, valuecheck)
         load_value = int(request.GET.get("page")) + len(data_list)
     else:
-        data_list = service.get_data(form, load_value,defaut)
+        data_list = service.get_data(form, load_value,defaut, valuecheck)
         load_value = len(data_list)
 
     data_search = service.get_new_data()
     record = CommentFrom(request.GET)
     refresh = service.get_last_refresh()
-    chart = service.data_chart(data_list)
+    chart = service.data_chart()
     count = service.getall_data_count()
     legend = service.get_liste_parameter()
     if load_value >= count:
         is_disable = True
+    elif load_value == 0:
+        is_disable = True
+        count = 0
+
     return render(request, "suiviVehicule/dashboard.html",
                   context={"data_list": data_list, 
                            "data_auto": data_search, 
@@ -90,8 +102,8 @@ def dashboard_request(request):
                            "cron_minute":settings.JOB_MINUTE,
                            "is_disable": is_disable,
                            "legend":legend,
-                           "total_page":count})
-
+                           "total_page":count,
+                           "checked":valuecheck})
 
 def googlemap_request(request, pos):
     return redirect("https://www.google.com/maps?q=" + pos)
