@@ -146,9 +146,9 @@
                            <form id="form" action="/dashboard" method="get">
                                 <div class="form-check">
                                     {% if checked == 'on' %}
-                                        <input class="form-check-input" type="checkbox" name="check"  onchange="document.getElementById('form').submit()" id="flexCheckDefault" checked>
+                                        <input class="form-check-input"  data-toggle="tooltip" title="Show trip on track" type="checkbox" name="check"  onchange="document.getElementById('form').submit()" id="flexCheckDefault" checked>
                                     {% else %}
-                                        <input class="form-check-input" type="checkbox" name="check"  onchange="document.getElementById('form').submit()" id="flexCheckDefault">
+                                        <input class="form-check-input" data-toggle="tooltip" title="Show trip on track" type="checkbox" name="check"  onchange="document.getElementById('form').submit()" id="flexCheckDefault">
                                     {% endif %}
                                     <label class="form-check-label" for="flexCheckDefault">
                                         Status
