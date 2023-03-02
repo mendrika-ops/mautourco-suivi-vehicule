@@ -1,6 +1,6 @@
 import pytz
 import requests
-from django.db import connection
+from django.db import IntegrityError, connection, transaction
 from humanfriendly import format_timespan
 from django.conf import settings
 from suiviVehicule.models import Recordcomment, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
@@ -100,31 +100,40 @@ class services():
             self.create_comment(data.id_trip,trajet.idstatusparameter, currentdate)
         except Exception as e:
             raise e
+    def add_log(self, now):
+        list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
+        for row in list_uid:
+            self.create_comment(row.id_trip,row.idstatusparameter, now)
 
+    @transaction.atomic            
     def gestion_status_pos(self):
         status = Statuspos()
-        list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
-        if len(list_uid) < 1:
+        try:
+            sid = transaction.savepoint()
+            #list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
+            #if len(list_uid) < 1:
+            #    list_uid = self.get_new_data()
             list_uid = self.get_new_data()
-        #list_uid = self.get_new_data()
-        currentdate = datetime.now()
-        now = currentdate
-        date_time = now.strftime("%d %B %Y %H:%M:%S")
-        setattr(status, 'datetime', now)
-        setattr(status, 'desc', 'opp')
-        status.save()
-        for row in list_uid:
-            status_detail = self.get_position_lat_long(row.Uid, date_time)
-            file = self.get_direction(row.PickUp_H_Pos, status_detail.coordonnee)
-            print("UID ", row.Uid, "coordonnee 000 ", row.PickUp_H_Pos, " COORDONNEE 111 ",
-                status_detail.coordonnee)
-            setattr(status_detail, 'idmere', status)
-            setattr(status_detail, 'duration', file["duration"])
-            setattr(status_detail, 'daty_time', now)
-            setattr(status_detail, 'id_trip', row.id_trip)
-            status_detail.save()
-            if isinstance(row, TrajetcoordonneeSamm):
-                self.create_comment(row.id_trip,row.idstatusparameter, now)
+            currentdate = datetime.now()
+            now = currentdate
+            date_time = now.strftime("%d %B %Y %H:%M:%S")
+            setattr(status, 'datetime', now)
+            setattr(status, 'desc', 'opp')
+            status.save()
+            for row in list_uid:
+                status_detail = self.get_position_lat_long(row.Uid, date_time)
+                file = self.get_direction(row.PickUp_H_Pos, status_detail.coordonnee)
+                print("UID ", row.Uid, "coordonnee 000 ", row.PickUp_H_Pos, " COORDONNEE 111 ",
+                    status_detail.coordonnee)
+                setattr(status_detail, 'idmere', status)
+                setattr(status_detail, 'duration', file["duration"])
+                setattr(status_detail, 'daty_time', now)
+                setattr(status_detail, 'id_trip', row.id_trip)
+                status_detail.save()
+            self.add_log(now)
+            transaction.savepoint_commit(sid)
+        except IntegrityError:
+            transaction.savepoint_rollback(sid)
         return status
 
     def get_last_refresh(self):
@@ -204,10 +213,8 @@ class services():
     
     def create_comment(self, id_trip, idstatus, now):
         try:
-            print("BOOOLEANN ", self.boolean_parameter_for_log(idstatus))
             if self.boolean_parameter_for_log(idstatus) is True:
                 check = self.check_comment(id_trip) 
-                print("length for comment ", len(check))
                 if len(check) > 0:
                     if check[0].etat != 0: 
                         check[0].etat = idstatus
