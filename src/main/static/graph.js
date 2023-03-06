@@ -22,6 +22,10 @@ let myChart = new Chart("myChart", {
         }]
     },
     options: {
+        onHover: (evt, activeEls) => {
+            console.log("event ", evt);
+            activeEls.length > 0 ? evt.target.style.cursor = 'pointer' : evt.target.style.cursor = 'default';
+        },
         title: {
             display: true,
             text: "Dashboard",
