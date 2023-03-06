@@ -41,6 +41,7 @@ class TrajetcoordonneeSamm(models.Model):
     idstatusparameter = models.IntegerField(null=True)
     difftimestart = models.FloatField()
     difftimepickup = models.FloatField()
+    current = models.CharField(max_length=150,null=True)
     class Meta:
         managed = False
         db_table = 'suivivehicle_laststatus'
@@ -62,7 +63,7 @@ class Trajetcoordonnee(models.Model):
     duration = models.CharField(max_length=100, null=True)
     couleur = models.CharField(max_length=100, null=True)
     estimatetime = models.CharField(max_length=50, null=True)
-    trip_start_time = models.TimeField()
+    trip_start_time = models.TimeField(null=True)
 
 class TrajetcoordonneeWithUid(models.Model):
     vehicleno = models.CharField(max_length=100)
@@ -106,6 +107,7 @@ class Statusposdetail(models.Model):
     daty_time = models.DateTimeField()
     duration = models.IntegerField(null=True)
     id_trip = models.IntegerField(null=True)
+    current = models.CharField(max_length=150,null=True)
 
 class Statusparameter(models.Model):
     id = models.indexes

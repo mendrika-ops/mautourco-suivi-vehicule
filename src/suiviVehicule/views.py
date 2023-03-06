@@ -66,17 +66,16 @@ def dashboard_request(request):
     data_list = []
     load_value = 0
     defaut = 10
-    valuecheck = request.GET.get("check")
     service = services()
     is_disable = False
     form = setForm(request)
     data_list = []
     
     if request.GET.get("page") is not None and request.GET.get("page").isnumeric() == True:
-        data_list = service.get_data(form, int(request.GET.get("page")) ,defaut, valuecheck)
-        load_value = int(request.GET.get("page")) + len(data_list)
+        data_list = service.get_data(form, int(request.GET.get("page")) ,defaut)
+        load_value = int(request.GET.get("page")) +defaut
     else:
-        data_list = service.get_data(form, load_value,defaut, valuecheck)
+        data_list = service.get_data(form, load_value,defaut)
         load_value = len(data_list)
 
     data_search = service.get_new_data()
@@ -87,6 +86,7 @@ def dashboard_request(request):
     legend = service.get_liste_parameter()
     if load_value >= count:
         is_disable = True
+        load_value = count
     elif load_value == 0:
         is_disable = True
         count = 0
@@ -102,8 +102,7 @@ def dashboard_request(request):
                            "cron_minute":settings.JOB_MINUTE,
                            "is_disable": is_disable,
                            "legend":legend,
-                           "total_page":count,
-                           "checked":valuecheck})
+                           "total_page":count})
 
 def googlemap_request(request, pos):
     return redirect("https://www.google.com/maps?q=" + pos)
