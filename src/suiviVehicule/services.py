@@ -38,6 +38,7 @@ class services():
 
     def get_direction(self, origin, destination):
         waypoints = f'{origin}|{destination}'
+        currentposition = ""
         result = requests.get(
             'https://maps.googleapis.com/maps/api/directions/json?',
             params={
@@ -48,7 +49,7 @@ class services():
             })
 
         directions = result.json()
-        # print("Direction ::: ",directions)
+        #print("Direction ::: ",directions)
         if directions["status"] == "OK":
 
             routes = directions["routes"][0]["legs"]
@@ -60,29 +61,22 @@ class services():
             for route in range(len(routes)):
                 distance += int(routes[route]["distance"]["value"])
                 duration += int(routes[route]["duration"]["value"])
-
+                
                 route_step = {
                     'origin': routes[route]["start_address"],
                     'destination': routes[route]["end_address"],
-                    'distance': routes[route]["distance"]["text"],
-                    'duration': routes[route]["duration"]["text"],
-
-                    'steps': [
-                        [
-                            s["distance"]["text"],
-                            s["duration"]["text"],
-                            s["html_instructions"],
-
-                        ]
-                        for s in routes[route]["steps"]]
+                   
                 }
-
                 route_list.append(route_step)
+            current = route_list[len(routes)-1]["destination"].split(", ")
+            currentposition = current[0] + ", "+ current[1]
+        print(currentposition)
         return {
             "origin": origin,
             "destination": destination,
             "distance": f"{round(distance / 1000, 2)} Km",
-            "duration": duration
+            "duration": duration, 
+            "current": currentposition
         }
 
     def set_one_refresh(self, idstatusdetail, id):
@@ -129,6 +123,7 @@ class services():
                 setattr(status_detail, 'duration', file["duration"])
                 setattr(status_detail, 'daty_time', now)
                 setattr(status_detail, 'id_trip', row.id_trip)
+                setattr(status_detail, 'current', file["current"])
                 status_detail.save()
             self.add_log(now)
             transaction.savepoint_commit(sid)
@@ -150,9 +145,9 @@ class services():
             obj = data[0]
         return obj
 
-    def get_data(self, form, page,defaut, checked):
+    def get_data(self, form, page,defaut):
         data = []
-        if form.is_valid() and checked == 'on':
+        if form.is_valid():
             data = TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
                                                    driver_mobile_number__icontains=form.cleaned_data[
                                                        'driver_mobile_number'],
@@ -162,18 +157,7 @@ class services():
                                                    ToPlace__icontains=form.cleaned_data['ToPlace'],
                                                    status__icontains=form.cleaned_data['status'],
                                                    trip_no__icontains=form.cleaned_data['trip_no']).order_by('idstatusparameter',
-            '-trip_start_date', 'pick_up_time')[page:page+defaut]
-        elif form.is_valid() and checked != 'on':
-            data = TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
-                                                   driver_mobile_number__icontains=form.cleaned_data[
-                                                       'driver_mobile_number'],
-                                                   vehicleno__icontains=form.cleaned_data['vehicleno'],
-                                                   id_trip__icontains=form.cleaned_data['id_trip'],
-                                                   FromPlace__icontains=form.cleaned_data['FromPlace'],
-                                                   ToPlace__icontains=form.cleaned_data['ToPlace'],
-                                                   status__icontains=form.cleaned_data['status'],
-                                                   trip_no__icontains=form.cleaned_data['trip_no']).exclude(idstatusparameter__icontains=2).order_by('idstatusparameter',
-            '-trip_start_date', 'pick_up_time')[page:page+defaut]
+            '-trip_start_date', 'pick_up_time')[0:page+defaut]
         else :
             data = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
         trajetcoord = []
