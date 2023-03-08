@@ -334,3 +334,17 @@ WHERE id=3;
 UPDATE suiviVehicule_statusparameter
 SET status='Late', min_percent=16.0, max_percent=25.0, couleur='#ffea00', desce='1'
 WHERE id=4;
+
+INSERT INTO suiviVehicule_statusparameter
+(id, status, min_percent, max_percent, couleur, desce)
+VALUES(1, 'Off Track', -1000.0, 0.0, '#ff0000', '1');
+INSERT INTO suiviVehicule_statusparameter
+(id, status, min_percent, max_percent, couleur, desce)
+VALUES(2, 'Risky', 0.0, 15.0, '#ffa500', '1');
+INSERT INTO suiviVehicule_statusparameter
+(id, status, min_percent, max_percent, couleur, desce)
+VALUES(3, 'Late', 16.0, 25.0, '#ffea00', '1');
+INSERT INTO suiviVehicule_statusparameter
+(id, status, min_percent, max_percent, couleur, desce)
+VALUES(4, 'On Track', 26.0, 1000.0, '#3cb371', '1');
+
