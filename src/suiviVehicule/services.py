@@ -45,7 +45,7 @@ class services():
                 'origin': origin,
                 'destination': destination,
                 'waypoints': waypoints,
-                "key": 'AIzaSyB2uvGCG5b8fsl9HD-hXW0GweGuBNzRM2U'
+                "key": 'AIzaSyCJwwTnRM8ePI1yj_zyOGgBtepyyJur8Gs'
             })
 
         directions = result.json()
