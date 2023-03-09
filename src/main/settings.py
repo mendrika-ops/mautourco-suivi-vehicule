@@ -24,7 +24,7 @@ SECRET_KEY = 'fk@ih--639=j%8x&e(7ukn-=!^81mkryt)u1^d_+yfh+5i8s(&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['appdev.mg']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -87,6 +87,14 @@ DATABASES = {
         'PORT': '3306',
         'USER': 'root',
         'PASSWORD': 'root',
+    },
+     'asterix': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'Asterix',
+        'HOST': '192.168.0.60',
+        'PORT': '3306',
+        'USER': 'fleet',
+        'PASSWORD': '*IxAyNqR',
     }
 }
 
@@ -136,8 +144,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 APPEND_SLASH = False
 
 USERIDGUID = '3f55ba57-8a28-41cc-917d-718b9a754410'
-SESSIONID = '273adb60-72ca-47a7-a14f-b857fc5661df'
-JOB_MINUTE = 5
+SESSIONID = '9c100f6e-7111-4756-9cf2-c307b512fd69'
+JOB_MINUTE = 30
 
 CRONJOBS = [
     ('*/'+str(JOB_MINUTE)+' * * * *', 'suiviVehicule.cron.test')

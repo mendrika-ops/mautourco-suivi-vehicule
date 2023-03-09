@@ -160,3 +160,7 @@ def parameter_update_request(request,id):
 def parameter_liste_request(request):
     data = services().get_liste_parameter()
     return render(request, "suiviVehicule/liste-parameter.html",context={"data_list": data})
+
+def rechange_request(request):
+    services().rechange()
+    return render(request, "suiviVehicule/error.html", context={"error": "Notify: loading data"})
