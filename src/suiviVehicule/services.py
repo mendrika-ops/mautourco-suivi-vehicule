@@ -1,6 +1,6 @@
 import pytz
 import requests
-from django.db import IntegrityError, connection, transaction
+from django.db import IntegrityError, connection, connections, transaction
 from humanfriendly import format_timespan
 from django.conf import settings
 from suiviVehicule.models import Recordcomment, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
@@ -267,5 +267,31 @@ class services():
             raise e
         return tab
     
-        
+    def get_asterix_data(self):
+        tab = []
+        cursor = connections["asterix"].cursor()
+        req = "SELECT v.vehicleno,CONCAT(d.driver_sname,' ',d.`driver_oname`) AS driver_oname,d.MobileNo AS driver_mobile_number,h.h_name AS FromPlace,h1.`h_name` AS ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,CONCAT(h.`latitude`, ',', h.`longitude`) AS PickUp_H_Pos,t.resa_trans_type FROM trip t,driver d,hotel h,hotel h1,vehicle v WHERE trip_start_date = CURRENT_DATE() AND t.`id_driver` = d.`id_driver` AND v.id_vehicle = t.id_vehicle AND t.`pick_up_place_id` = h.`id_hotel` AND t.`destination_id` = h1.`id_hotel` AND t.resa_type IN (1, 2, 3, 4, 5) AND v.vehicleno != 'CANCELLED' AND t.vehicleno != 'Not Assigned' AND t.resa_trans_type != '' GROUP BY trip_no, FromPlace ORDER BY t.trip_start_date, t.`pick_up_time`, t.`trip_no`"
+       
+        cursor.execute(req)
+        for row in cursor:
+            trajetcoordonnee = Trajetcoordonnee()
+            trajetcoordonnee.set_vehicleno(row[0])
+            trajetcoordonnee.set_driver_oname(row[1])
+            trajetcoordonnee.set_driver_mobile_number(row[2])
+            trajetcoordonnee.set_FromPlace(row[3])
+            trajetcoordonnee.set_ToPlace(row[4])
+            trajetcoordonnee.set_id_trip(row[5])
+            trajetcoordonnee.set_trip_no(row[6])
+            trajetcoordonnee.set_trip_start_date(row[7])
+            trajetcoordonnee.set_pick_up_time(row[8])
+            trajetcoordonnee.set_PickUp_H_Pos(row[9])
+            tab.append(trajetcoordonnee)
+            print(trajetcoordonnee.get_id_trip())
+        return tab
     
+    def rechange(self):
+        tab = self.get_asterix_data()
+        Trajetcoordonnee.objects.all().delete()
+        for row in tab:
+            row.save()
+        
