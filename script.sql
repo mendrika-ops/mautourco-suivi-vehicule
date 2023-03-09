@@ -123,8 +123,8 @@ where
     from
         `suiviVehicule_statuspos` `ss`))
     and (str_to_date(`stc`.`trip_start_date`,
-    '%m/%d/%Y') = curdate())
-        and (`stc`.`pick_up_time` > `stc`.`trip_start_time`)
+    '%Y-%m-%d') = curdate())
+    		and addtime(`su`.`daty_time`, '-02:00:00') < stc.pick_up_time
             and `stc`.`id_trip` in (
             select
                 `svr`.`id_trip`

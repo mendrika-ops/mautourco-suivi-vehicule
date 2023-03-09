@@ -64,7 +64,58 @@ class Trajetcoordonnee(models.Model):
     couleur = models.CharField(max_length=100, null=True)
     estimatetime = models.CharField(max_length=50, null=True)
     trip_start_time = models.TimeField(null=True)
+        
+    def get_vehicleno(self):
+        return self.vehicleno
+    def set_vehicleno(self, vehiculeno):
+        self.vehicleno = vehiculeno
+    
+    def get_driver_oname(self):
+        return self.driver_oname
+    def set_driver_oname(self, driver_oname):
+        self.driver_oname = driver_oname
+    
+    def get_driver_mobile_number(self):
+        return self.driver_mobile_number
+    def set_driver_mobile_number(self, driver_mobile_number):
+        self.driver_mobile_number= driver_mobile_number
 
+    def get_FromPlace(self):
+        return self.FromPlace
+    def set_FromPlace(self, FromPlace):
+        self.FromPlace = FromPlace
+
+    def get_ToPlace(self):
+        return self.ToPlace
+    def set_ToPlace(self, ToPlace):
+        self.ToPlace = ToPlace
+
+    def get_id_trip(self):
+        return self.id_trip
+    def set_id_trip(self, id_trip):
+        self.id_trip = id_trip
+
+    def get_trip_no(self):
+        return self.trip_no
+    def set_trip_no(self, trip_no):
+        self.trip_no = trip_no
+
+    def get_trip_start_date(self):
+        return self.trip_start_date
+    def set_trip_start_date(self, trip_start_date):
+        self.trip_start_date = trip_start_date
+
+    def get_pick_up_time(self):
+        return self.pick_up_time
+    def set_pick_up_time(self, pick_up_time):
+        self.pick_up_time = pick_up_time
+    
+    def get_PickUp_H_Pos(self):
+        return self.PickUp_H_Pos
+    def set_PickUp_H_Pos(self, PickUp_H_Pos):
+        self.PickUp_H_Pos = PickUp_H_Pos
+
+    
 class TrajetcoordonneeWithUid(models.Model):
     vehicleno = models.CharField(max_length=100)
     driver_oname = models.CharField(max_length=150)
