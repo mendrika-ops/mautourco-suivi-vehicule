@@ -152,11 +152,9 @@ class services():
                                                    driver_mobile_number__icontains=form.cleaned_data[
                                                        'driver_mobile_number'],
                                                    vehicleno__icontains=form.cleaned_data['vehicleno'],
-                                                   id_trip__icontains=form.cleaned_data['id_trip'],
                                                    FromPlace__icontains=form.cleaned_data['FromPlace'],
                                                    ToPlace__icontains=form.cleaned_data['ToPlace'],
-                                                   status__icontains=form.cleaned_data['status'],
-                                                   trip_no__icontains=form.cleaned_data['trip_no']).order_by('idstatusparameter',
+                                                   status__icontains=form.cleaned_data['status']).order_by('idstatusparameter',
             '-trip_start_date', 'pick_up_time')[0:page+defaut]
         else :
             data = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
@@ -249,13 +247,18 @@ class services():
         }
     
     def get_listes_record(self,datefrom,dateto):
+        
         dateinfrom = datetime. strptime(datefrom, '%Y-%m-%d')
+        print(dateinfrom)
         dateinto = datetime. strptime(dateto, '%Y-%m-%d')
         liste = Recordcommenttrajet.objects.filter(daterecord__range = [dateinfrom,dateinto]).order_by('-daterecord')
         return liste
     
     def get_liste_parameter(self):
         return Statusparameterlib().getListeParameters()
+    
+    def get_liste_parameter_activate(self):
+        return Statusparameter.objects.filter(desce=1).order_by('min_percent')
     
     def get_liste_parameter_byId(self, id):
         tab = []

@@ -83,7 +83,7 @@ def dashboard_request(request):
     refresh = service.get_last_refresh()
     chart = service.data_chart()
     count = service.getall_data_count()
-    legend = service.get_liste_parameter()
+    legend = service.get_liste_parameter_activate()
     if load_value >= count:
         is_disable = True
         load_value = count

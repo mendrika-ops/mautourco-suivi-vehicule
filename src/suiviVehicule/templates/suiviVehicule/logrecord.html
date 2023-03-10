@@ -16,13 +16,13 @@
                 <thead>
                   <tr>
                     <th scope="col">Driver name</th>
-                    <th scope="col">Driver mobile</th>
+                    <th scope="col">Driver Mob N°</th>
                     <th scope="col">Vehicule N°</th>
                     <th scope="col">Trip ID</th>
-                    <th scope="col">From</th>
-                    <th scope="col">To</th>
+                    <th scope="col">Pickup Place</th>
+                    <th scope="col">Destination</th>
                     <th scope="col">Pick up time</th>
-                    <th scope="col">Date</th>
+                    <th scope="col" style="width:100px">Date</th>
                     <th scope="col">Comments</th>
                     <th scope="col">Status</th>
                   </tr>
@@ -40,7 +40,7 @@
                     <td style="text-align: center;">{{ item.daterecord }}</td>
                     <td style="text-align: center;text-transform: uppercase;">{{ item.comment }}</td>                
                     <td class="list-action">
-                            <button class="btn btn-outline-success action" style="color:white;background-color:{{ item.couleur }}">{{item.status}}</button>
+                            <div class="btn btn-outline-success action" style="background-color:{{ item.couleur }}">{{item.status}}</div>
                         </td>
                 </tr>
                 {% endfor %}
