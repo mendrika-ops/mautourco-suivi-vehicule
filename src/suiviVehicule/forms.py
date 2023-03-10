@@ -26,7 +26,7 @@ list_statut = [
 ]
 list_active = [
     ('1', 'Enable'),
-    ('0', 'Desable')
+    ('0', 'Disable')
 ]
 
 class SigninForm(ModelForm):
