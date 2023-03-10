@@ -94,30 +94,26 @@ class Form(ModelForm):
 
 
 class SearchForm(ModelForm):
-    driver_oname = forms.CharField(required=False, label='Driver', widget=forms.TextInput(
+    driver_oname = forms.CharField(required=False, label='Driver Name', widget=forms.TextInput(
                               attrs={'class': "form-control", 'id': "driver"}))
     driver_mobile_number = forms.CharField(required=False,label='Driver mobile', widget=forms.TextInput(
                               attrs={'class': "form-control"}))
     vehicleno = forms.CharField(required=False,label='Vehicule', widget=forms.TextInput(
                               attrs={'class': "form-control"}))
-    id_trip = forms.CharField(required=False, label='Trip', widget=forms.TextInput(
+    FromPlace = forms.CharField(required=False, label='Pickup Place', widget=forms.TextInput(
         attrs={'class': "form-control"}))
-    FromPlace = forms.CharField(required=False, label='FromPlace', widget=forms.TextInput(
+    ToPlace = forms.CharField(required=False, label='Destination', widget=forms.TextInput(
         attrs={'class': "form-control"}))
-    ToPlace = forms.CharField(required=False, label='ToPlace', widget=forms.TextInput(
-        attrs={'class': "form-control"}))
-    status = forms.CharField(required=False, label='ToPlace',widget=forms.Select(choices=list_statut, attrs={'class': "form-control"}))
-    trip_no = forms.CharField(required=False, label='Trip N°', widget=forms.TextInput(
-        attrs={'class': "form-control"}))
-
+    status = forms.CharField(required=False, label='Status',widget=forms.Select(choices=list_statut, attrs={'class': "form-control"}))
+    
     class Meta:
         model = TrajetcoordonneeSamm
         fields = (
-        "driver_oname", "driver_mobile_number", "vehicleno", "id_trip", "FromPlace", "ToPlace", "status", "trip_no")
+        "driver_oname", "driver_mobile_number", "vehicleno", "FromPlace", "ToPlace", "status")
 
 class CommentFrom(ModelForm):
     comment = forms.CharField(widget=forms.Textarea(
-        attrs={'class': "form-control",'placeholder': "Please specify the reason for trip cancellation below", 'style': 'height: 5em;'}))
+        attrs={'class': "form-control",'placeholder': "* Please specify the reason for trip cancellation below", 'style': 'height: 5em;'}))
 
     class Meta:
         model = Recordcomment
