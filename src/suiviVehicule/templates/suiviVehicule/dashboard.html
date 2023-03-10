@@ -347,8 +347,27 @@
             "{{item.driver_oname}}",
         {% endfor %}
         ];
+        var availablePickup = [
+        {% for item in data_auto %}
+            "{{item.FromPlace}}",
+        {% endfor %}
+        ];
+
+        var availableDestination = [
+        {% for item in data_auto %}
+            "{{item.ToPlace}}",
+        {% endfor %}
+        ];
+
         $("#driver").autocomplete({
             source: availableTags
+        });
+        
+        $("#id_FromPlace").autocomplete({
+            source: availablePickup
+        });
+        $("#id_ToPlace").autocomplete({
+            source: availableDestination
         });
     } );
 </script>
