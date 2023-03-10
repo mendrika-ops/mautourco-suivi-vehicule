@@ -113,7 +113,7 @@ class SearchForm(ModelForm):
 
 class CommentFrom(ModelForm):
     comment = forms.CharField(widget=forms.Textarea(
-        attrs={'class': "form-control",'placeholder': "* Please specify the reason for trip cancellation below", 'style': 'height: 5em;'}))
+        attrs={'class': "form-control",'placeholder': "Please specify the reason for trip cancellation below", 'style': 'height: 5em;'}))
 
     class Meta:
         model = Recordcomment
