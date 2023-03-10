@@ -17,14 +17,21 @@
             <div class="form-row">
                 <div class="form-group col-md-5">
                     <label for="from">Date From</label>
-                    <input type="date" class="form-control" name="datefrom" value="" >
+                    <input type="text" class="form-control" id="datefrom" name="datefrom" value="" placeholder="yyyy-mm-dd" >
                 </div>
                 <div class="form-group col-md-5">
                     <label for="from">Date To</label>
-                    <input type="date" class="form-control" name="dateto" value="" >
+                    <input type="text" class="form-control" id="dateto" name="dateto" value="" placeholder="yyyy-mm-dd" >
                 </div>
             </div>
-       
+            <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+
+            <script>   
+                $(function() {
+                     $( "#datefrom" ).datepicker({ dateFormat: 'yy-mm-dd' }); 
+                     $( "#dateto" ).datepicker({ dateFormat: 'yy-mm-dd' });   
+                }); 
+            </script>
         <div class="footer row">
             <a href="/dashboard?reset" class="btn left">Reset</a>
             <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
@@ -39,27 +46,27 @@
             <div class="search col-md-6 ">
                 <div class="form-row">
                     <div class="form-group col-md-5 autocomplete">
-                        <label for="from">Driver </label>
+                        <label for="from">Driver Name </label>
                         {{ form_search.driver_oname }}
                     </div>
                     <div class="form-group col-md-5">
-                        <label for="from">From </label>
+                        <label for="from">Pickup Place </label>
                          {{ form_search.FromPlace }}
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-5">
-                        <label for="drive_mobile">Driver mobile </label>
+                        <label for="drive_mobile">Driver Mob No </label>
                         {{ form_search.driver_mobile_number }}
                 </div>
                 <div class="form-group col-md-5">
-                    <label for="to">To </label>
+                    <label for="to">Destination </label>
                     {{ form_search.ToPlace }}
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-5">
-                    <label for="vehicule">Vehicule </label>
+                    <label for="vehicule">Vehicule No</label>
                     {{ form_search.vehicleno }}
                 </div>
                 <div class="form-group col-md-5">
@@ -72,17 +79,7 @@
                     </select>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-5">
-                    <label for="trip_id">Trip </label>
-                    {{ form_search.id_trip }}
-                </div>
-                <div class="form-group col-md-5">
-                    <label for="trip">Trip N° </label>
-                    {{ form_search.trip_no }}
-                </div>
-            </div>
-
+           
             <div class="footer row">
                 <button class="left " name="reset">Reset</button>
                 <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
@@ -98,7 +95,7 @@
     <div class="list">
         <div class="row">
             <div class="col-md-12 head">
-                <p>Last updated : <span id="demo"> </span> mn ago
+                <p>Last updated : <span id="demo"> </span> mn ago at <span>{{last_refresh|time:"H:i:s"}}</span>
                     <a href="/refresh" >
                         <button class="btn-send" c>
                             Refresh
@@ -120,13 +117,15 @@
                 </div>
                 {% for lg in legend %}
                 <div class="d-inline-block legend-item">
+                    <div class="list-action">
                     {% if lg.id == 1 %}
-                    <p><span style="list-action" ><div class="btn btn-outline-success action" style="color:white;background-color:{{lg.couleur}}">{{lg.status}}</div></span> < {{lg.max_percent|floatformat:0}}min</p>
+                    <p><span><div class="btn btn-outline-success action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> < {{lg.max_percent|floatformat:0}}min</p>
                     {% elif lg.id == 4 %}
-                    <p><span style="list-action" ><div class="btn btn-outline-success action" style="color:white;background-color:{{lg.couleur}}">{{lg.status}}</div></span> > {{lg.min_percent|floatformat:0}}min</p>
+                    <p><span><div class="btn btn-outline-success action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> > {{lg.min_percent|floatformat:0}}min</p>
                     {% else %}
-                    <p><span style="list-action" ><div class="btn btn-outline-success action" style="color:white;background-color:{{lg.couleur}}">{{lg.status}}</div></span> {{lg.min_percent|floatformat:0}}-{{lg.max_percent|floatformat:0}}min</p>
+                    <p><span><div class="btn btn-outline-success action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> {{lg.min_percent|floatformat:0}}-{{lg.max_percent|floatformat:0}}min</p>
                     {% endif %}
+                    </div>
                 </div>
                 {% endfor %}
 
@@ -162,7 +161,7 @@
                             </form>-->
                             Status
                         </th>
-                        <th scope="col" style="width: 90px;"></th>
+                        <th scope="col" style="width: 70px;"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -180,10 +179,10 @@
                     <td style="text-align: center;">{{ item.difftimepickup |floatformat:0}}</td>
                   
                     <td class="list-action">
-                        <button class="btn btn-outline-success action" style="color:white;background-color:{{ item.couleur }}">{{ item.status }} </button>
+                        <div class="btn btn-outline-success action" style="background-color:{{ item.couleur }}">{{ item.status }} </div>
                     </td>
                     <td class="list-action">
-                        <a id="btn-send-2" href="/onerefresh/{{ item.idstatusposdetail }}/{{ item.id }}" class="outline-btn btn-send" data-toggle="tooltip" title="Refresh trip" ><img  class="svg" src="{% static '/reset.svg' %}" alt=""></a>
+                        <!--<a id="btn-send-2" href="/onerefresh/{{ item.idstatusposdetail }}/{{ item.id }}" class="outline-btn btn-send" data-toggle="tooltip" title="Refresh trip" ><img  class="svg" src="{% static '/reset.svg' %}" alt=""></a>-->
                         <a href="https://www.google.com/maps/dir/{{ item.PickUp_H_Pos }}/{{ item.PickEnd_H_Pos }}" target="_blank" class="outline-btn" data-toggle="tooltip" title="Google map"><img class="svg" target="_blank"
                                                                                         src="{% static '/map.svg' %}"
                                                                                         alt=""></a>
