@@ -4,4 +4,4 @@ logger = logging.getLogger(__name__)
 
 def test():
     services().gestion_status_pos()
-    logger.info("CALL")
+    #logger.info("CALL")
