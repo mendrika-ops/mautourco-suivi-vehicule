@@ -103,7 +103,7 @@ class services():
     def gestion_status_pos(self):
         status = Statuspos()
         try:
-            sid = transaction.savepoint()
+           
             #list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
             #if len(list_uid) < 1:
             #    list_uid = self.get_new_data()
@@ -114,6 +114,7 @@ class services():
             setattr(status, 'datetime', now)
             setattr(status, 'desc', 'opp')
             status.save()
+            sid = transaction.savepoint()
             for row in list_uid:
                 status_detail = self.get_position_lat_long(row.Uid, date_time)
                 file = self.get_direction(row.PickUp_H_Pos, status_detail.coordonnee)
@@ -247,9 +248,7 @@ class services():
         }
     
     def get_listes_record(self,datefrom,dateto):
-        
         dateinfrom = datetime. strptime(datefrom, '%Y-%m-%d')
-        print(dateinfrom)
         dateinto = datetime. strptime(dateto, '%Y-%m-%d')
         liste = Recordcommenttrajet.objects.filter(daterecord__range = [dateinfrom,dateinto]).order_by('-daterecord')
         return liste
@@ -259,7 +258,6 @@ class services():
     
     def get_liste_parameter_activate(self):
         return Statusparameter.objects.filter(desce=1).order_by('min_percent')
-    
     def get_liste_parameter_byId(self, id):
         tab = []
         try:
