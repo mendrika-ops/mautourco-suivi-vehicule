@@ -25,8 +25,8 @@ list_statut = [
     ('Cancel', 'Cancel')
 ]
 list_active = [
-    ('1', 'Active'),
-    ('0', 'Desactivate')
+    ('1', 'Enable'),
+    ('0', 'Desable')
 ]
 
 class SigninForm(ModelForm):

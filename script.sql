@@ -115,7 +115,7 @@ join `suiviVehicule_statusposdetail` `su` on
         and (`stc`.`Uid` = `su`.`uid`))))
 join `suiviVehicule_statusparameter` `spa` on
     ((((`spa`.`min_percent` * 60) < time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))))
-        and ((`spa`.`max_percent` * 60) > time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')))))))
+        and ((`spa`.`max_percent` * 60) > time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s')))) and spa.desce > 0 )))
 where
     ((`su`.`idmere_id` = (
     select
@@ -124,7 +124,7 @@ where
         `suiviVehicule_statuspos` `ss`))
     and (str_to_date(`stc`.`trip_start_date`,
     '%Y-%m-%d') = curdate())
-    		and addtime(`su`.`daty_time`, '-02:00:00') < stc.pick_up_time
+    		and addtime(`su`.`daty_time`, '-04:00:00') < stc.pick_up_time
             and `stc`.`id_trip` in (
             select
                 `svr`.`id_trip`
