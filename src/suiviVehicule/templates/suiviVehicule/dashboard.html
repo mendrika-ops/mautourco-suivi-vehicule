@@ -119,11 +119,11 @@
                 <div class="d-inline-block legend-item">
                     <div class="list-action">
                     {% if lg.id == 1 %}
-                    <p><span><div class="btn btn-outline-success action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> < {{lg.max_percent|floatformat:0}}min</p>
+                    <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> < {{lg.max_percent|floatformat:0}}min</p>
                     {% elif lg.id == 4 %}
-                    <p><span><div class="btn btn-outline-success action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> > {{lg.min_percent|floatformat:0}}min</p>
+                    <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> > {{lg.min_percent|floatformat:0}}min</p>
                     {% else %}
-                    <p><span><div class="btn btn-outline-success action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> {{lg.min_percent|floatformat:0}}-{{lg.max_percent|floatformat:0}}min</p>
+                    <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> {{lg.min_percent|floatformat:0}}-{{lg.max_percent|floatformat:0}}min</p>
                     {% endif %}
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                     <td style="text-align: center;">{{ item.difftimepickup |floatformat:0}}</td>
                   
                     <td class="list-action">
-                        <div class="btn btn-outline-success action" style="background-color:{{ item.couleur }}">{{ item.status }} </div>
+                        <div class="btn action" style="background-color:{{ item.couleur }}">{{ item.status }} </div>
                     </td>
                     <td class="list-action">
                         <!--<a id="btn-send-2" href="/onerefresh/{{ item.idstatusposdetail }}/{{ item.id }}" class="outline-btn btn-send" data-toggle="tooltip" title="Refresh trip" ><img  class="svg" src="{% static '/reset.svg' %}" alt=""></a>-->
