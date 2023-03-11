@@ -107,8 +107,8 @@
         </div>
         <div class="row">
             <div class="col-md-5 head">
-                <p>Actual time : 
-                    <span>{{last_refresh|time:"H:i:s"}}</span>
+                <p>Next refresh : 
+                    <span id="nextref"></span>
                 </p>
             </div>
             <div class="col-md-7 legend">
@@ -244,7 +244,8 @@
             <p id="id_trip"></p>
           </div>
           <form action="record/save" method="GET">
-            <div class="modal-body">                      
+            <div class="modal-body">  
+                *                    
                 <!--<textarea type="textarea" class="form-control" name="" placeholder="comments"></textarea>-->
                 {{ record.comment }}
                 <input type="hidden" name="id_trip" id="id_trip" value=""/>
@@ -312,7 +313,13 @@
     
 </script>
 <script>
+    
+
     var countDownDate = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}").getTime();
+    var dt = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}")
+    dt.setMinutes(dt.getMinutes() + 5);
+    document.getElementById("nextref").innerHTML = dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds(); 
+    console.log("date ", dt);
     var x = setInterval(function() {
         var now = new Date().getTime();
         var distance = now - countDownDate;
