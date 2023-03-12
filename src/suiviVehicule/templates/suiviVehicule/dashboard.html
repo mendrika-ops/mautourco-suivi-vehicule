@@ -198,7 +198,11 @@
             <div class="">
                 <form action="/dashboard" method="get">
                     <input type="hidden" name="page" value="{{ load_value }}">
-                   <!--<input type="hidden" name="check" value="{{checked}}">-->
+                    <input type="hidden" name="FromPlace" value="{{ FromPlace }}">
+                    <input type="hidden" name="ToPlace" value="{{ ToPlace }}">
+                    <input type="hidden" name="status" value="{{ status }}">
+                    <input type="hidden" name="vehicleno" value="{{ vehicleno }}">
+                    <!--<input type="hidden" name="check" value="{{checked}}">-->
                     {% if is_disable %}
                         <button type="submit" value="" disabled style="opacity: 0.3">Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
                     {% else %}
@@ -245,7 +249,7 @@
           </div>
           <form action="record/save" method="GET">
             <div class="modal-body">  
-                *                    
+                <p>*</p>                    
                 <!--<textarea type="textarea" class="form-control" name="" placeholder="comments"></textarea>-->
                 {{ record.comment }}
                 <input type="hidden" name="id_trip" id="id_trip" value=""/>
