@@ -186,9 +186,15 @@ class Recordcomment(models.Model):
     id = models.indexes
     id_trip = models.IntegerField(null=False)
     comment = models.TextField(max_length=500)
-    datetime = models.DateTimeField()
+    vehicleno = models.CharField(max_length=100,null=True)
+    driver_oname = models.CharField(max_length=150,null=True)
+    FromPlace = models.CharField(max_length=150,null=True)
+    ToPlace = models.CharField(max_length=150,null=True)
+    trip_start_date = models.CharField(max_length=15, null=True)
+    pick_up_time = models.TimeField(null=True)
+    datetime = models.DateField()
     etat = models.IntegerField(default=0)
-    
+    driver_mobile_number = models.CharField(max_length=50,null=True)
 
 class Recordcommenttrajet(models.Model):
     id = models.indexes
@@ -198,7 +204,6 @@ class Recordcommenttrajet(models.Model):
     driver_oname = models.CharField(max_length=150)
     FromPlace = models.CharField(max_length=150)
     ToPlace = models.CharField(max_length=150)
-    trip_start_time = models.TimeField()
     trip_start_date = models.CharField(max_length=15, null=False)
     pick_up_time = models.TimeField()
     status = models.CharField(max_length=100, null=True)

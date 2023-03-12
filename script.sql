@@ -165,35 +165,32 @@ select
 	from suivivehicle_laststatus st;
 
 
-CREATE OR REPLACE
-ALGORITHM = UNDEFINED VIEW `suiviVehicule_recordtrajet` AS
+create or replace
+algorithm = UNDEFINED view `suiviVehicule_recordtrajet` as
 select
-    `svt`.`vehicleno` AS `vehicleno`,
-    `svt`.`driver_oname` AS `driver_oname`,
-    `svt`.`FromPlace` AS `FromPlace`,
-    `svt`.`ToPlace` AS `ToPlace`,
-    `svt`.`id_trip` AS `id_trip`,
-    `svt`.`trip_start_date` AS `trip_start_date`,
-    `svt`.`trip_start_time` AS `trip_start_time`,
-    `svt`.`pick_up_time` AS `pick_up_time`,
+    `svr`.`vehicleno` as `vehicleno`,
+    `svr`.`driver_oname` as `driver_oname`,
+    `svr`.`FromPlace` as `FromPlace`,
+    `svr`.`ToPlace` as `ToPlace`,
+    `svr`.`id_trip` as `id_trip`,
+    `svr`.`trip_start_date` as `trip_start_date`,
+    `svr`.`pick_up_time` as `pick_up_time`,
     (case
         when (`svr`.`etat` = 0) then 'Cancel'
         else `svs`.`status`
-    end) AS `status`,
+    end) as `status`,
     (case
         when (`svr`.`etat` = 0) then 'rgba(30,61,89,1.0)'
         else `svs`.`couleur`
-    end) AS `couleur`,
-    `svr`.`comment` AS `comment`,
-    date_format(`svr`.`datetime`, '%Y-%m-%d') AS `daterecord`,
-    `svr`.`etat` AS `etat`,
-    `svr`.`id` AS `id`,
-    `svt`.`driver_mobile_number` AS `driver_mobile_number`
+    end) as `couleur`,
+    `svr`.`comment` as `comment`,
+    date_format(`svr`.`datetime`, '%Y-%m-%d') as `daterecord`,
+    `svr`.`etat` as `etat`,
+    `svr`.`id` as `id`,
+    `svr`.`driver_mobile_number` as `driver_mobile_number`
 from
-    ((`suiviVehicule_recordcomment` `svr`
-join `suiviVehicule_trajetcoordonnee` `svt` on
-    ((`svr`.`id_trip` = `svt`.`id_trip`)))
-left join `suiviVehicule_statusparameter` `svs` on
+    (`suivivehicule_recordcomment` `svr`
+left join `suivivehicule_statusparameter` `svs` on
     ((`svs`.`id` = `svr`.`etat`)));
 
 
