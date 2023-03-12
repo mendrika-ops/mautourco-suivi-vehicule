@@ -82,7 +82,7 @@ def dashboard_request(request):
     record = CommentFrom(request.GET)
     refresh = service.get_last_refresh()
     chart = service.data_chart()
-    count = service.getall_data_count() 
+    count = service.getall_data_count(form) 
     FromPlace = request.GET.get("FromPlace")
     ToPlace = request.GET.get("ToPlace")
     statuses = request.GET.get("status")
