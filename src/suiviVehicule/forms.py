@@ -125,11 +125,21 @@ class CommentFrom(ModelForm):
         if self.checkexist():
             raise Exception("Error ! object already canceled")
         else:
+            data = Trajetcoordonnee.objects.filter(id_trip=self.cleaned_data['id_trip'])
+            row = data[0]
             record = Recordcomment()
             record.comment = self.cleaned_data['comment']
             record.id_trip = self.cleaned_data['id_trip']
             record.datetime = datetime.now() 
+            record.vehicleno = row.vehicleno
+            record.driver_oname = row.driver_oname
+            record.FromPlace = row.FromPlace
+            record.ToPlace = row.ToPlace
+            record.trip_start_date = row.trip_start_date
+            record.pick_up_time = row.pick_up_time
+            record.driver_mobile_number = row.driver_mobile_number
             record.etat = 0
+
             record.save()
     def checkexist(self):
         return Recordcomment.objects.filter(id_trip=self.cleaned_data['id_trip'],etat=0).exists()
