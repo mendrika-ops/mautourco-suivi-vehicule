@@ -91,13 +91,13 @@ class services():
             setattr(data, 'daty_time', currentdate)
             setattr(data, 'duration', file["duration"])
             data.save()
-            self.create_comment(data.id_trip,trajet.idstatusparameter, currentdate)
+            #self.create_comment(data.id_trip,trajet.idstatusparameter, currentdate)
         except Exception as e:
             raise e
     def add_log(self, now):
         list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
         for row in list_uid:
-            self.create_comment(row.id_trip,row.idstatusparameter, now)
+            self.create_comment(row, now)
 
     #@transaction.atomic            
     def gestion_status_pos(self):
@@ -205,21 +205,28 @@ class services():
             data = TrajetcoordonneeSamm.objects.all().count()
         return data
     
-    def create_comment(self, id_trip, idstatus, now):
+    def create_comment(self, row, now):
         try:
-            if self.boolean_parameter_for_log(idstatus) is True:
-                check = self.check_comment(id_trip) 
+            if self.boolean_parameter_for_log(row.idstatusparameter) is True:
+                check = self.check_comment(row.id_trip) 
                 if len(check) > 0:
                     if check[0].etat != 0: 
-                        check[0].etat = idstatus
+                        check[0].etat = row.idstatusparameter
                         check[0].datetime = now
                         check[0].save()
                 else:
                     record = Recordcomment()
                     record.comment = ""
-                    record.id_trip = id_trip
+                    record.id_trip = row.id_trip
+                    record.vehicleno = row.vehicleno
+                    record.driver_oname = row.driver_oname
+                    record.FromPlace = row.FromPlace
+                    record.ToPlace = row.ToPlace
+                    record.trip_start_date = row.trip_start_date
+                    record.pick_up_time = row.pick_up_time
+                    record.driver_mobile_number = row.driver_mobile_number
                     record.datetime = now 
-                    record.etat = idstatus
+                    record.etat = row.idstatusparameter
                     record.save()
         except Exception as e:
             raise e
