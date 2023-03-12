@@ -82,7 +82,19 @@ def dashboard_request(request):
     record = CommentFrom(request.GET)
     refresh = service.get_last_refresh()
     chart = service.data_chart()
-    count = service.getall_data_count()
+    count = service.getall_data_count() 
+    FromPlace = request.GET.get("FromPlace")
+    ToPlace = request.GET.get("ToPlace")
+    statuses = request.GET.get("status")
+    vehicleno = request.GET.get("vehicleno")
+    if FromPlace is None:
+        FromPlace =""
+    if ToPlace is None:
+        ToPlace =""
+    if statuses is None:
+        statuses =""
+    if vehicleno is None:
+        vehicleno =""
     legend = service.get_liste_parameter_activate()
     if load_value >= count:
         is_disable = True
@@ -102,7 +114,11 @@ def dashboard_request(request):
                            "cron_minute":settings.JOB_MINUTE,
                            "is_disable": is_disable,
                            "legend":legend,
-                           "total_page":count})
+                           "total_page":count,
+                           "FromPlace":FromPlace,
+                           "ToPlace":ToPlace,
+                           "status":statuses,
+                           "vehicleno":vehicleno})
 
 def googlemap_request(request, pos):
     return redirect("https://www.google.com/maps?q=" + pos)
@@ -110,6 +126,7 @@ def googlemap_request(request, pos):
 
 def refresh_request(request):
     try:
+        services().rechange()
         services().gestion_status_pos()
     except Exception as e:
         messages.error(request, e)

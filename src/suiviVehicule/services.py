@@ -99,11 +99,10 @@ class services():
         for row in list_uid:
             self.create_comment(row.id_trip,row.idstatusparameter, now)
 
-    @transaction.atomic            
+    #@transaction.atomic            
     def gestion_status_pos(self):
         status = Statuspos()
         try:
-           
             #list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
             #if len(list_uid) < 1:
             #    list_uid = self.get_new_data()
@@ -114,7 +113,7 @@ class services():
             setattr(status, 'datetime', now)
             setattr(status, 'desc', 'opp')
             status.save()
-            sid = transaction.savepoint()
+            #sid = transaction.savepoint()
             for row in list_uid:
                 status_detail = self.get_position_lat_long(row.Uid, date_time)
                 file = self.get_direction(row.PickUp_H_Pos, status_detail.coordonnee)
@@ -127,9 +126,10 @@ class services():
                 setattr(status_detail, 'current', file["current"])
                 status_detail.save()
             self.add_log(now)
-            transaction.savepoint_commit(sid)
+            #transaction.savepoint_commit(sid)
         except IntegrityError:
-            transaction.savepoint_rollback(sid)
+            print("error")
+            #transaction.savepoint_rollback(sid)
         return status
 
     def get_last_refresh(self):
