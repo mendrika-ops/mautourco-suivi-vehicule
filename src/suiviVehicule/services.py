@@ -191,8 +191,14 @@ class services():
     def boolean_parameter_for_log(self, idstatus):
         return Statusparameter.objects.filter(id=idstatus).exclude(status__icontains="On Track").exists()
     
-    def getall_data_count(self):
-        return TrajetcoordonneeSamm.objects.all().count()
+    def getall_data_count(self,form):
+        return TrajetcoordonneeSamm.objects.filter(driver_oname__icontains=form.cleaned_data['driver_oname'],
+                                                   driver_mobile_number__icontains=form.cleaned_data[
+                                                       'driver_mobile_number'],
+                                                   vehicleno__icontains=form.cleaned_data['vehicleno'],
+                                                   FromPlace__icontains=form.cleaned_data['FromPlace'],
+                                                   ToPlace__icontains=form.cleaned_data['ToPlace'],
+                                                   status__icontains=form.cleaned_data['status']).count()
     
     def create_comment(self, id_trip, idstatus, now):
         try:
