@@ -39,7 +39,7 @@
 .main {
   padding: 2rem;
   font-family: "Open Sans";
-  width: 1400px;
+  width: 1700px;
   margin: 0 auto;
 }
 .main .carrosell {
@@ -75,9 +75,17 @@
   margin-top: 10px;
   border-radius: 0.5rem;
   padding: 1rem;
+  padding-top: 66px;
 }
 .main .search .form-group {
   margin: 0 auto;
+}
+.main .search .form-row {
+  height: 52px;
+}
+
+.main .search .form-row label {
+  font-size: 15px;
 }
 .main .search .footer {
   margin-top: 2rem;
@@ -185,6 +193,14 @@
   font-size: 12px;
   text-align: left;
   align-items: left;
+}
+.main .list table .head {
+  width: 250px;
+  text-align: center;
+}
+.main .list table .head-off {
+  width: 100px;
+  text-align: center;
 }
 .main .list .list-footer {
   display: flex;

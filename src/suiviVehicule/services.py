@@ -74,7 +74,7 @@ class services():
         return {
             "origin": origin,
             "destination": destination,
-            "distance": f"{round(distance / 1000, 2)} Km",
+            "distance": round(distance, 2),
             "duration": duration, 
             "current": currentposition
         }
@@ -118,12 +118,13 @@ class services():
                 status_detail = self.get_position_lat_long(row.Uid, date_time)
                 file = self.get_direction(row.PickUp_H_Pos, status_detail.coordonnee)
                 print("UID ", row.Uid, "coordonnee 000 ", row.PickUp_H_Pos, " COORDONNEE 111 ",
-                    status_detail.coordonnee)
+                    status_detail.coordonnee," distance ",file["distance"])
                 setattr(status_detail, 'idmere', status)
                 setattr(status_detail, 'duration', file["duration"])
                 setattr(status_detail, 'daty_time', now)
                 setattr(status_detail, 'id_trip', row.id_trip)
                 setattr(status_detail, 'current', file["current"])
+                setattr(status_detail, 'distance', file["distance"])
                 status_detail.save()
             self.add_log(now)
             #transaction.savepoint_commit(sid)
