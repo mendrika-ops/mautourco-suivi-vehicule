@@ -159,6 +159,7 @@ class Statusposdetail(models.Model):
     duration = models.IntegerField(null=True)
     id_trip = models.IntegerField(null=True)
     current = models.CharField(max_length=150,null=True)
+    distance = models.FloatField(null=True)
 
 class Statusparameter(models.Model):
     id = models.indexes
@@ -167,6 +168,7 @@ class Statusparameter(models.Model):
     max_percent = models.FloatField()
     couleur = models.CharField(max_length=50)
     desce = models.CharField(max_length=50, null=True)
+    max_distance = models.FloatField(null=True)
     
 class Statusparameterlib(models.Model):
     id = models.indexes
@@ -175,6 +177,7 @@ class Statusparameterlib(models.Model):
     max_percent = models.FloatField()
     couleur = models.CharField(max_length=50)
     desce = models.CharField(max_length=50, null=True)
+    max_distance = models.FloatField(null=True)
     class Meta:
         managed = False
         db_table = 'suiviVehicule_statusparameterlib'

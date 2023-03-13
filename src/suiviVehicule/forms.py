@@ -95,16 +95,16 @@ class Form(ModelForm):
 
 class SearchForm(ModelForm):
     driver_oname = forms.CharField(required=False, label='Driver Name', widget=forms.TextInput(
-                              attrs={'class': "form-control", 'id': "driver"}))
+                              attrs={'class': "form-control col-sm-7", 'id': "driver"}))
     driver_mobile_number = forms.CharField(required=False,label='Driver mobile', widget=forms.TextInput(
-                              attrs={'class': "form-control"}))
+                              attrs={'class': "form-control col-sm-7"}))
     vehicleno = forms.CharField(required=False,label='Vehicule', widget=forms.TextInput(
-                              attrs={'class': "form-control"}))
+                              attrs={'class': "form-control col-sm-7"}))
     FromPlace = forms.CharField(required=False, label='Pickup Place', widget=forms.TextInput(
-        attrs={'class': "form-control"}))
+        attrs={'class': "form-control col-sm-7"}))
     ToPlace = forms.CharField(required=False, label='Destination', widget=forms.TextInput(
-        attrs={'class': "form-control"}))
-    status = forms.CharField(required=False, label='Status',widget=forms.Select(choices=list_statut, attrs={'class': "form-control"}))
+        attrs={'class': "form-control col-sm-7"}))
+    status = forms.CharField(required=False, label='Status',widget=forms.Select(choices=list_statut, attrs={'class': "form-control col-sm-7"}))
     
     class Meta:
         model = TrajetcoordonneeSamm
