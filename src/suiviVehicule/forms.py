@@ -155,6 +155,8 @@ class ParameterForm(ModelForm):
                               attrs={'type':"color", 'class': "form-control"}))
     desce = forms.CharField(required=True, label='Etat', widget=forms.Select(choices=list_active, 
                               attrs={'class': "form-control"}))
+    max_distance = forms.FloatField(required=True, label='Max Distance', widget=forms.NumberInput(
+                              attrs={'class': "form-control", 'style':"width: 100px"}))
     
     class Meta:
         model = Statusparameter
@@ -166,6 +168,7 @@ class ParameterForm(ModelForm):
         parameter.max_percent = self.cleaned_data['max_percent']
         parameter.desce = self.cleaned_data['desce']
         parameter.couleur = self.cleaned_data['couleur']
+        parameter.max_distance = self.cleaned_data['max_distance']
         parameter.save()
 
     def isExist(self):
