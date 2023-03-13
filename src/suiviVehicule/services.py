@@ -25,15 +25,19 @@ class services():
         pos = response.json()
         if response.status_code == 400:
             raise Exception("Error 400 ! Please check your connection")
+        #print("get api : ", pos)
         return pos
 
     def get_position_lat_long(self, uid, date_time):
         pos = self.get_position_at_time(uid, date_time)
         lat = pos["Result"]["Position"]["Latitude"]
         long = pos["Result"]["Position"]["Longitude"]
+        address = pos["Result"]["Position"]["Address"]
         status_detail = Statusposdetail()
         setattr(status_detail, 'uid', uid)
         setattr(status_detail, 'coordonnee', f"{lat},{long}")
+        setattr(status_detail, 'current', address)
+        #print("coordonnée current ", status_detail.coordonnee)
         return status_detail
 
     def get_direction(self, origin, destination):
@@ -45,7 +49,8 @@ class services():
                 'origin': origin,
                 'destination': destination,
                 'waypoints': waypoints,
-                "key": 'AIzaSyCJwwTnRM8ePI1yj_zyOGgBtepyyJur8Gs'
+                'mode':'driving',
+                'key': 'AIzaSyCJwwTnRM8ePI1yj_zyOGgBtepyyJur8Gs'
             })
 
         directions = result.json()
@@ -59,9 +64,12 @@ class services():
             route_list = []
 
             for route in range(len(routes)):
-                distance += int(routes[route]["distance"]["value"])
-                duration += int(routes[route]["duration"]["value"])
-                
+                # print("routee " ,routes[route]["distance"])
+                # print("duration " ,routes[route]["duration"])
+                distance += round(int(routes[route]["distance"]["value"]))
+                duration += round(int(routes[route]["duration"]["value"]))
+                # print("approx im distance : ",round(int(routes[route]["distance"]["value"])))
+                # print("approx im duration : ",round(int(routes[route]["duration"]["value"])))
                 route_step = {
                     'origin': routes[route]["start_address"],
                     'destination': routes[route]["end_address"],
@@ -70,12 +78,13 @@ class services():
                 route_list.append(route_step)
             current = route_list[len(routes)-1]["destination"].split(", ")
             currentposition = current[0] + ", "+ current[1]
-        print(currentposition)
+            print("total distance : ",distance)
+            print("total im duration : ",duration)
         return {
             "origin": origin,
             "destination": destination,
-            "distance": round(distance, 2),
-            "duration": duration, 
+            "distance": distance,
+            "duration": round(duration)+(60), 
             "current": currentposition
         }
 
@@ -86,7 +95,7 @@ class services():
             currentdate = datetime.now()
             date_time = currentdate.strftime("%d %B %Y %H:%M:%S")
             status_detail = self.get_position_lat_long(data.uid, date_time)
-            file = self.get_direction(trajet.PickUp_H_Pos, status_detail.coordonnee)
+            file = self.get_direction(status_detail.coordonnee, trajet.PickUp_H_Pos)
             setattr(data, 'id', idstatusdetail)
             setattr(data, 'daty_time', currentdate)
             setattr(data, 'duration', file["duration"])
@@ -116,14 +125,13 @@ class services():
             #sid = transaction.savepoint()
             for row in list_uid:
                 status_detail = self.get_position_lat_long(row.Uid, date_time)
-                file = self.get_direction(row.PickUp_H_Pos, status_detail.coordonnee)
-                print("UID ", row.Uid, "coordonnee 000 ", row.PickUp_H_Pos, " COORDONNEE 111 ",
-                    status_detail.coordonnee," distance ",file["distance"])
+                print(status_detail.coordonnee,)
+                file = self.get_direction(status_detail.coordonnee, row.PickUp_H_Pos)
+                print("UID ", row.Uid, "coordonnee 000 ", row.PickUp_H_Pos, " COORDONNEE 111 ", status_detail.coordonnee," distance ",file["distance"])
                 setattr(status_detail, 'idmere', status)
                 setattr(status_detail, 'duration', file["duration"])
                 setattr(status_detail, 'daty_time', now)
                 setattr(status_detail, 'id_trip', row.id_trip)
-                setattr(status_detail, 'current', file["current"])
                 setattr(status_detail, 'distance', file["distance"])
                 status_detail.save()
             self.add_log(now)
