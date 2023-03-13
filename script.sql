@@ -207,7 +207,8 @@ select
     (case
         when (`svs`.`desce` = 0) then 'Disable'
         else 'Enable'
-    end) AS `desce`
+    end) AS `desce`,
+    svs.max_distance 
 from
     `suiviVehicule_statusparameter` `svs`;
 
