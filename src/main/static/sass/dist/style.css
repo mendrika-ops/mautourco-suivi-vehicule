@@ -75,7 +75,7 @@
   margin-top: 10px;
   border-radius: 0.5rem;
   padding: 1rem;
-  padding-top: 66px;
+  padding-top: 44px;
 }
 .main .search .form-group {
   margin: 0 auto;
@@ -347,4 +347,11 @@
 .list-action .action{
   color: #181717;
   font-weight: bold;
+}
+
+.container .modal-aster{
+  float: right;
+  margin-top: -16px;
+  margin-bottom: auto;
+  padding-right: 3px;
 }

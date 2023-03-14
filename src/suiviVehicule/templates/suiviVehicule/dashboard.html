@@ -242,7 +242,7 @@
           </div>
           <form action="record/save" method="GET">
             <div class="modal-body">  
-                <p>*</p>                    
+                <p class="modal-aster">*</p>                    
                 <!--<textarea type="textarea" class="form-control" name="" placeholder="comments"></textarea>-->
                 {{ record.comment }}
                 <input type="hidden" name="id_trip" id="id_trip" value=""/>
@@ -362,7 +362,7 @@
             "{{item.ToPlace}}",
         {% endfor %}
         ];
-
+        console.log("tata", availableDestination)
         $("#driver").autocomplete({
             source: availableTags
         });
