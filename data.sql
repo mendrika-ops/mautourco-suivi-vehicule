@@ -349,5 +349,5 @@ INSERT INTO suiviVehicule_statusparameter
 VALUES(4, 'On Track', 26.0, 1000.0, '#3cb371', '1');
 INSERT INTO suiviVehicule_statusparameter
 (id, status, min_percent, max_percent, couleur, desce)
-VALUES(5, 'Completed', 26.0, 1000.0, '#4cb371', '1');
+VALUES(5, 'Completed', 1100.0, 1100.0, '#4cb371', '1');
 
