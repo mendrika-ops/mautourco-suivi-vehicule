@@ -348,21 +348,21 @@
     $(function () {
         var availableTags = [
         {% for item in data_auto %}
-            "{{item.driver_oname}}",
+            "{{item.driver_oname}}".replace('&amp;','&'),
         {% endfor %}
         ];
         var availablePickup = [
         {% for item in data_auto %}
-            "{{item.FromPlace}}",
+            "{{item.FromPlace}}".replace('&amp;','&'),
         {% endfor %}
         ];
 
         var availableDestination = [
         {% for item in data_auto %}
-            "{{item.ToPlace}}",
+            "{{item.ToPlace}}".replace('&amp;','&'),
         {% endfor %}
         ];
-        console.log("tata", availableDestination)
+        
         $("#driver").autocomplete({
             source: availableTags
         });
