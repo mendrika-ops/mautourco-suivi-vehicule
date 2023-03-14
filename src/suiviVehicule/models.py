@@ -46,7 +46,9 @@ class TrajetcoordonneeSamm(models.Model):
         managed = False
         db_table = 'suivivehicle_laststatus'
 
-
+class Refresh(models.Model):
+    id = models.indexes
+    date_time = models.DateTimeField()
 class Trajetcoordonnee(models.Model):
     vehicleno = models.CharField(max_length=100)
     driver_oname = models.CharField(max_length=150)
@@ -64,6 +66,7 @@ class Trajetcoordonnee(models.Model):
     couleur = models.CharField(max_length=100, null=True)
     estimatetime = models.CharField(max_length=50, null=True)
     trip_start_time = models.TimeField(null=True)
+    refresh = models.ForeignKey(Refresh, on_delete=models.CASCADE, null=True)
         
     def get_vehicleno(self):
         return self.vehicleno
@@ -160,6 +163,8 @@ class Statusposdetail(models.Model):
     id_trip = models.IntegerField(null=True)
     current = models.CharField(max_length=150,null=True)
     distance = models.FloatField(null=True)
+
+
 
 class Statusparameter(models.Model):
     id = models.indexes

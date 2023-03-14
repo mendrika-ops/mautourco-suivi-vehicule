@@ -3,7 +3,7 @@ import requests
 from django.db import IntegrityError, connection, connections, transaction
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Recordcomment, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
+from suiviVehicule.models import Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
 from datetime import datetime
 
 
@@ -319,7 +319,12 @@ class services():
     
     def rechange(self):
         tab = self.get_asterix_data()
-        Trajetcoordonnee.objects.all().delete()
+        #Trajetcoordonnee.objects.all().delete()
+        ref = Refresh()
+        ref.date_time = datetime.now()
+        ref.save()
+        print("idd ", ref.id)
         for row in tab:
+            row.refresh_id = ref.id
             row.save()
         
