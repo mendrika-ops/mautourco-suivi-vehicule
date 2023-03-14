@@ -65,7 +65,7 @@ def check(checked):
 def dashboard_request(request):
     data_list = []
     load_value = 0
-    defaut = 10
+    defaut = 50
     service = services()
     is_disable = False
     form = setForm(request)
