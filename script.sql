@@ -1,6 +1,5 @@
 create database mautourcosuiviVehicule;
 
---user
 CREATE TABLE user (
 	id INT auto_increment NOT NULL,
 	username varchar(100) NOT NULL,
@@ -14,7 +13,7 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_general_ci;
 
---suiviVehicule_trajetcoordonnee
+
 CREATE TABLE `suiviVehicule_trajetcoordonnee` (
   `id` int NOT NULL AUTO_INCREMENT,
   `vehicleno` varchar(100) NOT NULL,
@@ -30,7 +29,7 @@ CREATE TABLE `suiviVehicule_trajetcoordonnee` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---suiviVehicule_units
+
 CREATE TABLE `suiviVehicule_units` (
   `Uid` varchar(50) DEFAULT NULL,
   `Name` varchar(100) DEFAULT NULL,
@@ -42,10 +41,33 @@ CREATE TABLE `suiviVehicule_units` (
   `UnitType` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-
---suiviVehicule_trajetcoordonneesummary
 create or replace
-algorithm = UNDEFINED view `suiviVehicule_trajetcoordonneesummary` as
+algorithm = UNDEFINED view `suivivehicule_trajetcoordonneemax` as
+select
+    `st`.`vehicleno` as `vehicleno`,
+    `st`.`id` as `id`,
+    `st`.`driver_oname` as `driver_oname`,
+    `st`.`driver_mobile_number` as `driver_mobile_number`,
+    `st`.`FromPlace` as `FromPlace`,
+    `st`.`ToPlace` as `ToPlace`,
+    `st`.`id_trip` as `id_trip`,
+    `st`.`trip_no` as `trip_no`,
+    `st`.`trip_start_date` as `trip_start_date`,
+    `st`.`pick_up_time` as `pick_up_time`,
+    `st`.`PickUp_H_Pos` as `PickUp_H_Pos`,
+    `st`.`trip_start_time` as `trip_start_time`,
+    `st`.`refresh_id` as `refresh_id`
+from
+    `suivivehicule_trajetcoordonnee` `st`
+where
+    (`st`.`refresh_id` = (
+    select
+        max(`sr`.`id`)
+    from
+        `suivivehicule_refresh` `sr`));
+
+create or replace
+algorithm = UNDEFINED view `suivivehicule_trajetcoordonneesummary` as
 select
     `su`.`Uid` as `Uid`,
     `st`.`vehicleno` as `vehicleno`,
@@ -61,12 +83,10 @@ select
     `st`.`PickUp_H_Pos` as `PickUp_H_Pos`,
     `st`.`trip_start_time` as `trip_start_time`
 from
-    (`suiviVehicule_trajetcoordonnee` `st`
-join `suiviVehicule_units` `su` on
-    ((`st`.`vehicleno` = `su`.`Name`)));    
+    (`suivivehicule_trajetcoordonneemax` `st`
+join `suivivehicule_units` `su` on
+    ((`st`.`vehicleno` = `su`.`Name`))); 
 
-
---suiviVehicule_getlastcoordonnee
 create or replace
 algorithm = UNDEFINED view `suiviVehicule_getlastcoordonnee` as
 select
