@@ -5,9 +5,6 @@ from humanfriendly import format_timespan
 from django.conf import settings
 from suiviVehicule.models import Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
 from datetime import datetime,tzinfo
-from dateutil import tz
-
-
 
 class services():
     UserIdGuid = settings.USERIDGUID
