@@ -125,7 +125,7 @@
 
             </div>
         </div>
-        <div class="row table-responsive">
+        <div class="row">
             <table class="table table-borderless col-md-12">
                 <thead>
                     <tr>
@@ -322,7 +322,6 @@
     console.log("date ", dt);
     var x = setInterval(function() {
         var now = new Date("{{ now |date:'Y-m-d H:i:s'}}").getTime()
-        console.log("coco ",now)
         var distance = now - countDownDate;
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);    
