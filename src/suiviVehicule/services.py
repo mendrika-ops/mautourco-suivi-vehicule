@@ -10,16 +10,20 @@ from datetime import datetime
 class services():
     UserIdGuid = settings.USERIDGUID
     SessionId = settings.SESSIONID
+    UserName = 'devvirmatics@mautourco.com'
+    Password = 'Mautourco@1234'
 
     def get_api_data(self):
         response = requests.get(
-            f'https://api.3dtracking.net/api/v1.0/Units/Unit/List?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}')
+            f'https://api.3dtracking.net/api/v1.0/Authentication/UserAuthenticate?UserName={self.UserName}&Password={self.Password}')
         users = response.json()
+        self.UserIdGuid = users["Result"]["UserIdGuid"]
+        self.SessionId = users["Result"]["SessionId"]
         if response.status_code == 400:
             raise Exception("Error 400 ! Please check your connection")
-        return users
 
     def get_position_at_time(self, uid, date_time):
+        #self.get_api_data()
         req = f"https://api.3dtracking.net/api/v1.0/Units/{uid}/PositionAtTime?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}&PointInTimeDateTimeUTC={date_time}"
         response = requests.get(req)
         pos = response.json()
@@ -108,7 +112,7 @@ class services():
         for row in list_uid:
             self.create_comment(row, now)
 
-    #@transaction.atomic            
+    @transaction.atomic            
     def gestion_status_pos(self):
         status = Statuspos()
         try:
@@ -122,7 +126,7 @@ class services():
             setattr(status, 'datetime', now)
             setattr(status, 'desc', 'opp')
             status.save()
-            #sid = transaction.savepoint()
+            sid = transaction.savepoint()
             for row in list_uid:
                 status_detail = self.get_position_lat_long(row.Uid, date_time)
                 print(status_detail.coordonnee,)
@@ -135,10 +139,10 @@ class services():
                 setattr(status_detail, 'distance', file["distance"])
                 status_detail.save()
             self.add_log(now)
-            #transaction.savepoint_commit(sid)
+            transaction.savepoint_commit(sid)
         except IntegrityError:
             print("error")
-            #transaction.savepoint_rollback(sid)
+            transaction.savepoint_rollback(sid)
         return status
 
     def get_last_refresh(self):
@@ -297,9 +301,10 @@ class services():
     
     def get_asterix_data(self):
         tab = []
-        cursor = connections["asterix"].cursor()
-        req = "SELECT v.vehicleno,CONCAT(d.driver_sname,' ',d.`driver_oname`) AS driver_oname,d.MobileNo AS driver_mobile_number,h.h_name AS FromPlace,h1.`h_name` AS ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,CONCAT(h.`latitude`, ',', h.`longitude`) AS PickUp_H_Pos,t.resa_trans_type FROM trip t,driver d,hotel h,hotel h1,vehicle v WHERE trip_start_date = CURRENT_DATE() AND t.`id_driver` = d.`id_driver` AND v.id_vehicle = t.id_vehicle AND t.`pick_up_place_id` = h.`id_hotel` AND t.`destination_id` = h1.`id_hotel` AND t.resa_type IN (1, 2, 3, 4, 5) AND v.vehicleno != 'CANCELLED' AND t.vehicleno != 'Not Assigned' AND t.resa_trans_type != '' AND t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000) GROUP BY trip_no, FromPlace ORDER BY t.trip_start_date, t.`pick_up_time`, t.`trip_no`"
-       
+        #cursor = connections["asterix"].cursor()
+        #req = "SELECT v.vehicleno,CONCAT(d.driver_sname,' ',d.`driver_oname`) AS driver_oname,d.MobileNo AS driver_mobile_number,h.h_name AS FromPlace,h1.`h_name` AS ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,CONCAT(h.`latitude`, ',', h.`longitude`) AS PickUp_H_Pos,t.resa_trans_type FROM trip t,driver d,hotel h,hotel h1,vehicle v WHERE trip_start_date = CURRENT_DATE() AND t.`id_driver` = d.`id_driver` AND v.id_vehicle = t.id_vehicle AND t.`pick_up_place_id` = h.`id_hotel` AND t.`destination_id` = h1.`id_hotel` AND t.resa_type IN (1, 2, 3, 4, 5) AND v.vehicleno != 'CANCELLED' AND t.vehicleno != 'Not Assigned' AND t.resa_trans_type != '' AND t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000) GROUP BY trip_no, FromPlace ORDER BY t.trip_start_date, t.`pick_up_time`, t.`trip_no`"
+        cursor = connection.cursor()
+        req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000)"
         cursor.execute(req)
         for row in cursor:
             trajetcoordonnee = Trajetcoordonnee()
@@ -318,13 +323,17 @@ class services():
         return tab
     
     def rechange(self):
-        tab = self.get_asterix_data()
-        #Trajetcoordonnee.objects.all().delete()
-        ref = Refresh()
-        ref.date_time = datetime.now()
-        ref.save()
-        print("idd ", ref.id)
-        for row in tab:
-            row.refresh_id = ref.id
-            row.save()
+        try:
+            tab = self.get_asterix_data()
+            #Trajetcoordonnee.objects.all().delete()
+            ref = Refresh()
+            ref.date_time = datetime.now()
+            ref.save()
+           
+            for row in tab:
+                print("idd ", ref.id)
+                row.refresh_id = ref.id
+                row.save()
+        except Exception as e:
+            print("error",e)
         
