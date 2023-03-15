@@ -42,7 +42,7 @@ CREATE TABLE `suiviVehicule_units` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 create or replace
-algorithm = UNDEFINED view `suivivehicule_trajetcoordonneemax` as
+algorithm = UNDEFINED view `suiviVehicule_trajetcoordonneemax` as
 select
     `st`.`vehicleno` as `vehicleno`,
     `st`.`id` as `id`,
@@ -58,16 +58,16 @@ select
     `st`.`trip_start_time` as `trip_start_time`,
     `st`.`refresh_id` as `refresh_id`
 from
-    `suivivehicule_trajetcoordonnee` `st`
+    `suiviVehicule_trajetcoordonnee` `st`
 where
     (`st`.`refresh_id` = (
     select
         max(`sr`.`id`)
     from
-        `suivivehicule_refresh` `sr`));
+        `suiviVehicule_refresh` `sr`));
 
 create or replace
-algorithm = UNDEFINED view `suivivehicule_trajetcoordonneesummary` as
+algorithm = UNDEFINED view `suiviVehicule_trajetcoordonneesummary` as
 select
     `su`.`Uid` as `Uid`,
     `st`.`vehicleno` as `vehicleno`,
@@ -83,8 +83,8 @@ select
     `st`.`PickUp_H_Pos` as `PickUp_H_Pos`,
     `st`.`trip_start_time` as `trip_start_time`
 from
-    (`suivivehicule_trajetcoordonneemax` `st`
-join `suivivehicule_units` `su` on
+    (`suiviVehicule_trajetcoordonneemax` `st`
+join `suiviVehicule_units` `su` on
     ((`st`.`vehicleno` = `su`.`Name`))); 
 
 create or replace
@@ -122,13 +122,13 @@ select
         select
             `ss`.`max_distance`
         from
-            `suivivehicule_statusparameter` `ss`
+            `suiviVehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))) then (
         select
             `ss`.`status`
         from
-            `suivivehicule_statusparameter` `ss`
+            `suiviVehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))
         else `spa`.`status`
@@ -138,13 +138,13 @@ select
         select
             `ss`.`max_distance`
         from
-            `suivivehicule_statusparameter` `ss`
+            `suiviVehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))) then (
         select
             `ss`.`couleur`
         from
-            `suivivehicule_statusparameter` `ss`
+            `suiviVehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))
         else `spa`.`couleur`
@@ -159,7 +159,7 @@ select
         select
             `ss`.`max_distance`
         from
-            `suivivehicule_statusparameter` `ss`
+            `suiviVehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))) then 5
         else `spa`.`id`
@@ -169,11 +169,11 @@ select
     (time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60) as `difftimepickup`,
     `su`.`current` as `current`
 from
-    ((`suivivehicule_trajetcoordonneesummary` `stc`
-join `suivivehicule_statusposdetail` `su` on
+    ((`suiviVehicule_trajetcoordonneesummary` `stc`
+join `suiviVehicule_statusposdetail` `su` on
     (((`stc`.`id_trip` = `su`.`id_trip`)
         and (`stc`.`Uid` = `su`.`uid`))))
-join `suivivehicule_statusparameter` `spa` on
+join `suiviVehicule_statusparameter` `spa` on
     ((((`spa`.`min_percent` * 60) < time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))))
         and ((`spa`.`max_percent` * 60) > time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))))
             and (`spa`.`desce` >= 1))))
@@ -182,14 +182,14 @@ where
     select
         max(`ss`.`id`)
     from
-        `suivivehicule_statuspos` `ss`))
+        `suiviVehicule_statuspos` `ss`))
     and (str_to_date(`stc`.`trip_start_date`,
     '%Y-%m-%d') = curdate())
         and `stc`.`id_trip` in (
         select
             `svr`.`id_trip`
         from
-            `suivivehicule_recordcomment` `svr`
+            `suiviVehicule_recordcomment` `svr`
         where
             (`svr`.`etat` = 0)) is false)
 order by
@@ -249,8 +249,8 @@ select
     `svr`.`id` as `id`,
     `svr`.`driver_mobile_number` as `driver_mobile_number`
 from
-    (`suivivehicule_recordcomment` `svr`
-left join `suivivehicule_statusparameter` `svs` on
+    (`suiviVehicule_recordcomment` `svr`
+left join `suiviVehicule_statusparameter` `svs` on
     ((`svs`.`id` = `svr`.`etat`)));
     
 
@@ -271,4 +271,20 @@ select
 from
     `suiviVehicule_statusparameter` `svs`;
 
+
+CREATE TABLE `planning` (
+  `planning_id` int NOT NULL AUTO_INCREMENT,
+  `vehicleno` varchar(100) DEFAULT NULL,
+  `driver_oname` varchar(250) DEFAULT NULL,
+  `driver_mobile_number` varchar(100) DEFAULT NULL,
+  `FromPlace` varchar(250) DEFAULT NULL,
+  `ToPlace` varchar(250) DEFAULT NULL,
+  `id_trip` int DEFAULT NULL,
+  `trip_no` int DEFAULT NULL,
+  `trip_start_date` date DEFAULT NULL,
+  `pick_up_time` varchar(100) DEFAULT NULL,
+  `PickUp_H_Pos` varchar(250) DEFAULT NULL,
+  `resa_trans_type` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`planning_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=300 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
     
