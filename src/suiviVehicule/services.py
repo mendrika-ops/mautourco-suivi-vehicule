@@ -4,7 +4,9 @@ from django.db import IntegrityError, connection, connections, transaction
 from humanfriendly import format_timespan
 from django.conf import settings
 from suiviVehicule.models import Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
-from datetime import datetime
+from datetime import datetime,tzinfo
+from dateutil import tz
+
 
 
 class services():
@@ -96,7 +98,7 @@ class services():
         try:
             data = Statusposdetail.objects.get(pk=idstatusdetail)
             trajet = TrajetcoordonneeSamm.objects.get(pk=id)
-            currentdate = datetime.now()
+            currentdate = self.date_time()
             date_time = currentdate.strftime("%d %B %Y %H:%M:%S")
             status_detail = self.get_position_lat_long(data.uid, date_time)
             file = self.get_direction(status_detail.coordonnee, trajet.PickUp_H_Pos)
@@ -111,7 +113,15 @@ class services():
         list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
         for row in list_uid:
             self.create_comment(row, now)
-
+    def date_time(self):
+        to_zone = tz.gettz('Indian/Mauritius')
+        from_zone = tz.gettz('UTC')
+        utc = datetime.now().replace(tzinfo=from_zone)
+        central = utc.astimezone(to_zone)
+        av = datetime.strptime(central.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
+        print("date time :  ", av)
+        print("date now : ", datetime.now())
+        return av
     @transaction.atomic            
     def gestion_status_pos(self):
         status = Statuspos()
@@ -120,7 +130,12 @@ class services():
             #if len(list_uid) < 1:
             #    list_uid = self.get_new_data()
             list_uid = self.get_new_data()
-            currentdate = datetime.now()
+           
+            
+            
+           
+            
+            currentdate = self.date_time()
             now = currentdate
             date_time = now.strftime("%d %B %Y %H:%M:%S")
             setattr(status, 'datetime', now)
@@ -327,7 +342,7 @@ class services():
             tab = self.get_asterix_data()
             #Trajetcoordonnee.objects.all().delete()
             ref = Refresh()
-            ref.date_time = datetime.now()
+            ref.date_time = self.date_time()
             ref.save()
            
             for row in tab:
