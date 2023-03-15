@@ -89,7 +89,7 @@
             <div class="col-md-12 head">
                 <p>Last updated : <span id="demo"> </span> mn ago at <span>{{last_refresh|time:"H:i:s"}}</span>
                     <a href="/refresh" >
-                        <button class="btn-send" c>
+                        <button class="btn-send" onclick="reload()">
                             Refresh
                             <i class="fa-sharp fa-solid fa-arrows-rotate"></i>
                         </button>
@@ -321,7 +321,8 @@
     document.getElementById("nextref").innerHTML = h +":"+min+":"+sec; 
     console.log("date ", dt);
     var x = setInterval(function() {
-        var now = new Date().getTime();
+        var now = new Date("{{ now |date:'Y-m-d H:i:s'}}").getTime()
+        console.log("coco ",now)
         var distance = now - countDownDate;
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);    
@@ -339,7 +340,9 @@
     }, 1000);
 </script>
 <script>
-   
+   function reload(){
+     window.location.reload(true)
+   }
     /*var availableTags = [
       {% for item in data_auto %}
           "{{item.driver_oname}}",
