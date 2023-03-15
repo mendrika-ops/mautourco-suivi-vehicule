@@ -118,7 +118,8 @@ def dashboard_request(request):
                            "FromPlace":FromPlace,
                            "ToPlace":ToPlace,
                            "status":statuses,
-                           "vehicleno":vehicleno})
+                           "vehicleno":vehicleno,
+                           "now": services().date_time()})
 
 def googlemap_request(request, pos):
     return redirect("https://www.google.com/maps?q=" + pos)
