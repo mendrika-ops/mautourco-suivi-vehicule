@@ -16,7 +16,32 @@ class User(models.Model):
     sexe = models.CharField(max_length=20, null=True)
     description = models.TextField()
     etat = models.IntegerField()
+class Units(models.Model):
+    Uid = models.CharField(max_length=50, null=True)
+    Name = models.CharField(max_length=100, null=True)
+    IMEI = models.CharField(max_length=100, null=True)
+    Status = models.CharField(max_length=50, null=True)
+    GroupName = models.CharField(max_length=100, null=True)
+    CompanyName = models.CharField(max_length=100, null=True)
+    PhoneNumber = models.CharField(max_length=100, null=True)
+    UnitType = models.CharField(max_length=100, null=True)
 
+    def set_Uid(self, Uid):
+        self.Uid = Uid
+    def set_Name(self, Name):
+        self.Name = Name
+    def set_IMEI(self, IMEI):
+        self.IMEI = IMEI
+    def set_Status(self, Status):
+        self.Status = Status
+    def set_GroupName(self, GroupName):
+        self.GroupName = GroupName
+    def set_CompanyName(self, CompanyName):
+        self.CompanyName = CompanyName
+    def set_PhoneNumber(self, PhoneNumber):
+        self.PhoneNumber = PhoneNumber
+    def set_UnitType(self, UnitType):
+        self.UnitType = UnitType
 
 class TrajetcoordonneeSamm(models.Model):
     vehicleno = models.CharField(max_length=100)
