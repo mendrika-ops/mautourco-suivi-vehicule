@@ -84,8 +84,8 @@ class services():
                 route_list.append(route_step)
             current = route_list[len(routes)-1]["destination"].split(", ")
             currentposition = current[0] + ", "+ current[1]
-            print("total distance : ",distance)
-            print("total im duration : ",duration)
+            #print("total distance : ",distance)
+            #print("total im duration : ",duration)
         return {
             "origin": origin,
             "destination": destination,
@@ -113,15 +113,17 @@ class services():
         list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
         for row in list_uid:
             self.create_comment(row, now)
+
     def date_time(self):
-        to_zone = tz.gettz('Indian/Mauritius')
-        from_zone = tz.gettz('UTC')
+        to_zone = tz.gettz('EAT')
+        from_zone = tz.gettz('EAT')
         utc = datetime.now().replace(tzinfo=from_zone)
         central = utc.astimezone(to_zone)
         av = datetime.strptime(central.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
-        print("date time :  ", av)
-        print("date now : ", datetime.now())
+        #print("date time :  ", av)
+        #print("date now : ", datetime.now())
         return av
+    
     @transaction.atomic            
     def gestion_status_pos(self):
         status = Statuspos()
@@ -130,11 +132,6 @@ class services():
             #if len(list_uid) < 1:
             #    list_uid = self.get_new_data()
             list_uid = self.get_new_data()
-           
-            
-            
-           
-            
             currentdate = self.date_time()
             now = currentdate
             date_time = now.strftime("%d %B %Y %H:%M:%S")
@@ -142,17 +139,19 @@ class services():
             setattr(status, 'desc', 'opp')
             status.save()
             sid = transaction.savepoint()
+            count = 1
             for row in list_uid:
                 status_detail = self.get_position_lat_long(row.Uid, date_time)
-                print(status_detail.coordonnee,)
+                #print(status_detail.coordonnee,)
                 file = self.get_direction(status_detail.coordonnee, row.PickUp_H_Pos)
-                print("UID ", row.Uid, "coordonnee 000 ", row.PickUp_H_Pos, " COORDONNEE 111 ", status_detail.coordonnee," distance ",file["distance"])
+                print("- datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ", count ,"/", len(list_uid))
                 setattr(status_detail, 'idmere', status)
                 setattr(status_detail, 'duration', file["duration"])
                 setattr(status_detail, 'daty_time', now)
                 setattr(status_detail, 'id_trip', row.id_trip)
                 setattr(status_detail, 'distance', file["distance"])
                 status_detail.save()
+                count = count + 1 
             self.add_log(now)
             transaction.savepoint_commit(sid)
         except IntegrityError:
@@ -319,7 +318,10 @@ class services():
         #cursor = connections["asterix"].cursor()
         #req = "SELECT v.vehicleno,CONCAT(d.driver_sname,' ',d.`driver_oname`) AS driver_oname,d.MobileNo AS driver_mobile_number,h.h_name AS FromPlace,h1.`h_name` AS ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,CONCAT(h.`latitude`, ',', h.`longitude`) AS PickUp_H_Pos,t.resa_trans_type FROM trip t,driver d,hotel h,hotel h1,vehicle v WHERE trip_start_date = CURRENT_DATE() AND t.`id_driver` = d.`id_driver` AND v.id_vehicle = t.id_vehicle AND t.`pick_up_place_id` = h.`id_hotel` AND t.`destination_id` = h1.`id_hotel` AND t.resa_type IN (1, 2, 3, 4, 5) AND v.vehicleno != 'CANCELLED' AND t.vehicleno != 'Not Assigned' AND t.resa_trans_type != '' AND t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000) GROUP BY trip_no, FromPlace ORDER BY t.trip_start_date, t.`pick_up_time`, t.`trip_no`"
         cursor = connection.cursor()
-        req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN ADDTIME(CURRENT_TIME,40000) AND ADDTIME(CURRENT_TIME,70000)"
+        #server mauritus
+        req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000)"
+        #server linux
+        #req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN ADDTIME(CURRENT_TIME,40000) AND ADDTIME(CURRENT_TIME,70000)"
         cursor.execute(req)
         for row in cursor:
             trajetcoordonnee = Trajetcoordonnee()
@@ -334,7 +336,7 @@ class services():
             trajetcoordonnee.set_pick_up_time(row[8])
             trajetcoordonnee.set_PickUp_H_Pos(row[9])
             tab.append(trajetcoordonnee)
-            print(trajetcoordonnee.get_id_trip())
+            #print(trajetcoordonnee.get_id_trip())
         return tab
     
     def rechange(self):
@@ -346,7 +348,7 @@ class services():
             ref.save()
            
             for row in tab:
-                print("idd ", ref.id)
+                #print("idd ", ref.id)
                 row.refresh_id = ref.id
                 row.save()
         except Exception as e:
