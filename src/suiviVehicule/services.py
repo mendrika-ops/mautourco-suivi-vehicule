@@ -116,7 +116,7 @@ class services():
 
     def date_time(self):
         to_zone = tz.gettz('Indian/Mauritius')
-        from_zone = tz.gettz('UTC')
+        from_zone = tz.gettz('Indian/Mauritius')
         utc = datetime.now().replace(tzinfo=from_zone)
         central = utc.astimezone(to_zone)
         av = datetime.strptime(central.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
@@ -315,13 +315,13 @@ class services():
     
     def get_asterix_data(self):
         tab = []
-        #cursor = connections["asterix"].cursor()
-        #req = "SELECT v.vehicleno,CONCAT(d.driver_sname,' ',d.`driver_oname`) AS driver_oname,d.MobileNo AS driver_mobile_number,h.h_name AS FromPlace,h1.`h_name` AS ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,CONCAT(h.`latitude`, ',', h.`longitude`) AS PickUp_H_Pos,t.resa_trans_type FROM trip t,driver d,hotel h,hotel h1,vehicle v WHERE trip_start_date = CURRENT_DATE() AND t.`id_driver` = d.`id_driver` AND v.id_vehicle = t.id_vehicle AND t.`pick_up_place_id` = h.`id_hotel` AND t.`destination_id` = h1.`id_hotel` AND t.resa_type IN (1, 2, 3, 4, 5) AND v.vehicleno != 'CANCELLED' AND t.vehicleno != 'Not Assigned' AND t.resa_trans_type != '' AND t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000) GROUP BY trip_no, FromPlace ORDER BY t.trip_start_date, t.`pick_up_time`, t.`trip_no`"
+        cursor = connections["asterix"].cursor()
+        req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type FROM VW_GPSTracking t"
         cursor = connection.cursor()
         #server mauritus
         #req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000)"
         #server linux
-        req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN ADDTIME(CURRENT_TIME,40000) AND ADDTIME(CURRENT_TIME,70000)"
+        #req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN ADDTIME(CURRENT_TIME,40000) AND ADDTIME(CURRENT_TIME,70000)"
         cursor.execute(req)
         for row in cursor:
             trajetcoordonnee = Trajetcoordonnee()
