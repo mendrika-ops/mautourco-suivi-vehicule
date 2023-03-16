@@ -3,7 +3,7 @@ import requests
 from django.db import IntegrityError, connection, connections, transaction
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet
+from suiviVehicule.models import Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units
 from datetime import datetime,tzinfo
 from dateutil import tz
 
@@ -23,10 +23,21 @@ class services():
         self.SessionId = users["Result"]["SessionId"]
         if response.status_code == 400:
             raise Exception("Error 400 ! Please check your connection")
+        
 
     def get_position_at_time(self, uid, date_time):
         #self.get_api_data()
         req = f"https://api.3dtracking.net/api/v1.0/Units/{uid}/PositionAtTime?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}&PointInTimeDateTimeUTC={date_time}"
+        response = requests.get(req)
+        pos = response.json()
+        if response.status_code == 400:
+            raise Exception("Error 400 ! Please check your connection")
+        #print("get api : ", pos)
+        return pos
+    
+    def get_api_units(self):
+        #self.get_api_data()
+        req = f"https://api.3dtracking.net/api/v1.0/Units/Unit/List?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}"
         response = requests.get(req)
         pos = response.json()
         if response.status_code == 400:
@@ -45,6 +56,24 @@ class services():
         setattr(status_detail, 'current', address)
         #print("coordonnée current ", status_detail.coordonnee)
         return status_detail
+
+    def api_units(self):
+        Units.objects.all().delete()
+        units = self.get_api_units()
+        result = units["Result"]
+        for i in range(len(result)):
+            #print(result[i]["Name"])
+            units = Units()
+            units.set_Uid(result[i]["Uid"])
+            units.set_Name(result[i]["Name"])
+            units.set_IMEI(result[i]["IMEI"])
+            units.set_Status(result[i]["Status"])
+            units.set_GroupName(result[i]["GroupName"])
+            units.set_CompanyName(result[i]["CompanyName"])
+            units.set_PhoneNumber(result[i]["PhoneNumber"])
+            units.save()
+
+
 
     def get_direction(self, origin, destination):
         waypoints = f'{origin}|{destination}'
@@ -341,6 +370,7 @@ class services():
     
     def rechange(self):
         try:
+            self.api_units()
             tab = self.get_asterix_data()
             #Trajetcoordonnee.objects.all().delete()
             ref = Refresh()
@@ -353,4 +383,5 @@ class services():
                 row.save()
         except Exception as e:
             print("error",e)
-        
+
+    
