@@ -26,7 +26,7 @@ class services():
         
 
     def get_position_at_time(self, uid, date_time):
-        #self.get_api_data()
+        self.get_api_data()
         req = f"https://api.3dtracking.net/api/v1.0/Units/{uid}/PositionAtTime?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}&PointInTimeDateTimeUTC={date_time}"
         response = requests.get(req)
         pos = response.json()
@@ -269,6 +269,7 @@ class services():
                     if check[0].etat != 0: 
                         check[0].etat = row.idstatusparameter
                         check[0].datetime = now
+                        check[0].current = row.current
                         check[0].save()
                 else:
                     record = Recordcomment()
@@ -283,6 +284,7 @@ class services():
                     record.driver_mobile_number = row.driver_mobile_number
                     record.datetime = now 
                     record.etat = row.idstatusparameter
+                    record.current = row.current
                     record.save()
         except Exception as e:
             raise e
@@ -324,7 +326,7 @@ class services():
     def get_listes_record(self,datefrom,dateto):
         dateinfrom = datetime. strptime(datefrom, '%Y-%m-%d')
         dateinto = datetime. strptime(dateto, '%Y-%m-%d')
-        liste = Recordcommenttrajet.objects.filter(daterecord__range = [dateinfrom,dateinto]).order_by('-daterecord')
+        liste = Recordcommenttrajet.objects.filter(daterecord__range = [dateinfrom,dateinto]).order_by('-daterecord','-actualtime')
         return liste
     
     def get_liste_parameter(self):
@@ -344,9 +346,9 @@ class services():
     
     def get_asterix_data(self):
         tab = []
-        cursor = connections["asterix"].cursor()
+        #cursor = connections["asterix"].cursor()
         #req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type FROM VW_GPSTracking t"
-        #cursor = connection.cursor()
+        cursor = connection.cursor()
         #server mauritus
         req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000)"
         #server linux
