@@ -247,10 +247,12 @@ select
     date_format(`svr`.`datetime`, '%Y-%m-%d') as `daterecord`,
     `svr`.`etat` as `etat`,
     `svr`.`id` as `id`,
-    `svr`.`driver_mobile_number` as `driver_mobile_number`
+    `svr`.`driver_mobile_number` as `driver_mobile_number`,
+    svr.current,
+    date_format(`svr`.`datetime`, ' %H:%i:%s') as actualtime
 from
-    (`suiviVehicule_recordcomment` `svr`
-left join `suiviVehicule_statusparameter` `svs` on
+    (`suivivehicule_recordcomment` `svr`
+left join `suivivehicule_statusparameter` `svs` on
     ((`svs`.`id` = `svr`.`etat`)));
     
 
