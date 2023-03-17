@@ -258,26 +258,26 @@
   </div>
 <script src="{% static './autocomplete.js' %}"></script>
 <script>
-    jQuery(function($){
-        $(document).ajaxSend(function(){
-            $("#bg-spinner").fadeIn(500);
-        });
+    // jQuery(function($){
+    //     $(document).ajaxSend(function(){
+    //         $("#bg-spinner").fadeIn(500);
+    //     });
 
-        $(".btn-send").click(function(){
-            console.log("click")
-            $.ajax({
-                type: 'GET',
-                success: function(data){
-                    var d = $.parseJSON(data)
-                    alert(d.Test);
-                }
-            }).done(function(){
-                setTimeout(function(){
-                    $("#bg-spinner").fadeOut(500);
-                }, 700);
-            });
-        });
-    });
+    //     $(".btn-send").click(function(){
+    //         console.log("click")
+    //         $.ajax({
+    //             type: 'GET',
+    //             success: function(data){
+    //                 var d = $.parseJSON(data)
+    //                 alert(d.Test);
+    //             }
+    //         }).done(function(){
+    //             setTimeout(function(){
+    //                 $("#bg-spinner").fadeOut(500);
+    //             }, 700);
+    //         });
+    //     });
+    // });
 </script>
 <script>
     const cancelButton = document.getElementById("cancel");
@@ -338,7 +338,7 @@
 </script>
 <script>
    function reload(){
-     window.location.reload(true)
+     window.location.reload()
    }
     /*var availableTags = [
       {% for item in data_auto %}
