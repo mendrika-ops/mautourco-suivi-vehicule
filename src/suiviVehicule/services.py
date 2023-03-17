@@ -26,7 +26,7 @@ class services():
         
 
     def get_position_at_time(self, uid, date_time):
-        #self.get_api_data()
+        self.get_api_data()
         req = f"https://api.3dtracking.net/api/v1.0/Units/{uid}/PositionAtTime?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}&PointInTimeDateTimeUTC={date_time}"
         response = requests.get(req)
         pos = response.json()
