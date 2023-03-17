@@ -225,9 +225,10 @@ class Recordcomment(models.Model):
     ToPlace = models.CharField(max_length=150,null=True)
     trip_start_date = models.CharField(max_length=15, null=True)
     pick_up_time = models.TimeField(null=True)
-    datetime = models.DateField()
+    datetime = models.DateTimeField()
     etat = models.IntegerField(default=0)
     driver_mobile_number = models.CharField(max_length=50,null=True)
+    current = models.CharField(max_length=150,null=True)
 
 class Recordcommenttrajet(models.Model):
     id = models.indexes
@@ -244,7 +245,8 @@ class Recordcommenttrajet(models.Model):
     daterecord = models.DateField()
     etat = models.IntegerField(default=0)
     driver_mobile_number = models.CharField(max_length=50)
-    
+    current = models.CharField(max_length=150,null=True)
+    actualtime = models.TimeField()
     class Meta:
         managed = False
         db_table = 'suiviVehicule_recordtrajet'
