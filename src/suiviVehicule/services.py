@@ -36,7 +36,7 @@ class services():
         return pos
     
     def get_api_units(self):
-        #self.get_api_data()
+        self.get_api_data()
         req = f"https://api.3dtracking.net/api/v1.0/Units/Unit/List?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}"
         response = requests.get(req)
         pos = response.json()
@@ -345,10 +345,10 @@ class services():
     def get_asterix_data(self):
         tab = []
         cursor = connections["asterix"].cursor()
-        req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type FROM VW_GPSTracking t"
-        cursor = connection.cursor()
+        #req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type FROM VW_GPSTracking t"
+        #cursor = connection.cursor()
         #server mauritus
-        #req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000)"
+        req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000)"
         #server linux
         #req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN ADDTIME(CURRENT_TIME,40000) AND ADDTIME(CURRENT_TIME,70000)"
         cursor.execute(req)
@@ -363,7 +363,10 @@ class services():
             trajetcoordonnee.set_trip_no(row[6])
             trajetcoordonnee.set_trip_start_date(row[7])
             trajetcoordonnee.set_pick_up_time(row[8])
-            trajetcoordonnee.set_PickUp_H_Pos(row[9])
+            if row[9] is None:
+                trajetcoordonnee.set_PickUp_H_Pos("-20.248151,57.782415")
+            else:
+                trajetcoordonnee.set_PickUp_H_Pos(row[9])
             tab.append(trajetcoordonnee)
             #print(trajetcoordonnee.get_id_trip())
         return tab
