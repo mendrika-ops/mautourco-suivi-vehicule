@@ -36,7 +36,7 @@ class services():
         return pos
     
     def get_api_units(self):
-        #self.get_api_data()
+        self.get_api_data()
         req = f"https://api.3dtracking.net/api/v1.0/Units/Unit/List?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}"
         response = requests.get(req)
         pos = response.json()
