@@ -280,36 +280,29 @@
     // });
 </script>
 <script>
-    const cancelButton = document.getElementById("cancel");
-    const dialog = document.getElementById("favDialog");
-    dialog.returnValue = "favAnimal";
-
-    function openCheck(dialog) {
-    if (dialog.open) {
-        console.log("Dialog open");
-    } else {
-        console.log("Dialog closed");
+    function modal_error(){
+        const cancelButton = document.getElementById("cancel");
+        const dialog = document.getElementById("favDialog");
+        dialog.showModal();
+        cancelButton.addEventListener("click", () => {
+            dialog.close("animalNotChosen"); 
+        });
     }
-    }
-
-    dialog.showModal();
-    openCheck(dialog);
-    cancelButton.addEventListener("click", () => {
-    dialog.close("animalNotChosen");
-    openCheck(dialog);
-    
-    });
+  modal_error()
 </script>
 <script>
-    $(document).on("click", ".btnannulation", function () {
-    var trip_Id = $(this).data('id');
-    $(".modal-body #id_trip").val(trip_Id);
-});
+    function modal_annulation(){
+        $(document).on("click", ".btnannulation", function () {
+        var trip_Id = $(this).data('id');
+        $(".modal-body #id_trip").val(trip_Id);
+        });
+    }
+    modal_annulation()
     
 </script>
 <script>
-    
-
+function refresh_time(){
+    localStorage.setItem("last_refresh", "{{ last_refresh|date:'Y-m-d H:i:s'}}");
     var countDownDate = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}").getTime();
     var dt = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}")
     dt.setMinutes(dt.getMinutes() + 5);
@@ -317,7 +310,6 @@
     min = dt.getMinutes() < 10 ? "0"+dt.getMinutes() : dt.getMinutes()
     sec = dt.getSeconds() < 10 ? "0"+dt.getSeconds() : dt.getSeconds()
     document.getElementById("nextref").innerHTML = h +":"+min+":"+sec; 
-    console.log("date ", dt);
     var x = setInterval(function() {
         var now = new Date("{{ now |date:'Y-m-d H:i:s'}}").getTime()
         var distance = now - countDownDate;
@@ -327,14 +319,16 @@
         if (minutes >= {{ cron_minute }}) {
             countDownDate = now;        
         }
-        // if(parseInt(minutes) == 1 && localStorage.getItem("load") == 0){
+        // if(parseInt(minutes) < 2 && localStorage.getItem("load") == 0){
         //      localStorage.setItem("load", 1);
-        //     window.location.reload(true);
         //   }
         // if(parseInt(minutes) != 1) {
         //     localStorage.setItem("load", 0);
         // }
+        callapi()
     }, 1000);
+}
+refresh_time()
 </script>
 <script>
    function reload(){
@@ -384,5 +378,32 @@
          $( "#datefrom" ).datepicker({ dateFormat: 'yy-mm-dd' }); 
          $( "#dateto" ).datepicker({ dateFormat: 'yy-mm-dd' });   
     }); 
+</script>
+<script>
+
+function callapi() {
+  let endpoint = 'http://localhost:8000/api/refresh'
+    $.ajax({
+        url: endpoint,
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(result){
+            if(result["result"]=='200'){
+                let api = new Date(result["datetime"]).getTime();
+                let last = new Date(localStorage.getItem("last_refresh")).getTime()
+                // console.log("api ",new Date(result["datetime"]).getTime(), "date : ",new Date(result["datetime"]) );
+                // console.log("last ",new Date(localStorage.getItem("last_refresh")).getTime(), new Date(localStorage.getItem("last_refresh")));
+                if(api > last){
+                    // console.log("reload iray")
+                    window.reload()
+                    localStorage.setItem("last_refresh" , api)          
+                }
+            }
+            //console.log(result);
+        }
+    })
+}
+
+callapi()
 </script>
 {% endblock %}
