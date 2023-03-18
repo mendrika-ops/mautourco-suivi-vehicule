@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import json
@@ -182,3 +183,8 @@ def parameter_liste_request(request):
 def rechange_request(request):
     services().rechange()
     return render(request, "suiviVehicule/error.html", context={"error": "Notify: loading data"})
+
+def last_api_request(request):
+    refresh = services().get_last_refresh()
+    print("Api refresh - ", refresh)
+    return JsonResponse({'datetime': refresh, 'result': '200'})
