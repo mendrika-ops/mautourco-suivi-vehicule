@@ -113,7 +113,7 @@
                     {% elif lg.id == 4 %}
                     <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> > {{lg.min_percent|floatformat:0}}min</p>
                     {% elif lg.id == 5 %}
-                    <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> < {{lg.max_distance|floatformat:0}} m</p>
+                    <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> < {{lg.max_distance|floatformat:0}}m</p>
                     {% else %}
                     <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> {{lg.min_percent|floatformat:0}}-{{lg.max_percent|floatformat:0}}min</p>
                     {% endif %}
