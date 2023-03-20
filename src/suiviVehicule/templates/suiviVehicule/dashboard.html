@@ -313,7 +313,11 @@ function refresh_time(){
 
     var countDownDate = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}").getTime();
     var x = setInterval(function() {
-        var now = new Date().getTime();
+        const options = { timeZone: 'Indian/Mauritius' };
+        const formatter = new Intl.DateTimeFormat('en-US', options);
+        const date = new Date(formatter.format(new Date()));
+        var now = date.getTime();
+        //var now = new Date().getTime();
         var distance = now - countDownDate;
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);    
