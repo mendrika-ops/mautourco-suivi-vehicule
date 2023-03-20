@@ -47,17 +47,15 @@ class services():
 
     def get_position_lat_long(self, uid, date_time):
         pos = self.get_position_at_time(uid, date_time)
+        lat = pos["Result"]["Position"]["Latitude"]
+        long = pos["Result"]["Position"]["Longitude"]
+        address = pos["Result"]["Position"]["Address"]
         status_detail = Statusposdetail()
-      
-        if pos["Status"]["Result"] != 'Error':
-            lat = pos["Result"]["Position"]["Latitude"]
-            long = pos["Result"]["Position"]["Longitude"]
-            address = pos["Result"]["Position"]["Address"]
-            
-            setattr(status_detail, 'uid', uid)
-            setattr(status_detail, 'coordonnee', f"{lat},{long}")
-            setattr(status_detail, 'current', address)
-            return status_detail
+        setattr(status_detail, 'uid', uid)
+        setattr(status_detail, 'coordonnee', f"{lat},{long}")
+        setattr(status_detail, 'current', address)
+        #print("coordonnée current ", status_detail.coordonnee)
+        return status_detail
 
     def api_units(self):
         Units.objects.all().delete()
@@ -91,7 +89,7 @@ class services():
             })
 
         directions = result.json()
-        # print("Direction ::: ",directions)
+        #print("Direction ::: ",directions)
         if directions["status"] == "OK":
 
             routes = directions["routes"][0]["legs"]
@@ -117,15 +115,13 @@ class services():
             currentposition = current[0] + ", "+ current[1]
             #print("total distance : ",distance)
             #print("total im duration : ",duration)
-            return {
-                "origin": origin,
-                "destination": destination,
-                "distance": distance,
-                "duration": round(duration)+(60), 
-                "current": currentposition
-            }
-        else:
-             return None
+        return {
+            "origin": origin,
+            "destination": destination,
+            "distance": distance,
+            "duration": round(duration)+(60), 
+            "current": currentposition
+        }
 
     def set_one_refresh(self, idstatusdetail, id):
         try:
@@ -175,22 +171,20 @@ class services():
             count = 1
             for row in list_uid:
                 status_detail = self.get_position_lat_long(row.Uid, date_time)
-               
-                if status_detail is not None:
-                    file = self.get_direction(status_detail.coordonnee, row.PickUp_H_Pos)
-                    if file is not None:
-                        print("- datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ", count ,"/", len(list_uid))
-                        setattr(status_detail, 'idmere', status)
-                        setattr(status_detail, 'duration', file["duration"])
-                        setattr(status_detail, 'daty_time', now)
-                        setattr(status_detail, 'id_trip', row.id_trip)
-                        setattr(status_detail, 'distance', file["distance"])
-                        status_detail.save()
-                        count = count + 1 
+                #print(status_detail.coordonnee,)
+                file = self.get_direction(status_detail.coordonnee, row.PickUp_H_Pos)
+                print("- datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ", count ,"/", len(list_uid))
+                setattr(status_detail, 'idmere', status)
+                setattr(status_detail, 'duration', file["duration"])
+                setattr(status_detail, 'daty_time', now)
+                setattr(status_detail, 'id_trip', row.id_trip)
+                setattr(status_detail, 'distance', file["distance"])
+                status_detail.save()
+                count = count + 1 
             self.add_log(now)
             transaction.savepoint_commit(sid)
-        except Exception as e:
-            print(e)
+        except IntegrityError:
+            print("error")
             transaction.savepoint_rollback(sid)
         return status
 
