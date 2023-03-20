@@ -186,5 +186,6 @@ def rechange_request(request):
 
 def last_api_request(request):
     refresh = services().get_last_refresh()
+    now = services().date_time()
     print("Api refresh - ", refresh)
-    return JsonResponse({'datetime': refresh, 'result': '200'})
+    return JsonResponse({'now': now, 'datetime': refresh, 'result': '200'})
