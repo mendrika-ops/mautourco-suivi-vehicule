@@ -378,7 +378,7 @@ refresh_time()
 <script>
 
 function callapi() {
-  let endpoint = 'http://localhost:8000/api/refresh'
+  let endpoint = 'http://192.168.1.68:80/api/refresh'
     $.ajax({
         url: endpoint,
         contentType: "application/json",
@@ -388,10 +388,7 @@ function callapi() {
                 console.log("call");
                 let api = new Date(result["datetime"]).getTime();
                 let last = new Date(localStorage.getItem("last_refresh")).getTime()
-                // console.log("api ",new Date(result["datetime"]).getTime(), "date : ",new Date(result["datetime"]) );
-                // console.log("last ",new Date(localStorage.getItem("last_refresh")).getTime(), new Date(localStorage.getItem("last_refresh")));
                 if(api > last){
-                    // console.log("reload iray")
                     window.reload()
                     localStorage.setItem("last_refresh" , api)          
                 }
