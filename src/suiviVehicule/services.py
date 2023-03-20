@@ -85,7 +85,7 @@ class services():
                 'destination': destination,
                 'waypoints': waypoints,
                 'mode':'driving',
-                'key': 'AIzaSyCJwwTnRM8ePI1yj_zyOGgBtepyyJur8Gs'
+                'key': 'AIzaSyA6wqUNamrQQTeq4zoW2zzHnNT4i35Tu-8'
             })
 
         directions = result.json()
@@ -346,11 +346,11 @@ class services():
     
     def get_asterix_data(self):
         tab = []
-        #cursor = connections["asterix"].cursor()
-        #req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type FROM VW_GPSTracking t"
-        cursor = connection.cursor()
+        cursor = connections["asterix"].cursor()
+        req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type FROM VW_GPSTracking t"
+        #cursor = connection.cursor()
         #server mauritus
-        req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000)"
+        #req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000)"
         #server linux
         #req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN ADDTIME(CURRENT_TIME,40000) AND ADDTIME(CURRENT_TIME,70000)"
         cursor.execute(req)
