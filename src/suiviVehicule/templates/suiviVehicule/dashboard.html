@@ -303,28 +303,24 @@
 <script>
 function refresh_time(){
     localStorage.setItem("last_refresh", "{{ last_refresh|date:'Y-m-d H:i:s'}}");
-    var countDownDate = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}").getTime();
-    var dt = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}")
+    var dt = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}");
+
     dt.setMinutes(dt.getMinutes() + 5);
     h = dt.getHours() < 10 ? "0"+dt.getHours() : dt.getHours()
     min = dt.getMinutes() < 10 ? "0"+dt.getMinutes() : dt.getMinutes()
     sec = dt.getSeconds() < 10 ? "0"+dt.getSeconds() : dt.getSeconds()
     document.getElementById("nextref").innerHTML = h +":"+min+":"+sec; 
+
+    var countDownDate = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}").getTime();
     var x = setInterval(function() {
-        var now = new Date("{{ now |date:'Y-m-d H:i:s'}}").getTime()
+        var now = new Date().getTime();
         var distance = now - countDownDate;
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);    
-        document.getElementById("demo").innerHTML = minutes;   
+        document.getElementById("demo").innerHTML = minutes + " mn ";
         if (minutes >= {{ cron_minute }}) {
-            countDownDate = now;        
+            countDownDate = now
         }
-        // if(parseInt(minutes) < 2 && localStorage.getItem("load") == 0){
-        //      localStorage.setItem("load", 1);
-        //   }
-        // if(parseInt(minutes) != 1) {
-        //     localStorage.setItem("load", 0);
-        // }
         callapi()
     }, 1000);
 }
@@ -382,7 +378,7 @@ refresh_time()
 <script>
 
 function callapi() {
-  let endpoint = 'http://192.168.1.68:80/api/refresh'
+  let endpoint = 'http://localhost:8000/api/refresh'
     $.ajax({
         url: endpoint,
         contentType: "application/json",
