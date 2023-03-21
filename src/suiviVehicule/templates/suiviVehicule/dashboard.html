@@ -316,7 +316,10 @@ function refresh_time(){
         var now = new Date().getTime();
         var distance = now - countDownDate;
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);    
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);  
+        if (minutes < 0 ){
+            minutes = minutes + 60;
+        } 
         document.getElementById("demo").innerHTML = minutes;
         if (minutes >= {{ cron_minute }}) {
             countDownDate = now
@@ -388,7 +391,10 @@ function callapi() {
                 console.log("call");
                 let api = new Date(result["datetime"]).getTime();
                 let last = new Date(localStorage.getItem("last_refresh")).getTime()
+                // console.log("api ",new Date(result["datetime"]).getTime(), "date : ",new Date(result["datetime"]) );
+                // console.log("last ",new Date(localStorage.getItem("last_refresh")).getTime(), new Date(localStorage.getItem("last_refresh")));
                 if(api > last){
+                    // console.log("reload iray")
                     window.reload()
                     localStorage.setItem("last_refresh" , api)          
                 }
