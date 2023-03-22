@@ -161,7 +161,7 @@ select
         from
             `suivivehicule_statusparameter` `ss`
         where
-            (`ss`.`id` = 5))) then 5
+            (`ss`.`id` = 5))) and `su`.`uid` is not null then 5
         else `spa`.`id`
     end) as `idstatusparameter`,
     `su`.`distance` as `distance`,
