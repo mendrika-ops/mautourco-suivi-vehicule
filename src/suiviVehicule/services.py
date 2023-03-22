@@ -45,19 +45,7 @@ class services():
         #print("get api : ", pos)
         return pos
 
-    def get_position_lat_long(self, uid, date_time):
-        pos = self.get_position_at_time(uid, date_time)
-        status_detail = Statusposdetail()
-      
-        if pos["Status"]["Result"] != 'Error':
-            lat = pos["Result"]["Position"]["Latitude"]
-            long = pos["Result"]["Position"]["Longitude"]
-            address = pos["Result"]["Position"]["Address"]
-            
-            setattr(status_detail, 'uid', uid)
-            setattr(status_detail, 'coordonnee', f"{lat},{long}")
-            setattr(status_detail, 'current', address)
-            return status_detail
+   
 
     def api_units(self):
         Units.objects.all().delete()
@@ -157,6 +145,49 @@ class services():
         #print("date now : ", datetime.now())
         return av
     
+    def get_position_lat_long(self, uid, date_time, row, status, now):
+        status_detail = Statusposdetail()
+        if uid is not None:
+            pos = self.get_position_at_time(uid, date_time)
+
+            if pos["Status"]["Result"] != 'Error':
+                lat = pos["Result"]["Position"]["Latitude"]
+                long = pos["Result"]["Position"]["Longitude"]
+                address = pos["Result"]["Position"]["Address"]
+                file = self.get_direction(f"{lat},{long}", row.PickUp_H_Pos)
+                if file is not None:
+                    print("- datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
+                    setattr(status_detail, 'uid', uid)
+                    setattr(status_detail, 'coordonnee', f"{lat},{long}")
+                    setattr(status_detail, 'current', address)
+                    setattr(status_detail, 'idmere', status)
+                    setattr(status_detail, 'duration', file["duration"])
+                    setattr(status_detail, 'daty_time', now)
+                    setattr(status_detail, 'id_trip', row.id_trip)
+                    setattr(status_detail, 'distance', file["distance"])
+                else:
+                    print("api error :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
+                    setattr(status_detail, 'uid', uid)
+                    setattr(status_detail, 'coordonnee', f"{lat},{long}")
+                    setattr(status_detail, 'current', address)
+                    setattr(status_detail, 'idmere', status)
+                    setattr(status_detail, 'daty_time', now)
+                    setattr(status_detail, 'id_trip', row.id_trip)
+                    setattr(status_detail, 'duration', -1)
+                    setattr(status_detail, 'distance', 0)
+        else:
+            print("UID not FOUND :::: ", str(row.trip_start_date)+" "+ str(row.pick_up_time))
+            setattr(status_detail, 'uid', None)
+            setattr(status_detail, 'coordonnee', "UID NOT FOUND")
+            setattr(status_detail, 'current', "UID NOT FOUND")
+            setattr(status_detail, 'idmere', status)
+            setattr(status_detail, 'duration', 1)
+            setattr(status_detail, 'daty_time', str(row.trip_start_date)+" "+ str(row.pick_up_time))
+            setattr(status_detail, 'id_trip', row.id_trip)
+            setattr(status_detail, 'distance', 0)
+        status_detail.save()
+        return status_detail
+        
     @transaction.atomic            
     def gestion_status_pos(self):
         status = Statuspos()
@@ -174,19 +205,10 @@ class services():
             sid = transaction.savepoint()
             count = 1
             for row in list_uid:
-                status_detail = self.get_position_lat_long(row.Uid, date_time)
-               
-                if status_detail is not None:
-                    file = self.get_direction(status_detail.coordonnee, row.PickUp_H_Pos)
-                    if file is not None:
-                        print("- datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ", count ,"/", len(list_uid))
-                        setattr(status_detail, 'idmere', status)
-                        setattr(status_detail, 'duration', file["duration"])
-                        setattr(status_detail, 'daty_time', now)
-                        setattr(status_detail, 'id_trip', row.id_trip)
-                        setattr(status_detail, 'distance', file["distance"])
-                        status_detail.save()
-                        count = count + 1 
+                print(count,"/",len(list_uid))
+                self.get_position_lat_long(row.Uid, date_time, row, status, now)
+                
+                count = count + 1 
             self.add_log(now)
             transaction.savepoint_commit(sid)
         except Exception as e:
@@ -381,7 +403,7 @@ class services():
     
     def rechange(self):
         try:
-            self.api_units()
+            # self.api_units()
             tab = self.get_asterix_data()
             #Trajetcoordonnee.objects.all().delete()
             ref = Refresh()
