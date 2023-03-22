@@ -181,7 +181,7 @@ class Statuspos(models.Model):
 class Statusposdetail(models.Model):
     id = models.indexes
     idmere = models.ForeignKey(Statuspos, on_delete=models.CASCADE)
-    uid = models.CharField(max_length=50)
+    uid = models.CharField(max_length=50,null=True)
     coordonnee = models.CharField(max_length=100)
     daty_time = models.DateTimeField()
     duration = models.IntegerField(null=True)

@@ -67,7 +67,7 @@ where
         `suiviVehicule_refresh` `sr`));
 
 create or replace
-algorithm = UNDEFINED view `suiviVehicule_trajetcoordonneesummary` as
+algorithm = UNDEFINED view `suivivehicule_trajetcoordonneesummary` as
 select
     `su`.`Uid` as `Uid`,
     `st`.`vehicleno` as `vehicleno`,
@@ -83,9 +83,9 @@ select
     `st`.`PickUp_H_Pos` as `PickUp_H_Pos`,
     `st`.`trip_start_time` as `trip_start_time`
 from
-    (`suiviVehicule_trajetcoordonneemax` `st`
-join `suiviVehicule_units` `su` on
-    ((`st`.`vehicleno` = `su`.`Name`))); 
+    (`suivivehicule_trajetcoordonneemax` `st`
+left join `suivivehicule_units` `su` on
+    ((`st`.`vehicleno` = `su`.`Name`)));
 
 create or replace
 algorithm = UNDEFINED view `suiviVehicule_getlastcoordonnee` as
@@ -122,13 +122,13 @@ select
         select
             `ss`.`max_distance`
         from
-            `suiviVehicule_statusparameter` `ss`
+            `suivivehicule_statusparameter` `ss`
         where
-            (`ss`.`id` = 5))) then (
+            (`ss`.`id` = 5))) and `su`.`uid` is not null  then (
         select
             `ss`.`status`
         from
-            `suiviVehicule_statusparameter` `ss`
+            `suivivehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))
         else `spa`.`status`
@@ -138,13 +138,13 @@ select
         select
             `ss`.`max_distance`
         from
-            `suiviVehicule_statusparameter` `ss`
+            `suivivehicule_statusparameter` `ss`
         where
-            (`ss`.`id` = 5))) then (
+            (`ss`.`id` = 5))) and `su`.`uid` is not null then (
         select
             `ss`.`couleur`
         from
-            `suiviVehicule_statusparameter` `ss`
+            `suivivehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))
         else `spa`.`couleur`
@@ -159,7 +159,7 @@ select
         select
             `ss`.`max_distance`
         from
-            `suiviVehicule_statusparameter` `ss`
+            `suivivehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))) then 5
         else `spa`.`id`
@@ -169,11 +169,10 @@ select
     (time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60) as `difftimepickup`,
     `su`.`current` as `current`
 from
-    ((`suiviVehicule_trajetcoordonneesummary` `stc`
-join `suiviVehicule_statusposdetail` `su` on
-    (((`stc`.`id_trip` = `su`.`id_trip`)
-        and (`stc`.`Uid` = `su`.`uid`))))
-join `suiviVehicule_statusparameter` `spa` on
+    ((`suivivehicule_trajetcoordonneesummary` `stc`
+join `suivivehicule_statusposdetail` `su` on
+    (((`stc`.`id_trip` = `su`.`id_trip`))))
+join `suivivehicule_statusparameter` `spa` on
     ((((`spa`.`min_percent` * 60) < time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))))
         and ((`spa`.`max_percent` * 60) > time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))))
             and (`spa`.`desce` >= 1))))
@@ -182,14 +181,14 @@ where
     select
         max(`ss`.`id`)
     from
-        `suiviVehicule_statuspos` `ss`))
+        `suivivehicule_statuspos` `ss`))
     and (str_to_date(`stc`.`trip_start_date`,
     '%Y-%m-%d') = curdate())
         and `stc`.`id_trip` in (
         select
             `svr`.`id_trip`
         from
-            `suiviVehicule_recordcomment` `svr`
+            `suivivehicule_recordcomment` `svr`
         where
             (`svr`.`etat` = 0)) is false)
 order by
