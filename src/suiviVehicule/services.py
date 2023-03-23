@@ -3,9 +3,11 @@ import requests
 from django.db import IntegrityError, connection, connections, transaction
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units
+from suiviVehicule.models import Planning, Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units
 from datetime import datetime,tzinfo
 from dateutil import tz
+
+from suiviVehicule.planning import planning
 
 
 
@@ -298,6 +300,8 @@ class services():
                         check[0].etat = row.idstatusparameter
                         check[0].datetime = now
                         check[0].current = row.current
+                        check[0].difftimestart = row.difftimestart
+                        check[0].difftimepickup = row.difftimepickup
                         check[0].save()
                 else:
                     record = Recordcomment()
@@ -313,6 +317,8 @@ class services():
                     record.datetime = now 
                     record.etat = row.idstatusparameter
                     record.current = row.current
+                    record.difftimestart = row.difftimestart
+                    record.difftimepickup = row.difftimepickup
                     record.save()
         except Exception as e:
             raise e
@@ -372,49 +378,29 @@ class services():
             raise e
         return tab
     
-    def get_asterix_data(self):
+    def save_data(self, ref):
         tab = []
         cursor = connections["asterix"].cursor()
         req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type FROM VW_GPSTracking t"
-        #cursor = connection.cursor()
-        #server mauritus
-        #req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN CURRENT_TIME AND ADDTIME(CURRENT_TIME,30000)"
-        #server linux
-        #req = "select t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type from planning t where t.`pick_up_time` BETWEEN ADDTIME(CURRENT_TIME,40000) AND ADDTIME(CURRENT_TIME,70000)"
         cursor.execute(req)
-        for row in cursor:
-            trajetcoordonnee = Trajetcoordonnee()
-            trajetcoordonnee.set_vehicleno(row[0])
-            trajetcoordonnee.set_driver_oname(row[1])
-            trajetcoordonnee.set_driver_mobile_number(row[2])
-            trajetcoordonnee.set_FromPlace(row[3])
-            trajetcoordonnee.set_ToPlace(row[4])
-            trajetcoordonnee.set_id_trip(row[5])
-            trajetcoordonnee.set_trip_no(row[6])
-            trajetcoordonnee.set_trip_start_date(row[7])
-            trajetcoordonnee.set_pick_up_time(row[8])
-            if row[9] is None:
-                trajetcoordonnee.set_PickUp_H_Pos("-20.248151,57.782415")
-            else:
-                trajetcoordonnee.set_PickUp_H_Pos(row[9])
-            tab.append(trajetcoordonnee)
-            #print(trajetcoordonnee.get_id_trip())
-        return tab
-    
+        for row in cursor: 
+            plan = planning()
+            plan.save_trajetcoordonne(row, ref.id)   
+            plan.save_planning(row, self.date_time()) 
+            
+    @transaction.atomic 
     def rechange(self):
         try:
-            # self.api_units()
-            tab = self.get_asterix_data()
+            sid = transaction.savepoint()
+            self.api_units()
             #Trajetcoordonnee.objects.all().delete()
             ref = Refresh()
             ref.date_time = self.date_time()
             ref.save()
-           
-            for row in tab:
-                #print("idd ", ref.id)
-                row.refresh_id = ref.id
-                row.save()
+            self.save_data(ref)
+            transaction.savepoint_commit(sid)
         except Exception as e:
-            print("error",e)
-
+            print(e)
+            transaction.savepoint_rollback(sid)
+        
     

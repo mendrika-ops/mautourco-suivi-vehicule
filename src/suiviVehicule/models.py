@@ -74,6 +74,7 @@ class TrajetcoordonneeSamm(models.Model):
 class Refresh(models.Model):
     id = models.indexes
     date_time = models.DateTimeField()
+
 class Trajetcoordonnee(models.Model):
     vehicleno = models.CharField(max_length=100)
     driver_oname = models.CharField(max_length=150)
@@ -229,7 +230,8 @@ class Recordcomment(models.Model):
     etat = models.IntegerField(default=0)
     driver_mobile_number = models.CharField(max_length=50,null=True)
     current = models.CharField(max_length=150,null=True)
-
+    difftimestart = models.FloatField(null=True)
+    difftimepickup = models.FloatField(null=True)
 class Recordcommenttrajet(models.Model):
     id = models.indexes
     id_trip = models.IntegerField(null=False)
@@ -247,8 +249,79 @@ class Recordcommenttrajet(models.Model):
     driver_mobile_number = models.CharField(max_length=50)
     current = models.CharField(max_length=150,null=True)
     actualtime = models.TimeField()
+    difftimestart = models.FloatField(null=True)
+    difftimepickup = models.FloatField(null=True)
     class Meta:
         managed = False
         db_table = 'suiviVehicule_recordtrajet'
+
+class Planning(models.Model):
+    Planning_id = models.indexes
+    vehicleno = models.CharField(max_length=100)
+    driver_oname = models.CharField(max_length=150)
+    driver_mobile_number = models.CharField(max_length=50)
+    FromPlace = models.CharField(max_length=150)
+    ToPlace = models.CharField(max_length=150)
+    id_trip = models.IntegerField()
+    trip_no = models.IntegerField()
+    trip_start_date = models.CharField(max_length=15, null=False)
+    pick_up_time = models.TimeField()
+    PickUp_H_Pos = models.CharField(max_length=100)
+    resa_trans_type = models.CharField(max_length=100)
+    daty_time = models.DateTimeField(null=True)
+    
+    def set_vehicleno(self, vehiculeno):
+        self.vehicleno = vehiculeno
+
+    def set_driver_oname(self, driver_oname):
+        self.driver_oname = driver_oname
+   
+    def set_driver_mobile_number(self, driver_mobile_number):
+        self.driver_mobile_number= driver_mobile_number
+
+    def set_FromPlace(self, FromPlace):
+        self.FromPlace = FromPlace
+
+    def set_ToPlace(self, ToPlace):
+        self.ToPlace = ToPlace
+
+    def set_id_trip(self, id_trip):
+        self.id_trip = id_trip
+
+    def set_trip_no(self, trip_no):
+        self.trip_no = trip_no
+
+    def set_trip_start_date(self, trip_start_date):
+        self.trip_start_date = trip_start_date
+
+    def set_pick_up_time(self, pick_up_time):
+        self.pick_up_time = pick_up_time
+    
+    def set_PickUp_H_Pos(self, PickUp_H_Pos):
+        self.PickUp_H_Pos = PickUp_H_Pos
+
+    def set_resa_trans_type(self, resa_trans_type):
+        self.resa_trans_type = resa_trans_type
+
+class Planninglib(models.Model):
+    id = models.indexes
+    vehicleno = models.CharField(max_length=100)
+    driver_oname = models.CharField(max_length=150)
+    driver_mobile_number = models.CharField(max_length=50)
+    FromPlace = models.CharField(max_length=150)
+    ToPlace = models.CharField(max_length=150)
+    id_trip = models.IntegerField()
+    trip_no = models.IntegerField()
+    trip_start_date = models.CharField(max_length=15, null=False)
+    pick_up_time = models.TimeField()
+    PickUp_H_Pos = models.CharField(max_length=100)
+    resa_trans_type = models.CharField(max_length=100)
+    daty_time = models.DateTimeField(null=True)
+    daterecord = models.DateField(null=True)
+    actualtime = models.TimeField(null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'suivivehicule_planninglib'
 
 
