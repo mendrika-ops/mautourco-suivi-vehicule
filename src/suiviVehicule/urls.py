@@ -1,5 +1,5 @@
 from django.urls import path
-from suiviVehicule.views import index, article, register_request, login_request, dashboard_request, googlemap_request, \
+from suiviVehicule.views import index, article, log_planning_request, register_request, login_request, dashboard_request, googlemap_request, \
     refresh_request, one_refresh_request, comment_request, log_request, parameter_update_request, parameter_liste_request,rechange_request,last_api_request
 
 urlpatterns = [
@@ -17,5 +17,6 @@ urlpatterns = [
     path("parameter/update/<str:id>", parameter_update_request),
     path("parameter/list", parameter_liste_request),
     path("chargement", rechange_request),
-    path("api/refresh", last_api_request)
+    path("api/refresh", last_api_request),
+    path("planning/list", log_planning_request)
 ]

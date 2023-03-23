@@ -1,14 +1,38 @@
 {% extends "suiviVehicule/template.html" %}
 {% block content %}
 {% load static %}
-<div class="main">    
+<div class="main">  
+    <button class="carrosell" data-toggle="collapse" href="#multiCollapseExample2" role="button" onclick="clickIcon()"
+    aria-expanded="false" aria-controls="multiCollapseExample2">View log <i
+    class="fa-solid fa-angle-right fa-rotate-90"></i>
+    </button>
+    <form action="/planning/list" method="GET" >
+        <div class="row collapse multi-collapse" id="multiCollapseExample2">
+            <div class="search col-md-6 ">
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="from">Date From</label>
+                        <input type="text" style="width: 299px;" class="form-control" id="datefrom" name="datefrom" value="" placeholder="yyyy-mm-dd" >
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="from">Date To</label>
+                        <input type="text" style="width: 299px;" class="form-control" id="dateto" name="dateto" value="" placeholder="yyyy-mm-dd" >
+                    </div>
+                </div>
+            <div class="footer row">
+                <a href="/planning/list" class="btn left">Reset</a>
+                <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            </div>
+        </div>
+    </form>
     <div class="list">
         <div class="title-rec row">
             <div class="col-md-1 icon ">
                <a href="/dashboard" ><i class="fa-regular fa-circle-left fa-xl"></i></a>
             </div>       
             <div class="col-md-10 title-rec-head" style="text-align: center;">
-                <h2>Trip Log</h2>
+                <h2>Planning Log</h2>
             </div>        
         </div> 
         <div class="row table-responsive">
@@ -21,13 +45,11 @@
                     <th scope="col">Trip ID</th>
                     <th scope="col">Pickup Place</th>
                     <th scope="col">Destination</th>
-                    <th scope="col">Current Position</th>
+                    <th scope="col">PickUp Position</th>
                     <th scope="col">Pick up time</th>
+                    <th scope="col">Resa Trans</th>
                     <th scope="col" style="width:100px">Date</th>
-                    <th scope="col" style="width:100px">Actual Time</th>
-                    <th scope="col" class="box head-off" data-toggle="tooltip" title="Trip duration from current position to pickup place" >Trip duration</th>
-                    <th scope="col">Comments</th>
-                    <th scope="col">Status</th>
+                    <th scope="col" style="width:100px">Record Time</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -39,15 +61,11 @@
                     <td style="text-align: center;">{{ item.id_trip }}</td>
                     <td>{{ item.FromPlace }}</td>
                     <td>{{ item.ToPlace }}</td>
-                    <td>{{ item.current }}</td>
+                    <td>{{ item.PickUp_H_Pos }}</td>
                     <td style="text-align: center;">{{ item.pick_up_time |date:"H:i:s" }}</td>  
+                    <td style="text-align: center;">{{ item.resa_trans_type }}</td>
                     <td style="text-align: center;">{{ item.daterecord }}</td>
                     <td style="text-align: center;">{{ item.actualtime }}</td>
-                    <td style="text-align: center;">{{ item.difftimestart |floatformat:0}}</td>
-                    <td style="text-align: center;text-transform: uppercase;">{{ item.comment }}</td>                
-                    <td class="list-action">
-                            <div class="btn action" style="background-color:{{ item.couleur }}">{{item.status}}</div>
-                        </td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -73,4 +91,5 @@
         </div>
     </div>
 </div>
+<script src="{% static './main.js' %}"></script>
 {% endblock %}

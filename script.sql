@@ -225,7 +225,7 @@ select
 
 
 create or replace
-algorithm = UNDEFINED view `suiviVehicule_recordtrajet` as
+algorithm = UNDEFINED view `suivivehicule_recordtrajet` as
 select
     `svr`.`vehicleno` as `vehicleno`,
     `svr`.`driver_oname` as `driver_oname`,
@@ -247,8 +247,10 @@ select
     `svr`.`etat` as `etat`,
     `svr`.`id` as `id`,
     `svr`.`driver_mobile_number` as `driver_mobile_number`,
-    svr.current,
-    date_format(`svr`.`datetime`, ' %H:%i:%s') as actualtime
+    `svr`.`current` as `current`,
+    date_format(`svr`.`datetime`, ' %H:%i:%s') as `actualtime`,
+    svr.difftimestart,
+    svr.difftimepickup
 from
     (`suivivehicule_recordcomment` `svr`
 left join `suivivehicule_statusparameter` `svs` on
@@ -272,20 +274,25 @@ select
 from
     `suiviVehicule_statusparameter` `svs`;
 
+create or replace
+algorithm = UNDEFINED view `suivivehicule_planninglib` as
+select
+    `st`.`vehicleno` as `vehicleno`,
+    `st`.`id` as `id`,
+    `st`.`driver_oname` as `driver_oname`,
+    `st`.`driver_mobile_number` as `driver_mobile_number`,
+    `st`.`FromPlace` as `FromPlace`,
+    `st`.`ToPlace` as `ToPlace`,
+    `st`.`id_trip` as `id_trip`,
+    `st`.`trip_no` as `trip_no`,
+    `st`.`trip_start_date` as `trip_start_date`,
+    `st`.`pick_up_time` as `pick_up_time`,
+    `st`.`PickUp_H_Pos` as `PickUp_H_Pos`,
+    `st`.`resa_trans_type` as `resa_trans_type`,
+    date_format(`st`.`daty_time`, '%Y-%m-%d') as `daterecord`,
+    date_format(`st`.`daty_time`, ' %H:%i:%s') as `actualtime`,
+    `st`.`daty_time` as `daty_time`
+from
+    `suivivehicule_planning` `st`;
 
-CREATE TABLE `planning` (
-  `planning_id` int NOT NULL AUTO_INCREMENT,
-  `vehicleno` varchar(100) DEFAULT NULL,
-  `driver_oname` varchar(250) DEFAULT NULL,
-  `driver_mobile_number` varchar(100) DEFAULT NULL,
-  `FromPlace` varchar(250) DEFAULT NULL,
-  `ToPlace` varchar(250) DEFAULT NULL,
-  `id_trip` int DEFAULT NULL,
-  `trip_no` int DEFAULT NULL,
-  `trip_start_date` date DEFAULT NULL,
-  `pick_up_time` varchar(100) DEFAULT NULL,
-  `PickUp_H_Pos` varchar(250) DEFAULT NULL,
-  `resa_trans_type` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`planning_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=300 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
     
