@@ -9,97 +9,90 @@
     <button class="carrosell" data-toggle="collapse" href="#multiCollapseExample2" role="button" onclick="clickIcon()"
     aria-expanded="false" aria-controls="multiCollapseExample2">View log <i
     class="fa-solid fa-angle-right fa-rotate-90"></i>
-</button>
+    </button>
 
-<form action="/record/listes" method="GET" >
-    <div class="row collapse multi-collapse" id="multiCollapseExample2">
-        <div class="search col-md-6 ">
-            <div class="form-row">
-                <div class="form-group col-md-5">
-                    <label for="from">Date From</label>
-                    <input type="text" style="width: 299px;" class="form-control" id="datefrom" name="datefrom" value="" placeholder="yyyy-mm-dd" >
-                </div>
-                <div class="form-group col-md-5">
-                    <label for="from">Date To</label>
-                    <input type="text" style="width: 299px;" class="form-control" id="dateto" name="dateto" value="" placeholder="yyyy-mm-dd" >
-                </div>
-            </div>
-        <div class="footer row">
-            <a href="/dashboard?reset" class="btn left">Reset</a>
-            <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
-        </div>
-        </div>
-    </div>
-</form>
-
-<form method="GET">
-    <div class="row collapse multi-collapse" id="multiCollapseExample1">
-            <!--<input type="hidden" name="check" value="on">-->
+    <form action="/record/listes" method="GET" >
+        <div class="row collapse multi-collapse" id="multiCollapseExample2">
             <div class="search col-md-6 ">
                 <div class="form-row">
-                    <div class="form-group col-md-5 autocomplete row">
-                        <label for="from" class="col-sm-5 col-form-label">Driver Name </label>
-                        {{ form_search.driver_oname }}
+                    <div class="form-group col-md-5">
+                        <label for="from">Date From</label>
+                        <input type="text" style="width: 299px;" class="form-control" id="datefrom" name="datefrom" value="" placeholder="yyyy-mm-dd" >
                     </div>
-                    <div class="form-group col-md-5 row">
-                        <label for="from" class="col-sm-5 col-form-label">Pickup Place </label>
-                         {{ form_search.FromPlace }}
+                    <div class="form-group col-md-5">
+                        <label for="from">Date To</label>
+                        <input type="text" style="width: 299px;" class="form-control" id="dateto" name="dateto" value="" placeholder="yyyy-mm-dd" >
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-5 row">
-                        <label for="drive_mobile" class="col-sm-5 col-form-label">Driver Mob No </label>
-                        {{ form_search.driver_mobile_number }}
-                </div>
-                <div class="form-group col-md-5 row">
-                    <label for="to" class="col-sm-5 col-form-label">Destination </label>
-                    {{ form_search.ToPlace }}
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-5 row">
-                    <label for="vehicule" class="col-sm-5 col-form-label">Vehicule No</label>
-                    {{ form_search.vehicleno }}
-                </div>
-                <div class="form-group col-md-5 row">
-                    <label for="status" class="col-sm-5 col-form-label">Status </label>
-                    <select name="status" class="form-control col-sm-7">
-                        <option value="">All</option>
-                        {% for lg in legend %}
-                        <option value="{{lg.status}}">{{lg.status}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-           
             <div class="footer row">
-                <button class="left " name="reset">Reset</button>
+                <a href="/dashboard?reset" class="btn left">Reset</a>
                 <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
             </div>
-
-        <div class="dashboard col-md-6">
-            <canvas id="myChart" data="{{ chart }}" ></canvas>
         </div>
-    </div>
-</form>
+    </form>
+
+    <form method="GET">
+        <div class="row collapse multi-collapse search-box" id="multiCollapseExample1">
+                <!--<input type="hidden" name="check" value="on">-->
+                <div class="search col-md-6 ">
+                    <div class="form-row">
+                        <div class="form-group col-md-5 autocomplete row">
+                            <label for="from" class="col-sm-5 col-form-label">Driver Name </label>
+                            {{ form_search.driver_oname }}
+                        </div>
+                        <div class="form-group col-md-5 row">
+                            <label for="from" class="col-sm-5 col-form-label">Pickup Place </label>
+                            {{ form_search.FromPlace }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-5 row">
+                            <label for="drive_mobile" class="col-sm-5 col-form-label">Driver Mob No </label>
+                            {{ form_search.driver_mobile_number }}
+                    </div>
+                    <div class="form-group col-md-5 row">
+                        <label for="to" class="col-sm-5 col-form-label">Destination </label>
+                        {{ form_search.ToPlace }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-5 row">
+                        <label for="vehicule" class="col-sm-5 col-form-label">Vehicule No</label>
+                        {{ form_search.vehicleno }}
+                    </div>
+                    <div class="form-group col-md-5 row">
+                        <label for="status" class="col-sm-5 col-form-label">Status </label>
+                        <select name="status" class="form-control col-sm-7">
+                            <option value="">All</option>
+                            {% for lg in legend %}
+                            <option value="{{lg.status}}">{{lg.status}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            
+                <div class="footer row">
+                    <button class="left " name="reset">Reset</button>
+                    <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+                </div>
+
+            <div class="dashboard col-md-6">
+                <canvas id="myChart" data="{{ chart }}" ></canvas>
+            </div>
+        </div>
+    </form> 
     
     <div class="list">
         <div class="row">
-            <div class="col-md-12 head">
-                <p>Last updated : <span id="demo"> </span> mn ago at <span>{{last_refresh|time:"H:i:s"}}</span>
+            <div class="col-md-5 head">
+                <div>Last updated : <span id="demo"> </span> mn ago at <span>{{last_refresh|time:"H:i:s"}}</span> - Next refresh : <span id="nextref"></span>
                         <button class="btn-send" onclick="reload()">
                             Reload
                             <i class="fa-sharp fa-solid fa-arrows-rotate"></i>
                         </button>
-                    </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-5 head">
-                <p>Next refresh : 
-                    <span id="nextref"></span>
-                </p>
+                    </div>
             </div>
             <div class="col-md-7 legend">
                 <div class="d-inline-block legend-item" >
@@ -120,24 +113,23 @@
                     </div>
                 </div>
                 {% endfor %}
-
             </div>
         </div>
         <div class="row">
             <table class="table table-borderless col-md-12">
                 <thead>
                     <tr>
-                        <th scope="col" class="head">Driver name</th>
-                        <th scope="col" >Vehicule N°</th>
-                        <th scope="col">Driver Mob N°</th>
-                        <th scope="col" class="head">Pickup Place</th>
-                        <th scope="col" class="head">Destination</th>
-                        <th scope="col" class="head">Current Position</th>
-                        <th scope="col" class="head-off">Pick up time</th>
-                        <th scope="col" class="head-off" data-toggle="tooltip" title="Trip duration from current position to pickup place" >Trip duration</th>
-                        <th scope="col" class="head-off" data-toggle="tooltip" title="Estimate time to reach pickup place from current position" >ETA time</th>
-                        <th scope="col" class="head-off" data-toggle="tooltip" title="Difference between pickup time and ETA Time" >Difference</th>
-                        <th scope="col" class="head-off">
+                        <th scope="col" class="box head">Driver name</th>
+                        <th scope="col" class="box">Vehicule N°</th>
+                        <th scope="col" class="box">Driver Mob N°</th>
+                        <th scope="col" class="box head">Pickup Place</th>
+                        <th scope="col" class="box head">Destination</th>
+                        <th scope="col" class="box head">Current Position</th>
+                        <th scope="col" class="box head-off">Pick up time</th>
+                        <th scope="col" class="box head-off" data-toggle="tooltip" title="Trip duration from current position to pickup place" >Trip duration</th>
+                        <th scope="col" class="box head-off" data-toggle="tooltip" title="Estimate time to reach pickup place from current position" >ETA time</th>
+                        <th scope="col" class="box head-off" data-toggle="tooltip" title="Difference between pickup time and ETA Time" >Difference</th>
+                        <th scope="col" class="box head-off">
                           <!-- <form id="form" action="/dashboard" method="get">
                                 <div class="form-check">
                                     {% if checked == 'on' %}
@@ -257,6 +249,7 @@
     
   </div>
 <script src="{% static './autocomplete.js' %}"></script>
+<script src="{% static './main.js' %}"></script>
 <script>
     // jQuery(function($){
     //     $(document).ajaxSend(function(){
@@ -372,12 +365,6 @@ refresh_time()
     } );
 </script>
 <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
-<script>   
-    $(function() {
-         $( "#datefrom" ).datepicker({ dateFormat: 'yy-mm-dd' }); 
-         $( "#dateto" ).datepicker({ dateFormat: 'yy-mm-dd' });   
-    }); 
-</script>
 <script>
 
 function callapi() {
