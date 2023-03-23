@@ -6,6 +6,7 @@ from django.utils.datetime_safe import datetime
 import json
 from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom, ParameterForm
 from suiviVehicule.models import TrajetcoordonneeSamm
+from suiviVehicule.planning import planning
 from suiviVehicule.services import services
 from django.conf import settings
 
@@ -189,3 +190,14 @@ def last_api_request(request):
     now = services().date_time()
     print("Api refresh - ", refresh)
     return JsonResponse({'now': now, 'datetime': refresh, 'result': '200'})
+
+def log_planning_request(request):
+    defaut = str(services().date_time().strftime('%Y-%m-%d'))
+    datefrom = defaut
+    dateto = defaut
+    if request.GET.get('datefrom') is not None and request.GET.get('dateto') is not None:
+        datefrom = request.GET.get('datefrom')
+        dateto = request.GET.get('dateto') 
+               
+    data = planning().get_list_planning(datefrom, dateto)
+    return render(request, "suiviVehicule/logplanning.html",context={"data_list": data})
