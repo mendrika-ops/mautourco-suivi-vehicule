@@ -194,6 +194,7 @@ class services():
     @transaction.atomic            
     def gestion_status_pos(self):
         status = Statuspos()
+        sid = transaction.savepoint()
         try:
             #list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
             #if len(list_uid) < 1:
@@ -205,12 +206,10 @@ class services():
             setattr(status, 'datetime', now)
             setattr(status, 'desc', 'opp')
             status.save()
-            sid = transaction.savepoint()
             count = 1
             for row in list_uid:
                 print(count,"/",len(list_uid))
-                self.get_position_lat_long(row.Uid, date_time, row, status, now)
-                
+                self.get_position_lat_long(row.Uid, date_time, row, status, now)    
                 count = count + 1 
             self.add_log(now)
             transaction.savepoint_commit(sid)
@@ -389,16 +388,23 @@ class services():
             plan.save_trajetcoordonne(row, ref.id)   
             plan.save_planning(row, self.date_time()) 
             
-    @transaction.atomic 
     def rechange(self):
         try:
-            sid = transaction.savepoint()
             self.api_units()
             #Trajetcoordonnee.objects.all().delete()
             ref = Refresh()
             ref.date_time = self.date_time()
             ref.save()
             self.save_data(ref)
+        except Exception as e:
+            raise e
+        
+    @transaction.atomic 
+    def refresh(self):
+        sid = transaction.savepoint()
+        try:   
+            self.rechange()
+            self.gestion_status_pos()
             transaction.savepoint_commit(sid)
         except Exception as e:
             print(e)

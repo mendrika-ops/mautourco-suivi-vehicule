@@ -129,8 +129,7 @@ def googlemap_request(request, pos):
 
 def refresh_request(request):
     try:
-        services().rechange()
-        services().gestion_status_pos()
+        services().refresh()
     except Exception as e:
         messages.error(request, e)
     return redirect("/dashboard")
