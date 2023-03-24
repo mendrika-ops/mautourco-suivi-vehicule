@@ -4,7 +4,7 @@ from suiviVehicule.models import Planning, Planninglib, Trajetcoordonnee
 
 class planning():
     def verify_planning(self, planning):
-        bool = Planning.objects.filter(id_trip=planning.id_trip).exists()
+        bool = Planning.objects.filter(id_trip=planning.id_trip, vehicleno__icontains=planning.vehicleno).exists()
         if bool is False:
             planning.save()
 
