@@ -353,6 +353,11 @@
   font-size: 14px;
 }
 
+.main .list .list-table {
+  overflow: auto;
+  max-height: 700px;
+}
+
 .main .list .legend-item .action{
   font-size: 12px;
   width: 80px;
