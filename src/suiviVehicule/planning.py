@@ -4,7 +4,8 @@ from suiviVehicule.models import Planning, Planninglib, Trajetcoordonnee
 
 class planning():
     def verify_planning(self, planning, now):
-        datenow = datetime. strptime(now, '%Y-%m-%d')
+        str(now.strftime('%Y-%m-%d'))
+        datenow = datetime. strptime(str(now.strftime('%Y-%m-%d')), '%Y-%m-%d')
         bool = Planning.objects.filter(trip_start_date=datenow, id_trip=planning.id_trip, vehicleno__icontains=planning.vehicleno).exists()
         if bool is False:
             planning.save()
