@@ -43,6 +43,7 @@
 
 .main {
   padding: 2rem;
+  padding-top: 1rem;
   font-family: "Open Sans";
   width: 1700px;
   margin: 0 auto;
@@ -54,7 +55,7 @@
   border: 1;
   border-radius: 4px;
   padding: 0 auto;
-  font-size: 16px;
+  font-size: 13px;
   width: 140px;
 }
 .main .carrosell:hover {
@@ -90,7 +91,7 @@
 }
 
 .main .search .form-row label {
-  font-size: 15px;
+  font-size: 13px;
 }
 .main .search .footer {
   margin-top: 2rem;
@@ -103,7 +104,7 @@
   color: #1a5a9f;
   border: 1;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
   width: 140px;
 }
 .main .search .footer button:hover {
@@ -123,8 +124,9 @@
   color: #1a5a9f;
   border: 1;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
   width: 140px;
+  padding: 0;
 }
 .main .search .footer a:hover {
   color: #f58220;
@@ -147,12 +149,13 @@
   border: 1;
   border-radius: 4px;
   padding: 0 auto;
-  font-size: 16px;
+  font-size: 13px;
   width: 140px;
   margin-left: 1rem;
 }
 .main .list .head {
   height: 40px;
+  font-size: 14px;
 }
 .main .list .box {
   vertical-align: middle;
@@ -347,6 +350,7 @@
 
 .main .list .legend-item {
   margin-left: 20px;
+  font-size: 14px;
 }
 
 .main .list .legend-item .action{
