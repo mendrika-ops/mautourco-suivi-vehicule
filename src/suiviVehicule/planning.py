@@ -3,8 +3,9 @@ from suiviVehicule.models import Planning, Planninglib, Trajetcoordonnee
 
 
 class planning():
-    def verify_planning(self, planning):
-        bool = Planning.objects.filter(id_trip=planning.id_trip, vehicleno__icontains=planning.vehicleno).exists()
+    def verify_planning(self, planning, now):
+        datenow = datetime. strptime(now, '%Y-%m-%d')
+        bool = Planning.objects.filter(trip_start_date=datenow, id_trip=planning.id_trip, vehicleno__icontains=planning.vehicleno).exists()
         if bool is False:
             planning.save()
 
@@ -22,7 +23,7 @@ class planning():
         planning.set_PickUp_H_Pos(data[9])
         planning.set_resa_trans_type(data[10])
         planning.daty_time = now
-        self.verify_planning(planning)
+        self.verify_planning(planning,now)
 
     def save_trajetcoordonne(self, data, refresh_id):
         trajetcoordonnee = Trajetcoordonnee()

@@ -156,7 +156,8 @@ class services():
                 lat = pos["Result"]["Position"]["Latitude"]
                 long = pos["Result"]["Position"]["Longitude"]
                 address = pos["Result"]["Position"]["Address"]
-                file = self.get_direction(f"{lat},{long}", row.PickUp_H_Pos)
+                pick_up = row.PickUp_H_Pos.split(",") 
+                file = self.get_direction(f"{lat},{long}", pick_up[0]+","+pick_up[1])
                 if file is not None:
                     print("- datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
                     setattr(status_detail, 'uid', uid)
