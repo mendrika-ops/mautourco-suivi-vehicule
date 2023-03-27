@@ -22,6 +22,7 @@ let myChart = new Chart("myChart", {
         }]
     },
     options: {
+        aspectRatio: 3,
         onHover: (evt, activeEls) => {
             console.log("event ", evt);
             activeEls.length > 0 ? evt.target.style.cursor = 'pointer' : evt.target.style.cursor = 'default';
