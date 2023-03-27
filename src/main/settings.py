@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'suiviVehicule'
+    'suiviVehicule',
+    'sass_processor'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -184,3 +185,10 @@ LOGGING = {
         },
     },
 }
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
+)
+
