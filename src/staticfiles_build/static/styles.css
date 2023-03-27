@@ -1,0 +1,292 @@
+.header {
+  height: 58px;
+  border-bottom: 0.3rem solid #ee7203;
+  background-color: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.22), 0 1px 2px 0 rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: row; }
+  .header .header-logo {
+    height: 100%;
+    display: flex;
+    align-items: center; }
+    .header .header-logo img {
+      width: 166px;
+      margin-left: 52px; }
+  .header .header-title {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ee7203; }
+    .header .header-title h2 {
+      font-size: 1.2rem; }
+  .header .header-sign-in {
+    height: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    color: #ee7203;
+    padding-right: 40px; }
+    .header .header-sign-in h2 {
+      font-size: 1.7rem; }
+
+.main {
+  padding: 2rem;
+  padding-top: 1rem;
+  font-family: "Open Sans";
+  width: 1700px;
+  margin: 0 auto; }
+  .main .carrosell {
+    background-color: white;
+    border-color: #1a5a9f;
+    color: #1a5a9f;
+    border: 1;
+    border-radius: 4px;
+    padding: 0 auto;
+    font-size: 13px;
+    width: 140px; }
+    .main .carrosell:hover {
+      color: #f58220; }
+    .main .carrosell i {
+      margin-left: 10px; }
+  .main .btn-outline-success {
+    border-color: #1e847f; }
+    .main .btn-outline-success:hover {
+      background-color: #1e847f; }
+  .main .btn-outline-danger {
+    border-color: #ff6e40; }
+    .main .btn-outline-danger:hover {
+      background-color: #ff6e40; }
+  .main .search {
+    background-color: #ecf2f8;
+    margin-top: 10px;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    padding-top: 44px; }
+    .main .search .form-group {
+      margin: 0 auto; }
+    .main .search .form-row {
+      height: 42px; }
+      .main .search .form-row label {
+        font-size: 13px; }
+      .main .search .form-row input {
+        height: 30px;
+        font-size: 13px; }
+      .main .search .form-row select {
+        height: 30px;
+        font-size: 13px; }
+    .main .search .footer {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center; }
+      .main .search .footer button {
+        background-color: white;
+        border-color: #1a5a9f;
+        color: #1a5a9f;
+        border: 1;
+        border-radius: 4px;
+        font-size: 14px;
+        width: 140px; }
+        .main .search .footer button:hover {
+          color: #f58220; }
+        .main .search .footer button i {
+          margin-left: 10px; }
+      .main .search .footer .right {
+        margin-left: 3rem; }
+      .main .search .footer a {
+        border: 2px solid;
+        background-color: white;
+        border-color: #1a5a9f;
+        color: #1a5a9f;
+        border: 1;
+        border-radius: 4px;
+        font-size: 13px;
+        width: 140px;
+        padding: 0;
+        margin-left: 10px; }
+        .main .search .footer a:hover {
+          color: #f58220; }
+  .main .dashboard #idChart {
+    max-width: 200px;
+    max-height: 200px; }
+  .main .list {
+    margin-top: 1rem; }
+    .main .list .head {
+      height: 48px;
+      font-size: 13px; }
+      .main .list .head button {
+        background-color: white;
+        border-color: #1a5a9f;
+        color: #1a5a9f;
+        border: 1;
+        border-radius: 4px;
+        padding: 0 auto;
+        font-size: 13px;
+        width: 140px;
+        margin-left: 1rem; }
+        .main .list .head button:hover {
+          color: #f58220; }
+        .main .list .head button i {
+          margin-left: 10px; }
+    .main .list .box {
+      vertical-align: middle; }
+    .main .list .legend {
+      height: 40px;
+      margin-top: -16px; }
+    .main .list table thead {
+      background-color: #1a5a9f;
+      color: white;
+      text-align: center;
+      font-size: 13px;
+      position: sticky;
+      top: 0; }
+      .main .list table thead th {
+        font-size: 13px;
+        vertical-align: middle; }
+    .main .list table tbody {
+      font-size: 13px; }
+      .main .list table tbody .list-action {
+        padding: 0;
+        padding-top: 10px; }
+        .main .list table tbody .list-action .action {
+          font-size: 11px; }
+        .main .list table tbody .list-action .outline-btn {
+          border: 0;
+          background-color: white; }
+          .main .list table tbody .list-action .outline-btn .svg {
+            width: 23px; }
+          .main .list table tbody .list-action .outline-btn:hover .svg {
+            stroke: #f58220; }
+        .main .list table tbody .list-action .btn {
+          width: 85px; }
+        .main .list table tbody .list-action .action {
+          color: #181717;
+          font-weight: bold; }
+      .main .list table tbody td {
+        font-size: 11px;
+        text-align: left;
+        align-items: left; }
+    .main .list table .head {
+      width: 250px;
+      text-align: center; }
+    .main .list table .head-off {
+      width: 100px;
+      text-align: center; }
+    .main .list .list-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between; }
+      .main .list .list-footer button {
+        background-color: white;
+        border-color: #1a5a9f;
+        color: #1a5a9f;
+        border: 1;
+        border-radius: 4px;
+        padding: 0 auto;
+        font-size: 13px;
+        width: 140px;
+        margin-left: 1rem; }
+        .main .list .list-footer button:hover {
+          color: #f58220; }
+        .main .list .list-footer button i {
+          margin-left: 0.5rem; }
+      .main .list .list-footer .footer-pagine {
+        margin-right: 35px;
+        font-size: 13px; }
+    .main .list .title-rec {
+      align-items: center;
+      margin-bottom: 30px; }
+      .main .list .title-rec .title-rec-head {
+        text-align: center; }
+    .main .list .legend-item {
+      margin-left: 20px;
+      font-size: 13px;
+      text-align: center; }
+      .main .list .legend-item .action {
+        color: #181717;
+        font-weight: bold;
+        font-size: 11px;
+        width: 85px; }
+    .main .list .list-table {
+      overflow: auto;
+      max-height: 700px; }
+  .main .btn-outline-success {
+    border: none; }
+  .main .update {
+    margin-top: 10px;
+    border-radius: 0.5rem;
+    padding: 1rem; }
+    .main .update .form-group {
+      margin: 0 auto; }
+    .main .update .footer {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center; }
+      .main .update .footer button {
+        background-color: white;
+        border-color: #1a5a9f;
+        color: #1a5a9f;
+        border: 1;
+        border-radius: 4px;
+        font-size: 13px;
+        width: 140px; }
+  .main .parameter {
+    display: flex;
+    justify-content: center; }
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0; }
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4; }
+    .autocomplete-items div:hover {
+      background-color: #e9e9e9; }
+
+.autocomplete-active {
+  background-color: #1a5a9f !important;
+  color: #ffffff; }
+
+.container .modal-aster {
+  float: right;
+  margin-top: -16px;
+  margin-bottom: auto;
+  padding-right: 3px; }
+
+#bg-spinner {
+  top: 0;
+  z-index: 100;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  display: none;
+  background-color: rgba(1, 1, 1, 0.7); }
+
+#position-spinner {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center; }
+
+#spinner {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  border: 6px solid #d3d3d3;
+  border-top: 6px solid #007bff;
+  animation: loading 1s linear infinite; }
+
+@keyframes loading {
+  to {
+    transform: rotate(360deg); } }
+
+/*# sourceMappingURL=styles.css.map */
