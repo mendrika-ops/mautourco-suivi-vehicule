@@ -48,6 +48,7 @@
                     <th scope="col">PickUp Position</th>
                     <th scope="col">Pick up time</th>
                     <th scope="col">Resa Trans</th>
+                    <th scope="col">Gpsid</th>
                     <th scope="col" style="width:100px">Date</th>
                     <th scope="col" style="width:100px">Record Time</th>
                   </tr>
@@ -64,8 +65,9 @@
                     <td>{{ item.PickUp_H_Pos }}</td>
                     <td style="text-align: center;">{{ item.pick_up_time |date:"H:i:s" }}</td>  
                     <td style="text-align: center;">{{ item.resa_trans_type }}</td>
+                    <td style="text-align: center;">{{ item.gpsid }}</td>
                     <td style="text-align: center;">{{ item.daterecord }}</td>
-                    <td style="text-align: center;">{{ item.actualtime }}</td>
+                    <td style="text-align: center;">{{ item.actualtime }}</td>                  
                 </tr>
                 {% endfor %}
                 </tbody>
