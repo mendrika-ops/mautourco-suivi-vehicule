@@ -159,7 +159,7 @@ class services():
                 pick_up = row.PickUp_H_Pos.split(",") 
                 file = self.get_direction(f"{lat},{long}", pick_up[0]+","+pick_up[1])
                 if file is not None:
-                    print("- datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
+                    print("Normal :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
                     setattr(status_detail, 'uid', uid)
                     setattr(status_detail, 'coordonnee', f"{lat},{long}")
                     setattr(status_detail, 'current', address)
@@ -169,7 +169,7 @@ class services():
                     setattr(status_detail, 'id_trip', row.id_trip)
                     setattr(status_detail, 'distance', file["distance"])
                 else:
-                    print("api error :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
+                    print("Map error :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
                     setattr(status_detail, 'uid', uid)
                     setattr(status_detail, 'coordonnee', f"{lat},{long}")
                     setattr(status_detail, 'current', address)
@@ -178,8 +178,18 @@ class services():
                     setattr(status_detail, 'id_trip', row.id_trip)
                     setattr(status_detail, 'duration', -1)
                     setattr(status_detail, 'distance', 0)
+            else:
+                print("Postion error :::: ", str(row.trip_start_date)+" "+ str(row.pick_up_time))
+                setattr(status_detail, 'uid', uid)
+                setattr(status_detail, 'coordonnee', "POSITION ERROR")
+                setattr(status_detail, 'current', "POSITION ERROR")
+                setattr(status_detail, 'idmere', status)
+                setattr(status_detail, 'daty_time', now)
+                setattr(status_detail, 'id_trip', row.id_trip)
+                setattr(status_detail, 'duration', -1)
+                setattr(status_detail, 'distance', 0)
         else:
-            print("UID not FOUND :::: ", str(row.trip_start_date)+" "+ str(row.pick_up_time))
+            print("UID not found :::: ", str(row.trip_start_date)+" "+ str(row.pick_up_time))
             setattr(status_detail, 'uid', None)
             setattr(status_detail, 'coordonnee', "UID NOT FOUND")
             setattr(status_detail, 'current', "UID NOT FOUND")
