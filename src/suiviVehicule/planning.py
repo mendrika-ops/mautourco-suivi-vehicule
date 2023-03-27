@@ -6,7 +6,7 @@ class planning():
     def verify_planning(self, planning, now):
         str(now.strftime('%Y-%m-%d'))
         datenow = datetime. strptime(str(now.strftime('%Y-%m-%d')), '%Y-%m-%d')
-        bool = Planning.objects.filter(trip_start_date=datenow, id_trip=planning.id_trip, vehicleno__icontains=planning.vehicleno).exists()
+        bool = Planninglib.objects.filter(daterecord=datenow, id_trip=planning.id_trip, vehicleno__icontains=planning.vehicleno).exists()
         if bool is False:
             planning.save()
 
@@ -24,6 +24,7 @@ class planning():
         planning.set_PickUp_H_Pos(data[9])
         planning.set_resa_trans_type(data[10])
         planning.daty_time = now
+        planning.gpsid = data[11]
         self.verify_planning(planning,now)
 
     def save_trajetcoordonne(self, data, refresh_id):

@@ -381,7 +381,7 @@ class services():
     def save_data(self, ref):
         tab = []
         cursor = connections["asterix"].cursor()
-        req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type FROM VW_GPSTracking t"
+        req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type, t.gpsid FROM VW_GPSTracking t"
         cursor.execute(req)
         for row in cursor: 
             plan = planning()

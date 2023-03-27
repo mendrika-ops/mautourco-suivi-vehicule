@@ -291,7 +291,8 @@ select
     `st`.`resa_trans_type` as `resa_trans_type`,
     date_format(`st`.`daty_time`, '%Y-%m-%d') as `daterecord`,
     date_format(`st`.`daty_time`, ' %H:%i:%s') as `actualtime`,
-    `st`.`daty_time` as `daty_time`
+    `st`.`daty_time` as `daty_time`,
+    st.gpsid
 from
     `suivivehicule_planning` `st`;
 

@@ -269,6 +269,7 @@ class Planning(models.Model):
     PickUp_H_Pos = models.CharField(max_length=100)
     resa_trans_type = models.CharField(max_length=100)
     daty_time = models.DateTimeField(null=True)
+    gpsid = models.CharField(null=True, max_length=100)
     
     def set_vehicleno(self, vehiculeno):
         self.vehicleno = vehiculeno
@@ -319,6 +320,7 @@ class Planninglib(models.Model):
     daty_time = models.DateTimeField(null=True)
     daterecord = models.DateField(null=True)
     actualtime = models.TimeField(null=True)
+    gpsid = models.CharField(null=True, max_length=100)
 
     class Meta:
         managed = False
