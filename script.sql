@@ -296,4 +296,36 @@ select
 from
     `suivivehicule_planning` `st`;
 
+create or replace
+algorithm = UNDEFINED view `suivivehicule_recordtrajet_export` as
+select
+    `svr`.`vehicleno` as `vehicleno`,
+    `svr`.`driver_oname` as `driver_oname`,
+    `svr`.`FromPlace` as `FromPlace`,
+    `svr`.`ToPlace` as `ToPlace`,
+    `svr`.`id_trip` as `id_trip`,
+    `svr`.`trip_start_date` as `trip_start_date`,
+    cast(svr.pick_up_time as char) as `pick_up_time`,
+    (case
+        when (`svr`.`etat` = 0) then 'Cancel'
+        else `svs`.`status`
+    end) as `status`,
+    (case
+        when (`svr`.`etat` = 0) then 'rgba(30,61,89,1.0)'
+        else `svs`.`couleur`
+    end) as `couleur`,
+    `svr`.`comment` as `comment`,
+    date_format(`svr`.`datetime`, '%Y-%m-%d') as `daterecord`,
+    `svr`.`etat` as `etat`,
+    `svr`.`id` as `id`,
+    `svr`.`driver_mobile_number` as `driver_mobile_number`,
+    `svr`.`current` as `current`,
+    date_format(`svr`.`datetime`, ' %H:%i:%s') as `actualtime`,
+    `svr`.`difftimestart` as `difftimestart`,
+    `svr`.`difftimepickup` as `difftimepickup`
+from
+    (`suivivehicule_recordcomment` `svr`
+left join `suivivehicule_statusparameter` `svs` on
+    ((`svs`.`id` = `svr`.`etat`)));
+
     

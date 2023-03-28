@@ -198,6 +198,21 @@
       margin-bottom: 30px; }
       .main .list .title-rec .title-rec-head {
         text-align: center; }
+      .main .list .title-rec .export {
+        margin-left: auto;
+        margin-top: 20px; }
+        .main .list .title-rec .export button {
+          background-color: white;
+          border-color: #1a5a9f;
+          color: #1a5a9f;
+          border: 1;
+          border-radius: 4px;
+          font-size: 13px;
+          width: 85px; }
+          .main .list .title-rec .export button:hover {
+            color: #f58220; }
+          .main .list .title-rec .export button i {
+            margin-left: 10px; }
     .main .list .legend-item {
       margin-left: 20px;
       font-size: 13px;

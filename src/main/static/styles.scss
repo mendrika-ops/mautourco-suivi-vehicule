@@ -275,6 +275,26 @@ $font-size-table: 11px;
         .title-rec-head {
           text-align: center;
         }
+        .export {
+          margin-left: auto;
+          margin-top: 20px;
+          button {
+            background-color: white;
+            border-color: $button;
+            color: $button;
+            border: 1;
+            border-radius: 4px;
+            font-size: $font-size;
+            width: 85px;
+            &:hover {
+              color: $button-hover;
+            }
+            i {
+              margin-left: 10px;
+            }
+          }
+          
+        }
       }
 
       .legend-item {
