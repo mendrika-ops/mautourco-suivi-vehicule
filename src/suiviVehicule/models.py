@@ -177,6 +177,7 @@ class Statuspos(models.Model):
     id = models.indexes
     datetime = models.DateTimeField()
     desc = models.CharField(max_length=100)
+    nbre = models.IntegerField(null=True)
 
 
 class Statusposdetail(models.Model):
