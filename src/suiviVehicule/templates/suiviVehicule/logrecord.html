@@ -7,9 +7,16 @@
             <div class="col-md-1 icon ">
                <a href="/dashboard" ><i class="fa-regular fa-circle-left fa-xl"></i></a>
             </div>       
-            <div class="col-md-10 title-rec-head" style="text-align: center;">
+            <div class="col-md-9 title-rec-head" style="text-align: center;">
                 <h2>Trip Log</h2>
-            </div>        
+            </div>  
+            <div class="col-md-1 export">
+                <form action="/log/export" method="get">
+                    <input type="hidden" name="datefrom" value="{{datefrom}}">
+                    <input type="hidden" name="dateto" value="{{dateto}}">
+                    <button class="right">Export<i class="fa-solid fa-file-export"></i></button>
+                </form>
+             </div>        
         </div> 
         <div class="row table-responsive list-table">
             <table class="table table-borderless col-md-12">
