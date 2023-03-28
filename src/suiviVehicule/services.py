@@ -215,6 +215,7 @@ class services():
             date_time = now.strftime("%d %B %Y %H:%M:%S")
             setattr(status, 'datetime', now)
             setattr(status, 'desc', 'opp')
+            setattr(status, 'nbre', len(list_uid))
             status.save()
             count = 1
             for row in list_uid:
