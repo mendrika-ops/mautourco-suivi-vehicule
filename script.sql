@@ -328,4 +328,21 @@ from
 left join `suivivehicule_statusparameter` `svs` on
     ((`svs`.`id` = `svr`.`etat`)));
 
+
+create or replace
+algorithm = UNDEFINED view `suivivehicule_recaprefresh` as
+select
+    1 as `id`,
+    count(0) as `nbre_refresh`,
+    sum(`ss`.`nbre`) as `nbre_call_api`,
+    cast(`ss`.`datetime` as date) as `date`
+from
+    `suivivehicule_statuspos` `ss`
+where
+    (`ss`.`nbre` is not null)
+group by
+    `date`
+order by
+    `date`;
+
     

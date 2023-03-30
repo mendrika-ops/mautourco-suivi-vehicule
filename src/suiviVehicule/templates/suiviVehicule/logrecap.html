@@ -1,0 +1,94 @@
+{% extends "suiviVehicule/template.html" %}
+{% block content %}
+{% load static %}
+<div class="main">  
+    <button class="carrosell" data-toggle="collapse" href="#multiCollapseExample2" role="button" onclick="clickIcon()"
+    aria-expanded="false" aria-controls="multiCollapseExample2">Search log <i
+    class="fa-solid fa-angle-right fa-rotate-90"></i>
+    </button>
+    <form action="/log/recap" method="GET" >
+        <div class="row collapse multi-collapse" id="multiCollapseExample2">
+            <div class="search col-md-6 ">
+                <div class="form-row">
+                    <div class="form-group col-md-5 row">
+                        <label for="from" class="col-sm-5 col-form-label">Date From </label>
+                        <input type="text" class="form-control col-sm-7" id="datefromlog" name="datefrom" value="" placeholder="yyyy-mm-dd" >
+                    </div>
+                    <div class="form-group col-md-5 row">
+                        <label for="from" class="col-sm-5 col-form-label">Date To </label>
+                        <input type="text" class="form-control col-sm-7" id="datetolog" name="dateto" value="" placeholder="yyyy-mm-dd" >
+                    </div>
+                </div>
+            <div class="footer row">
+                <a href="/log/recap" class="btn left">Reset</a>
+                <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            </div>
+        </div>
+    </form>
+    <div class="list">
+        <div class="title-rec row">
+            <div class="col-md-1 icon ">
+               <a href="/dashboard" ><i class="fa-regular fa-circle-left fa-xl"></i></a>
+            </div>       
+            <div class="col-md-10 title-rec-head" style="text-align: center;">
+                <h2>Recap refresh by day</h2>
+            </div>        
+        </div> 
+        <div class="row list-table">
+            <table class="table table-borderless col-md-12">
+                <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Refresh number</th>
+                    <th scope="col">Total Call Api</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for item in data_list %}
+                <tr>             
+                    <td style="text-align: center;">{{ item.date }}</td>
+                    <td style="text-align: center;">{{ item.nbre_refresh }}</td>
+                    <td style="text-align: center;">{{ item.nbre_call_api }}</td>                  
+                </tr>
+                {% endfor %}
+                <tr>             
+                    <td style="text-align: center;"><b>SUM</b></td>
+                    <td style="text-align: center;">{{ sum_refresh }}</td>
+                    <td style="text-align: center;">{{ sum_api }}</td>                  
+                </tr>
+                </tbody>
+            </table>
+        </div>
+            {% for message in messages %}
+            <!-- pop-up dialog box, containing a form -->
+                <dialog id="favDialog" style="border: none;border-radius: 0.2rem;">  
+                    <hr></hr>             
+                    <p>{{ message }}</p>
+                    <hr></hr>
+                    <div>
+                        <button id="cancel" class="btn btn-default" type="reset">Cancel</button>
+                    </div>
+                </dialog>
+
+            {% endfor %}        
+            
+        <div class="list-footer">
+          <!--  <a href="/record/listes?page={{ load_value }}" class="btn" >
+                <button name="loadmore" value="" >Load more <i class="fa-solid fa-ellipsis-vertical fa-rotate-90"></i></button>
+            </a>-->
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+    $( "#datefromlog" ).datepicker({
+       dateFormat:'yy-mm-dd',
+           })
+    $( "#datetolog" ).datepicker({
+       dateFormat:'yy-mm-dd',
+           });   
+}); 
+</script>
+<script src="{% static './main.js' %}"></script>
+{% endblock %}

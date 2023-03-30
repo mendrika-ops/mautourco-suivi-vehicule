@@ -3,7 +3,7 @@ import requests
 from django.db import IntegrityError, connection, connections, transaction
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Planning, Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units
+from suiviVehicule.models import Planning, Recaprefresh, Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units
 from datetime import datetime,tzinfo
 from dateutil import tz
 
@@ -420,5 +420,13 @@ class services():
         except Exception as e:
             print(e)
             transaction.savepoint_rollback(sid)
+        
+    def getRecaprefresh(self, dateinfrom, dateinto):
+        data = []
+        if dateinfrom is None and dateinto is None:
+            data =  Recaprefresh.objects.all()
+        else:
+            data = Recaprefresh.objects.filter(date__range = [dateinfrom,dateinto])
+        return data
         
     
