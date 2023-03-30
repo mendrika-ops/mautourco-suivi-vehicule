@@ -1,5 +1,5 @@
 from django.urls import path
-from suiviVehicule.views import export_users_xls, index, article, log_planning_request, register_request, login_request, dashboard_request, googlemap_request, \
+from suiviVehicule.views import export_users_xls, index, article, log_planning_request, recaprefresh_request, register_request, login_request, dashboard_request, googlemap_request, \
     refresh_request, one_refresh_request, comment_request, log_request, parameter_update_request, parameter_liste_request,rechange_request,last_api_request
 
 urlpatterns = [
@@ -19,5 +19,6 @@ urlpatterns = [
     path("chargement", rechange_request),
     path("api/refresh", last_api_request),
     path("planning/list", log_planning_request),
-    path("log/export", export_users_xls)
+    path("log/export", export_users_xls),
+    path("log/recap", recaprefresh_request)
 ]
