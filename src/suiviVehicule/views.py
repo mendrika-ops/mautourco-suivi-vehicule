@@ -240,3 +240,14 @@ def export_users_xls(request):
 
     wb.save(response)
     return response
+
+def recaprefresh_request(request):
+    data = []
+    datefrom = None
+    dateto = None
+    if request.GET.get('datefrom') is not None and request.GET.get('dateto') is not None:
+        datefrom = request.GET.get('datefrom')
+        dateto = request.GET.get('dateto') 
+    
+    data = services().getRecaprefresh(datefrom, dateto)
+    return render(request, "suiviVehicule/logrecap.html",context={"data_list": data, "sum_refresh": sum(data.values_list('nbre_refresh', flat=True)), "sum_api": sum(data.values_list('nbre_call_api', flat=True)) })
