@@ -169,7 +169,7 @@ class services():
                     setattr(status_detail, 'id_trip', row.id_trip)
                     setattr(status_detail, 'distance', file["distance"])
                 else:
-                    print("Map error :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
+                    print("Map error :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", -1 , " - Distance ", 0, " : ")
                     setattr(status_detail, 'uid', uid)
                     setattr(status_detail, 'coordonnee', f"{lat},{long}")
                     setattr(status_detail, 'current', address)
