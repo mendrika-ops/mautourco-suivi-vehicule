@@ -32,7 +32,7 @@
                <a href="/dashboard" ><i class="fa-regular fa-circle-left fa-xl"></i></a>
             </div>       
             <div class="col-md-10 title-rec-head" style="text-align: center;">
-                <h2>Recap refresh by day</h2>
+                <h2>Historic refresh</h2>
             </div>        
         </div> 
         <div class="row list-table">
@@ -40,20 +40,20 @@
                 <thead>
                   <tr>
                     <th scope="col">Date</th>
-                    <th scope="col">Refresh number</th>
-                    <th scope="col">Total Call Api</th>
+                    <th scope="col">Sum trip refresh</th>
+                    <th scope="col">Refresh effectuate</th>
                   </tr>
                 </thead>
                 <tbody>
                 {% for item in data_list %}
                 <tr>             
                     <td style="text-align: center;">{{ item.date }}</td>
-                    <td style="text-align: center;">{{ item.nbre_refresh }}</td>
-                    <td style="text-align: center;">{{ item.nbre_call_api }}</td>                  
+                    <td style="text-align: center;">{{ item.nbre_call_api }}</td>
+                    <td style="text-align: center;">{{ item.nbre_refresh }}</td>                  
                 </tr>
                 {% endfor %}
-                <tr>             
-                    <td style="text-align: center;"><b>SUM</b></td>
+                <tr style="border: 3px solid;">             
+                    <td style="text-align: center;"><b>Sum</b></td>
                     <td style="text-align: center;">{{ sum_refresh }}</td>
                     <td style="text-align: center;">{{ sum_api }}</td>                  
                 </tr>
