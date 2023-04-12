@@ -118,35 +118,51 @@ select
     addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)) as `estimatetime`,
     sec_to_time(`su`.`duration`) as `duration`,
     (case
-        when (`su`.`distance` < (
+        when ((`su`.`distance` < (
         select
             `ss`.`max_distance`
         from
             `suivivehicule_statusparameter` `ss`
         where
-            (`ss`.`id` = 5))) and `su`.`uid` is not null  then (
+            (`ss`.`id` = 5)))
+        and (`su`.`uid` is not null)) then (
         select
             `ss`.`status`
         from
             `suivivehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))
+      when  format((`su`.`duration` / 60),0) >= format((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60),0) then  (
+        select
+            `ss`.`status`
+        from
+            `suivivehicule_statusparameter` `ss`
+        where
+            (`ss`.`id` = 4))
         else `spa`.`status`
     end) as `status`,
     (case
-        when (`su`.`distance` < (
+        when ((`su`.`distance` < (
         select
             `ss`.`max_distance`
         from
             `suivivehicule_statusparameter` `ss`
         where
-            (`ss`.`id` = 5))) and `su`.`uid` is not null then (
+            (`ss`.`id` = 5)))
+            and (`su`.`uid` is not null)) then (
         select
             `ss`.`couleur`
         from
             `suivivehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))
+        when  format((`su`.`duration` / 60),0) >= format((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60),0) then  (
+        select
+            `ss`.`couleur`
+        from
+            `suivivehicule_statusparameter` `ss`
+        where
+            (`ss`.`id` = 4))
         else `spa`.`couleur`
     end) as `couleur`,
     `su`.`daty_time` as `datetime`,
@@ -155,13 +171,15 @@ select
     `stc`.`trip_start_time` as `trip_start_time`,
     ((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(`stc`.`pick_up_time`, `stc`.`trip_start_time`))) * 100) as `pourcentage`,
     (case
-        when (`su`.`distance` < (
+        when ((`su`.`distance` < (
         select
             `ss`.`max_distance`
         from
             `suivivehicule_statusparameter` `ss`
         where
-            (`ss`.`id` = 5))) and `su`.`uid` is not null then 5
+            (`ss`.`id` = 5)))
+            and (`su`.`uid` is not null)) then 5
+        when   format((`su`.`duration` / 60), 0) >= (time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60) then 4
         else `spa`.`id`
     end) as `idstatusparameter`,
     `su`.`distance` as `distance`,
@@ -171,10 +189,10 @@ select
 from
     ((`suivivehicule_trajetcoordonneesummary` `stc`
 join `suivivehicule_statusposdetail` `su` on
-    (((`stc`.`id_trip` = `su`.`id_trip`))))
+    ((`stc`.`id_trip` = `su`.`id_trip`)))
 join `suivivehicule_statusparameter` `spa` on
     ((((`spa`.`min_percent` * 60) < time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))))
-        and ((`spa`.`max_percent` * 60) > time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))))
+        and ((`spa`.`max_percent` * 60) >= time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))))
             and (`spa`.`desce` >= 1))))
 where
     ((`su`.`idmere_id` = (

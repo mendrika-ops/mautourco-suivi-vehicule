@@ -56,9 +56,9 @@ class services():
         for i in range(len(result)):
             #print(result[i]["Name"])
             units = Units()
-            units.set_Uid(result[i]["Uid"])
-            units.set_Name(result[i]["Name"])
-            units.set_IMEI(result[i]["IMEI"])
+            units.set_Uid(result[i]["Uid"].strip())
+            units.set_Name(result[i]["Name"].strip())
+            units.set_IMEI(result[i]["IMEI"].strip())
             units.set_Status(result[i]["Status"])
             units.set_GroupName(result[i]["GroupName"])
             units.set_CompanyName(result[i]["CompanyName"])
