@@ -12,9 +12,9 @@ class planning():
 
     def save_planning(self, data, now):
         planning = Planning()
-        planning.set_vehicleno(data[0])
-        planning.set_driver_oname(data[1])
-        planning.set_driver_mobile_number(data[2])
+        planning.set_vehicleno(data[0].strip())
+        planning.set_driver_oname(data[1].strip())
+        planning.set_driver_mobile_number(data[2].strip())
         planning.set_FromPlace(data[3])
         planning.set_ToPlace(data[4])
         planning.set_id_trip(data[5])
@@ -29,9 +29,9 @@ class planning():
 
     def save_trajetcoordonne(self, data, refresh_id):
         trajetcoordonnee = Trajetcoordonnee()
-        trajetcoordonnee.set_vehicleno(data[0])
-        trajetcoordonnee.set_driver_oname(data[1])
-        trajetcoordonnee.set_driver_mobile_number(data[2])
+        trajetcoordonnee.set_vehicleno(data[0].strip())
+        trajetcoordonnee.set_driver_oname(data[1].strip())
+        trajetcoordonnee.set_driver_mobile_number(data[2].strip())
         trajetcoordonnee.set_FromPlace(data[3])
         trajetcoordonnee.set_ToPlace(data[4])
         trajetcoordonnee.set_id_trip(data[5])
