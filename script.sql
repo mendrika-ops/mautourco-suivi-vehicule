@@ -13,34 +13,6 @@ ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_general_ci;
 
-
-CREATE TABLE `suiviVehicule_trajetcoordonnee` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `vehicleno` varchar(100) NOT NULL,
-  `driver_oname` varchar(150) NOT NULL,
-  `driver_mobile_number` varchar(50) NOT NULL,
-  `FromPlace` varchar(150) NOT NULL,
-  `ToPlace` varchar(150) NOT NULL,
-  `id_trip` int NOT NULL,
-  `trip_no` int NOT NULL,
-  `trip_start_date` varchar(15) NOT NULL,
-  `pick_up_time` time(6) NOT NULL,
-  `PickUp_H_Pos` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-CREATE TABLE `suiviVehicule_units` (
-  `Uid` varchar(50) DEFAULT NULL,
-  `Name` varchar(100) DEFAULT NULL,
-  `IMEI` varchar(100) DEFAULT NULL,
-  `Status` varchar(50) DEFAULT NULL,
-  `GroupName` varchar(100) DEFAULT NULL,
-  `CompanyName` varchar(100) DEFAULT NULL,
-  `PhoneNumber` varchar(100) DEFAULT NULL,
-  `UnitType` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 create or replace
 algorithm = UNDEFINED view `suiviVehicule_trajetcoordonneemax` as
 select
@@ -132,7 +104,7 @@ select
             `suivivehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))
-      when  format((`su`.`duration` / 60),0) >= format((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60),0) then  (
+        when ((`su`.`duration` / 60) <= (time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60)) then (
         select
             `ss`.`status`
         from
@@ -156,7 +128,7 @@ select
             `suivivehicule_statusparameter` `ss`
         where
             (`ss`.`id` = 5))
-        when  format((`su`.`duration` / 60),0) >= format((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60),0) then  (
+        when ((`su`.`duration` / 60) <= (time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60)) then (
         select
             `ss`.`couleur`
         from
@@ -179,7 +151,7 @@ select
         where
             (`ss`.`id` = 5)))
             and (`su`.`uid` is not null)) then 5
-        when   format((`su`.`duration` / 60), 0) >= (time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60) then 4
+        when ((`su`.`duration` / 60) <= (time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60)) then 4
         else `spa`.`id`
     end) as `idstatusparameter`,
     `su`.`distance` as `distance`,
