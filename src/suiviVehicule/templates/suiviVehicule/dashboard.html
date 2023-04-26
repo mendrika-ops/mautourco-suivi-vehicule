@@ -104,7 +104,7 @@
                     {% if lg.id == 1 %}
                     <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> Difference < Duration </p>
                     {% elif lg.id == 4 %}
-                    <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> Difference > Duration </p>
+                    <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> Difference >= Duration </p>
                     {% elif lg.id == 5 %}
                     <p><span><div class="btn  action" style="background-color:{{lg.couleur}}">{{lg.status}}</div></span> < {{lg.max_distance|floatformat:0}}m</p>
                     {% endif %}
