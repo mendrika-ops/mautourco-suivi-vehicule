@@ -190,7 +190,8 @@ class Statusposdetail(models.Model):
     id_trip = models.IntegerField(null=True)
     current = models.CharField(max_length=150,null=True)
     distance = models.FloatField(null=True)
-
+    daty_api_google = models.DateTimeField(null=True)
+    is_call_api = models.IntegerField(null=True)
 
 
 class Statusparameter(models.Model):
