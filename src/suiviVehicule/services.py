@@ -153,7 +153,7 @@ class services():
         file = []
         trip = Recordcommenttrajet.objects.filter(id_trip=row.id_trip,etat=1)
         last = Statusposdetail.objects.filter(id_trip=row.id_trip).order_by('-daty_time')
-        if last.exists() is True:
+        if last.exists() is True and last[0].daty_api_google is not None:
             ref = now - last[0].daty_api_google.replace(tzinfo=None)
             ref_sec = ref.total_seconds()
             if trip.exists() is True and ref_sec >= self.minvalue*60:
