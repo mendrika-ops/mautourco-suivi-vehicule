@@ -146,7 +146,7 @@ APPEND_SLASH = False
 
 USERIDGUID = '3f55ba57-8a28-41cc-917d-718b9a754410'
 SESSIONID = '02d80a20-6e40-4a56-b175-9eed0473067d'
-JOB_MINUTE = 5
+JOB_MINUTE = 2
 
 CRONJOBS = [
     ('*/'+str(JOB_MINUTE)+' * * * *', 'suiviVehicule.cron.test')

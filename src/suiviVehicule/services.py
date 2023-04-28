@@ -16,6 +16,8 @@ class services():
     SessionId = settings.SESSIONID
     UserName = 'devvirmatics@mautourco.com'
     Password = 'Mautourco@1234'
+    minvalue = 2
+    maxvalue = 15
 
     def get_api_data(self):
         response = requests.get(
@@ -147,8 +149,42 @@ class services():
         #print("date now : ", datetime.now())
         return av
     
+    def configuration_api_google(self, status_detail, row, pick_up, now, lat, long):
+        file = []
+        trip = Recordcommenttrajet.objects.filter(id_trip=row.id_trip,etat=1)
+        last = Statusposdetail.objects.filter(id_trip=row.id_trip).order_by('-daty_time')
+        if last.exists() is True:
+            ref = now - last[0].daty_api_google.replace(tzinfo=None)
+            ref_sec = ref.total_seconds()
+            if trip.exists() is True and ref_sec >= self.minvalue*60:
+                file = self.get_direction(f"{lat},{long}", pick_up[0]+","+pick_up[1])
+                setattr(status_detail, 'daty_api_google', now)
+                setattr(status_detail, 'is_call_api', 1)
+                print("Appel:: offtrack :: reference ",round(ref_sec/60))
+            elif trip.exists() is False and ref_sec >= self.maxvalue*60:
+                file = self.get_direction(f"{lat},{long}", pick_up[0]+","+pick_up[1])
+                setattr(status_detail, 'daty_api_google', now)
+                setattr(status_detail, 'is_call_api', 1)
+                print("Appel:: ontrack :: reference ",round(ref_sec/60))
+            else:
+                file = {
+                        "distance": last[0].distance,
+                        "duration": last[0].duration
+                    }
+                setattr(status_detail, 'daty_api_google', last[0].daty_api_google)
+                setattr(status_detail, 'is_call_api', 0)
+                print("Appel:: normal :: reference ",round(ref_sec/60))
+        else:
+            print("Appel:: not in :: reference ")
+            file = self.get_direction(f"{lat},{long}", pick_up[0]+","+pick_up[1])
+            setattr(status_detail, 'daty_api_google', now)
+            setattr(status_detail, 'is_call_api', 0)
+        return file
+
+
     def get_position_lat_long(self, uid, date_time, row, status, now):
         status_detail = Statusposdetail()
+        file = []
         if uid is not None:
             pos = self.get_position_at_time(uid, date_time)
 
@@ -157,7 +193,9 @@ class services():
                 long = pos["Result"]["Position"]["Longitude"]
                 address = pos["Result"]["Position"]["Address"]
                 pick_up = row.PickUp_H_Pos.split(",") 
-                file = self.get_direction(f"{lat},{long}", pick_up[0]+","+pick_up[1])
+
+                file = self.configuration_api_google(status_detail, row, pick_up, now, lat, long)
+                
                 if file is not None:
                     print("Normal :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
                     setattr(status_detail, 'uid', uid)
@@ -168,6 +206,7 @@ class services():
                     setattr(status_detail, 'daty_time', now)
                     setattr(status_detail, 'id_trip', row.id_trip)
                     setattr(status_detail, 'distance', file["distance"])
+                  
                 else:
                     print("Map error :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", -1 , " - Distance ", 0, " : ")
                     setattr(status_detail, 'uid', uid)
@@ -178,6 +217,7 @@ class services():
                     setattr(status_detail, 'id_trip', row.id_trip)
                     setattr(status_detail, 'duration', -1)
                     setattr(status_detail, 'distance', 0)
+                    setattr(status_detail, 'daty_api_google', now)
             else:
                 print("Postion error :::: ", str(row.trip_start_date)+" "+ str(row.pick_up_time))
                 setattr(status_detail, 'uid', uid)
@@ -206,9 +246,6 @@ class services():
         status = Statuspos()
         sid = transaction.savepoint()
         try:
-            #list_uid = TrajetcoordonneeSamm.objects.all().order_by('idstatusparameter','-trip_start_date', 'pick_up_time')
-            #if len(list_uid) < 1:
-            #    list_uid = self.get_new_data()
             list_uid = self.get_new_data()
             currentdate = self.date_time()
             now = currentdate
