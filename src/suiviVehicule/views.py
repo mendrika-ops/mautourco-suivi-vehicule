@@ -4,7 +4,6 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import json
-from suiviVehicule.bot import bot
 from suiviVehicule.export import Recordexport
 from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom, ParameterForm
 from suiviVehicule.models import Recordcommenttrajet, TrajetcoordonneeSamm
@@ -15,7 +14,6 @@ import xlwt
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-from twilio.twiml.messaging_response import MessagingResponse
 
 # Create your views here.
 def index(request):
