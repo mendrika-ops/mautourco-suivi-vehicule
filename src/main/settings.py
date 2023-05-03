@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'suiviVehicule',
-    'sass_processor'
+    'sass_processor',
+    'django.contrib.humanize'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

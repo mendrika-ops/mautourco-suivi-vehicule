@@ -44,15 +44,16 @@
                   </tr>
                 </thead>
                 <tbody>
+                {% load humanize %}
                 {% for item in data_list %}
                 <tr>             
                     <td style="text-align: center;">{{ item.date }}</td>
-                    <td style="text-align: center;">{{ item.nbre_call_api }}</td>  
+                    <td style="text-align: center;">{{ item.nbre_call_api|intcomma:" " }}</td>  
                 </tr>
                 {% endfor %}
                 <tr style="border: 3px solid;">             
                     <td style="text-align: center;"><b>Sum</b></td>
-                    <td style="text-align: center;">{{ sum_api }}</td>                  
+                    <td style="text-align: center;">{{ sum_api|intcomma:" "  }}</td>                  
                 </tr>
                 </tbody>
             </table>
