@@ -4,6 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import json
+from suiviVehicule.bot import bot
 from suiviVehicule.export import Recordexport
 from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom, ParameterForm
 from suiviVehicule.models import Recordcommenttrajet, TrajetcoordonneeSamm
@@ -12,6 +13,9 @@ from suiviVehicule.services import services
 from django.conf import settings
 import xlwt
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+from twilio.twiml.messaging_response import MessagingResponse
 
 # Create your views here.
 def index(request):
@@ -250,4 +254,4 @@ def recaprefresh_request(request):
         dateto = request.GET.get('dateto') 
     
     data = services().getRecaprefresh(datefrom, dateto)
-    return render(request, "suiviVehicule/logrecap.html",context={"data_list": data, "sum_refresh": sum(data.values_list('nbre_refresh', flat=True)), "sum_api": sum(data.values_list('nbre_call_api', flat=True)) })
+    return render(request, "suiviVehicule/logrecap.html",context={"data_list": data, "sum_api": sum(data.values_list('nbre_call_api', flat=True)) })
