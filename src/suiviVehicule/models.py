@@ -329,7 +329,6 @@ class Planninglib(models.Model):
         db_table = 'suivivehicule_planninglib'
 
 class Recaprefresh(models.Model):
-    nbre_refresh = models.IntegerField()
     nbre_call_api = models.IntegerField()
     date = models.DateField()
     class Meta:

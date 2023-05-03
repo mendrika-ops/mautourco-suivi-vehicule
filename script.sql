@@ -323,16 +323,23 @@ create or replace
 algorithm = UNDEFINED view `suivivehicule_recaprefresh` as
 select
     1 as `id`,
-    count(0) as `nbre_refresh`,
-    sum(`ss`.`nbre`) as `nbre_call_api`,
-    cast(`ss`.`datetime` as date) as `date`
+    cast(`ss`.`daty_time` as date) as `date`,
+    count(0) as `nbre_call_api`
 from
-    `suivivehicule_statuspos` `ss`
+    `suivivehicule_statusposdetail` `ss`
 where
-    (`ss`.`nbre` is not null)
+    (cast(`ss`.`daty_time` as date) <= '2023-04-27')
 group by
-    `date`
-order by
-    `date`;
-
-    
+    cast(`ss`.`daty_time` as date)
+union
+select
+    1 as `id`,
+    cast(`ss`.`daty_time` as date) as `date`,
+    count(0) as `nbre_call_api`
+from
+    `suivivehicule_statusposdetail` `ss`
+where
+    ((cast(`ss`.`daty_time` as date) > '2023-04-27')
+        and (`ss`.`is_call_api` = 1))
+group by
+    cast(`ss`.`daty_time` as date);

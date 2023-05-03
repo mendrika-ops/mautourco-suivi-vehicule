@@ -41,21 +41,18 @@
                   <tr>
                     <th scope="col">Date</th>
                     <th scope="col">Sum trip refresh</th>
-                    <th scope="col">Refresh effectuate</th>
                   </tr>
                 </thead>
                 <tbody>
                 {% for item in data_list %}
                 <tr>             
                     <td style="text-align: center;">{{ item.date }}</td>
-                    <td style="text-align: center;">{{ item.nbre_call_api }}</td>
-                    <td style="text-align: center;">{{ item.nbre_refresh }}</td>                  
+                    <td style="text-align: center;">{{ item.nbre_call_api }}</td>  
                 </tr>
                 {% endfor %}
                 <tr style="border: 3px solid;">             
                     <td style="text-align: center;"><b>Sum</b></td>
-                    <td style="text-align: center;">{{ sum_api }}</td>
-                    <td style="text-align: center;">{{ sum_refresh }}</td>                  
+                    <td style="text-align: center;">{{ sum_api }}</td>                  
                 </tr>
                 </tbody>
             </table>
