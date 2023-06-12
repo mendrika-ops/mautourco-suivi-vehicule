@@ -25,7 +25,7 @@ select
     ((time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / time_to_sec(timediff(`stc`.`pick_up_time`, `stc`.`trip_start_time`))) * 100) as `pourcentage`,
     `su`.`distance` as `distance`,
     (`su`.`duration` / 60) as `difftimestart`,
-    (time_to_sec(timediff(`stc`.`pick_up_time`, date_format(addtime(`su`.`daty_time`, sec_to_time(`su`.`duration`)), '%H:%i:%s'))) / 60) as `difftimepickup`,
+    (time_to_sec(timediff(`stc`.`pick_up_time`, date_format(`su`.`daty_time`, '%H:%i:%s'))) / 60) as `difftimepickup`,
     `su`.`current` as `current`
 from
     (`suivivehicule_trajetcoordonneesummary` `stc`
