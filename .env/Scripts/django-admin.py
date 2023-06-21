@@ -1,4 +1,4 @@
-#!F:\BICI\mautourco-suivi-vehicule\.env\Scripts\python.exe
+#!C:\Users\dev_consultant4\Documents\mautourco\mautourco-suivi-vehicule\.env\Scripts\python.exe
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 
