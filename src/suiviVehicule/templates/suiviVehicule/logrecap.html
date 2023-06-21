@@ -82,10 +82,10 @@
     $(function() {
     $( "#datefromlog" ).datepicker({
        dateFormat:'yy-mm-dd',
-           })
+           }).datepicker("setDate",'now'); 
     $( "#datetolog" ).datepicker({
        dateFormat:'yy-mm-dd',
-           });   
+           }).datepicker("setDate",'now'); ;   
 }); 
 </script>
 <script src="{% static './main.js' %}"></script>

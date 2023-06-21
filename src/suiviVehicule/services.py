@@ -6,19 +6,19 @@ from django.conf import settings
 from suiviVehicule.models import Planning, Recaprefresh, Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units
 from datetime import datetime,tzinfo
 from dateutil import tz
-
+import time
 from suiviVehicule.planning import planning
 
 
 
 class services():
-    UserIdGuid = settings.USERIDGUID
-    SessionId = settings.SESSIONID
+    UserIdGuid=''
+    SessionId=''
     UserName = 'devvirmatics@mautourco.com'
     Password = 'Mautourco@1234'
     minvalue = 2
     maxvalue = 15
-
+    count_sleep = 0
     def get_api_data(self):
         response = requests.get(
             f'https://api.3dtracking.net/api/v1.0/Authentication/UserAuthenticate?UserName={self.UserName}&Password={self.Password}')
@@ -30,7 +30,7 @@ class services():
         
 
     def get_position_at_time(self, uid, date_time):
-        self.get_api_data()
+        # self.get_api_data()
         req = f"https://api.3dtracking.net/api/v1.0/Units/{uid}/PositionAtTime?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}&PointInTimeDateTimeUTC={date_time}"
         response = requests.get(req)
         pos = response.json()
@@ -40,7 +40,7 @@ class services():
         return pos
     
     def get_api_units(self):
-        self.get_api_data()
+        # self.get_api_data()
         req = f"https://api.3dtracking.net/api/v1.0/Units/Unit/List?UserIdGuid={self.UserIdGuid}&SessionId={self.SessionId}"
         response = requests.get(req)
         pos = response.json()
@@ -58,66 +58,77 @@ class services():
         for i in range(len(result)):
             #print(result[i]["Name"])
             units = Units()
-            units.set_Uid(result[i]["Uid"].strip())
-            units.set_Name(result[i]["Name"].strip())
-            units.set_IMEI(result[i]["IMEI"].strip())
-            units.set_Status(result[i]["Status"])
-            units.set_GroupName(result[i]["GroupName"])
-            units.set_CompanyName(result[i]["CompanyName"])
-            units.set_PhoneNumber(result[i]["PhoneNumber"])
-            units.save()
+            if self.is_exist_units(result[i]["Uid"].strip()) == False:
+                units.set_Uid(result[i]["Uid"].strip())
+                units.set_Name(result[i]["Name"].strip())
+                units.set_IMEI(result[i]["IMEI"].strip())
+                units.set_Status(result[i]["Status"])
+                units.set_GroupName(result[i]["GroupName"])
+                units.set_CompanyName(result[i]["CompanyName"])
+                units.set_PhoneNumber(result[i]["PhoneNumber"])
+                units.save()
 
-
+    def is_exist_units(self, uid):
+        return Units.objects.filter(Uid__icontains=uid).exists()
 
     def get_direction(self, origin, destination):
         waypoints = f'{origin}|{destination}'
         currentposition = ""
-        result = requests.get(
-            'https://maps.googleapis.com/maps/api/directions/json?',
-            params={
-                'origin': origin,
-                'destination': destination,
-                'waypoints': waypoints,
-                'mode':'driving',
-                'key': 'AIzaSyA6wqUNamrQQTeq4zoW2zzHnNT4i35Tu-8'
-            })
+        try:
+            result = requests.get(
+                'https://maps.googleapis.com/maps/api/directions/json?',
+                params={
+                    'origin': origin,
+                    'destination': destination,
+                    'waypoints': waypoints,
+                    'mode':'driving',
+                    'key': 'AIzaSyA6wqUNamrQQTeq4zoW2zzHnNT4i35Tu-8'
+                })
 
-        directions = result.json()
-        # print("Direction ::: ",directions)
-        if directions["status"] == "OK":
+            directions = result.json()
+            print("API Status ::: ", directions["status"])
+            if directions["status"] == "OK":
 
-            routes = directions["routes"][0]["legs"]
+                routes = directions["routes"][0]["legs"]
 
-            distance = 0
-            duration = 0
-            route_list = []
+                distance = 0
+                duration = 0
+                route_list = []
 
-            for route in range(len(routes)):
-                # print("routee " ,routes[route]["distance"])
-                # print("duration " ,routes[route]["duration"])
-                distance += round(int(routes[route]["distance"]["value"]))
-                duration += round(int(routes[route]["duration"]["value"]))
-                # print("approx im distance : ",round(int(routes[route]["distance"]["value"])))
-                # print("approx im duration : ",round(int(routes[route]["duration"]["value"])))
-                route_step = {
-                    'origin': routes[route]["start_address"],
-                    'destination': routes[route]["end_address"],
-                   
+                for route in range(len(routes)):
+                    # print("routee " ,routes[route]["distance"])
+                    # print("duration " ,routes[route]["duration"])
+                    distance += round(int(routes[route]["distance"]["value"]))
+                    duration += round(int(routes[route]["duration"]["value"]))
+                    # print("approx im distance : ",round(int(routes[route]["distance"]["value"])))
+                    # print("approx im duration : ",round(int(routes[route]["duration"]["value"])))
+                    route_step = {
+                        'origin': routes[route]["start_address"],
+                        'destination': routes[route]["end_address"],
+                    
+                    }
+                    route_list.append(route_step)
+                current = route_list[len(routes)-1]["destination"].split(", ")
+                currentposition = current[0] + ", "+ current[1]
+                #print("total distance : ",distance)
+                #print("total im duration : ",duration)
+                return {
+                    "origin": origin,
+                    "destination": destination,
+                    "distance": distance,
+                    "duration": round(duration)+(60), 
+                    "current": currentposition
                 }
-                route_list.append(route_step)
-            current = route_list[len(routes)-1]["destination"].split(", ")
-            currentposition = current[0] + ", "+ current[1]
-            #print("total distance : ",distance)
-            #print("total im duration : ",duration)
-            return {
-                "origin": origin,
-                "destination": destination,
-                "distance": distance,
-                "duration": round(duration)+(60), 
-                "current": currentposition
-            }
-        else:
-             return None
+            
+            elif directions["status"] == "INVALID_REQUEST":
+                return None
+            
+            else:
+                raise Exception("An ERROR API maps.googleapi.com")
+
+        except Exception as e:
+            print(e)
+            raise e
 
     def set_one_refresh(self, idstatusdetail, id):
         try:
@@ -157,14 +168,28 @@ class services():
             ref = now - last[0].daty_api_google.replace(tzinfo=None)
             ref_sec = ref.total_seconds()
             if trip.exists() is True and ref_sec >= self.minvalue*60:
+                self.count_sleep+=1
+                if self.count_sleep >= 10:
+                    print("sleep for 5 seconds")
+                    time.sleep(5)
+                    self.count_sleep = 0
+
                 file = self.get_direction(f"{lat},{long}", pick_up[0]+","+pick_up[1])
                 setattr(status_detail, 'daty_api_google', now)
                 setattr(status_detail, 'is_call_api', 1)
                 print("Appel:: offtrack :: reference ",round(ref_sec/60))
+                
             elif trip.exists() is False and ref_sec >= self.maxvalue*60:
+                self.count_sleep+=1
+                if self.count_sleep >= 10:
+                    print("sleep for 5 seconds")
+                    time.sleep(5)
+                    self.count_sleep = 0
+
                 file = self.get_direction(f"{lat},{long}", pick_up[0]+","+pick_up[1])
                 setattr(status_detail, 'daty_api_google', now)
                 setattr(status_detail, 'is_call_api', 1)
+                
                 print("Appel:: ontrack :: reference ",round(ref_sec/60))
             else:
                 file = {
@@ -173,7 +198,7 @@ class services():
                     }
                 setattr(status_detail, 'daty_api_google', last[0].daty_api_google)
                 setattr(status_detail, 'is_call_api', 0)
-                print("Appel:: normal :: reference ",round(ref_sec/60))
+                print("Appel:: ready :: reference ",round(ref_sec/60))
         else:
             print("Appel:: not in :: reference ")
             file = self.get_direction(f"{lat},{long}", pick_up[0]+","+pick_up[1])
@@ -185,66 +210,68 @@ class services():
     def get_position_lat_long(self, uid, date_time, row, status, now):
         status_detail = Statusposdetail()
         file = []
-        if uid is not None:
-            pos = self.get_position_at_time(uid, date_time)
+        try:
+            if uid is not None:
+                pos = self.get_position_at_time(uid, date_time)
 
-            if pos["Status"]["Result"] != 'Error':
-                lat = pos["Result"]["Position"]["Latitude"]
-                long = pos["Result"]["Position"]["Longitude"]
-                address = pos["Result"]["Position"]["Address"]
-                pick_up = row.PickUp_H_Pos.split(",") 
+                if pos["Status"]["Result"] != 'Error':
+                    lat = pos["Result"]["Position"]["Latitude"]
+                    long = pos["Result"]["Position"]["Longitude"]
+                    address = pos["Result"]["Position"]["Address"]
+                    pick_up = row.PickUp_H_Pos.split(",") 
 
-                file = self.configuration_api_google(status_detail, row, pick_up, now, lat, long)
-                
-                if file is not None:
-                    print("Normal :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
-                    setattr(status_detail, 'uid', uid)
-                    setattr(status_detail, 'coordonnee', f"{lat},{long}")
-                    setattr(status_detail, 'current', address)
-                    setattr(status_detail, 'idmere', status)
-                    setattr(status_detail, 'duration', file["duration"])
-                    setattr(status_detail, 'daty_time', now)
-                    setattr(status_detail, 'id_trip', row.id_trip)
-                    setattr(status_detail, 'distance', file["distance"])
-                  
+                    file = self.configuration_api_google(status_detail, row, pick_up, now, lat, long)
+                    
+                    if file is not None:
+                        print("Normal :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", file["duration"], " - Distance ", file["distance"], " : ")
+                        setattr(status_detail, 'uid', uid)
+                        setattr(status_detail, 'coordonnee', f"{lat},{long}")
+                        setattr(status_detail, 'current', address)
+                        setattr(status_detail, 'idmere', status)
+                        setattr(status_detail, 'duration', file["duration"])
+                        setattr(status_detail, 'daty_time', now)
+                        setattr(status_detail, 'id_trip', row.id_trip)
+                        setattr(status_detail, 'distance', file["distance"])
+                    
+                    else:
+                        print("Map error :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", -1 , " - Distance ", 0, " : ")
+                        setattr(status_detail, 'uid', uid)
+                        setattr(status_detail, 'coordonnee', f"{lat},{long}")
+                        setattr(status_detail, 'current', address)
+                        setattr(status_detail, 'idmere', status)
+                        setattr(status_detail, 'daty_time', now)
+                        setattr(status_detail, 'id_trip', row.id_trip)
+                        setattr(status_detail, 'duration', -1)
+                        setattr(status_detail, 'distance', 0)
+                        setattr(status_detail, 'daty_api_google', now)
                 else:
-                    print("Map error :::: - datetime : ", self.date_time()," - UID ",row.Uid," - Vehicule No :  ", row.vehicleno, " - Duration ", -1 , " - Distance ", 0, " : ")
+                    print("Postion error :::: ", str(row.trip_start_date)+" "+ str(row.pick_up_time))
                     setattr(status_detail, 'uid', uid)
-                    setattr(status_detail, 'coordonnee', f"{lat},{long}")
-                    setattr(status_detail, 'current', address)
+                    setattr(status_detail, 'coordonnee', "POSITION ERROR")
+                    setattr(status_detail, 'current', "POSITION ERROR")
                     setattr(status_detail, 'idmere', status)
                     setattr(status_detail, 'daty_time', now)
                     setattr(status_detail, 'id_trip', row.id_trip)
                     setattr(status_detail, 'duration', -1)
                     setattr(status_detail, 'distance', 0)
-                    setattr(status_detail, 'daty_api_google', now)
             else:
-                print("Postion error :::: ", str(row.trip_start_date)+" "+ str(row.pick_up_time))
-                setattr(status_detail, 'uid', uid)
-                setattr(status_detail, 'coordonnee', "POSITION ERROR")
-                setattr(status_detail, 'current', "POSITION ERROR")
+                print("UID not found :::: ", str(row.trip_start_date)+" "+ str(row.pick_up_time))
+                setattr(status_detail, 'uid', None)
+                setattr(status_detail, 'coordonnee', "UID NOT FOUND")
+                setattr(status_detail, 'current', "UID NOT FOUND")
                 setattr(status_detail, 'idmere', status)
-                setattr(status_detail, 'daty_time', now)
+                setattr(status_detail, 'duration', 1)
+                setattr(status_detail, 'daty_time', str(row.trip_start_date)+" "+ str(row.pick_up_time))
                 setattr(status_detail, 'id_trip', row.id_trip)
-                setattr(status_detail, 'duration', -1)
                 setattr(status_detail, 'distance', 0)
-        else:
-            print("UID not found :::: ", str(row.trip_start_date)+" "+ str(row.pick_up_time))
-            setattr(status_detail, 'uid', None)
-            setattr(status_detail, 'coordonnee', "UID NOT FOUND")
-            setattr(status_detail, 'current', "UID NOT FOUND")
-            setattr(status_detail, 'idmere', status)
-            setattr(status_detail, 'duration', 1)
-            setattr(status_detail, 'daty_time', str(row.trip_start_date)+" "+ str(row.pick_up_time))
-            setattr(status_detail, 'id_trip', row.id_trip)
-            setattr(status_detail, 'distance', 0)
-        status_detail.save()
+            status_detail.save()
+        except Exception as e:
+            raise e
         return status_detail
         
-    @transaction.atomic            
     def gestion_status_pos(self):
         status = Statuspos()
-        sid = transaction.savepoint()
+        self.count_sleep = 0
         try:
             list_uid = self.get_new_data()
             currentdate = self.date_time()
@@ -260,10 +287,9 @@ class services():
                 self.get_position_lat_long(row.Uid, date_time, row, status, now)    
                 count = count + 1 
             self.add_log(now)
-            transaction.savepoint_commit(sid)
         except Exception as e:
             print(e)
-            transaction.savepoint_rollback(sid)
+            raise e
         return status
 
     def get_last_refresh(self):
@@ -428,13 +454,19 @@ class services():
     
     def save_data(self, ref):
         tab = []
-        cursor = connections["asterix"].cursor()
-        req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type, t.gpsid FROM VW_GPSTracking t"
-        cursor.execute(req)
-        for row in cursor: 
-            plan = planning()
-            plan.save_trajetcoordonne(row, ref.id)   
-            plan.save_planning(row, self.date_time()) 
+        try:
+            cursor = connections["asterix"].cursor()
+            req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type, t.gpsid FROM VW_GPSTracking t"
+            cursor.execute(req)
+            for row in cursor: 
+                plan = planning()
+                plan.save_trajetcoordonne(row, ref.id)   
+                plan.save_planning(row, self.date_time())
+
+            to_del = ref.id - 2
+            Trajetcoordonnee.objects.filter(refresh_id__lte=to_del).delete()
+        except Exception as e:
+            raise e
             
     def rechange(self):
         try:
@@ -450,13 +482,15 @@ class services():
     @transaction.atomic 
     def refresh(self):
         sid = transaction.savepoint()
-        try:   
+        try:  
+            self.get_api_data() 
             self.rechange()
             self.gestion_status_pos()
             transaction.savepoint_commit(sid)
         except Exception as e:
             print(e)
             transaction.savepoint_rollback(sid)
+            raise e
         
     def getRecaprefresh(self, dateinfrom, dateinto):
         data = []
