@@ -66,6 +66,7 @@ class TrajetcoordonneeSamm(models.Model):
     idstatusparameter = models.IntegerField(null=True)
     difftimestart = models.FloatField()
     difftimepickup = models.FloatField()
+    lateby = models.FloatField()
     current = models.CharField(max_length=150,null=True)
     class Meta:
         managed = False
