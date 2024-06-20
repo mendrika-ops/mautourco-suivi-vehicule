@@ -300,7 +300,7 @@ function refresh_time(){
     localStorage.setItem("last_refresh", "{{ last_refresh|date:'Y-m-d H:i:s'}}");
     var dt = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}");
 
-    dt.setMinutes(dt.getMinutes() + 2);
+    dt.setMinutes(dt.getMinutes() + 240);
     h = dt.getHours() < 10 ? "0"+dt.getHours() : dt.getHours()
     min = dt.getMinutes() < 10 ? "0"+dt.getMinutes() : dt.getMinutes()
     sec = dt.getSeconds() < 10 ? "0"+dt.getSeconds() : dt.getSeconds()
