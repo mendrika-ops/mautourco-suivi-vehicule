@@ -167,7 +167,8 @@ class services():
         if last.exists() is True and last[0].daty_api_google is not None:
             ref = now - last[0].daty_api_google.replace(tzinfo=None)
             ref_sec = ref.total_seconds()
-            if trip.exists() is True and ref_sec >= self.minvalue*60:
+            if trip.exists() is True:
+            #if trip.exists() is True and ref_sec >= self.minvalue*60:
                 self.count_sleep+=1
                 if self.count_sleep >= 10:
                     print("sleep for 5 seconds")
@@ -179,7 +180,8 @@ class services():
                 setattr(status_detail, 'is_call_api', 1)
                 print("Appel:: offtrack :: reference ",round(ref_sec/60))
                 
-            elif trip.exists() is False and ref_sec >= self.maxvalue*60:
+            elif trip.exists() is False:
+            #elif trip.exists() is False and ref_sec >= self.maxvalue*60:
                 self.count_sleep+=1
                 if self.count_sleep >= 10:
                     print("sleep for 5 seconds")
