@@ -299,8 +299,9 @@
 function refresh_time(){
     localStorage.setItem("last_refresh", "{{ last_refresh|date:'Y-m-d H:i:s'}}");
     var dt = new Date("{{ last_refresh|date:'Y-m-d H:i:s'}}");
-
-    dt.setMinutes(dt.getMinutes() + 240);
+    var cron = {{ cron_minute }};
+    console.log("ito ", {{cron_minute}});
+    dt.setMinutes(dt.getMinutes() + cron);
     h = dt.getHours() < 10 ? "0"+dt.getHours() : dt.getHours()
     min = dt.getMinutes() < 10 ? "0"+dt.getMinutes() : dt.getMinutes()
     sec = dt.getSeconds() < 10 ? "0"+dt.getSeconds() : dt.getSeconds()

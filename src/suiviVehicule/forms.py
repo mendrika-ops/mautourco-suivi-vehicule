@@ -8,7 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db import connection
 from django.forms import ModelForm
 
-from suiviVehicule.models import User, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcomment, Statusparameter
+from suiviVehicule.models import User, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcomment, Statusparameter, RefreshTime
 from suiviVehicule.services import services
 from datetime import datetime
 
@@ -27,6 +27,11 @@ list_statut = [
 list_active = [
     ('1', 'Enable'),
     ('0', 'Disable')
+]
+
+type_time = [
+    ('0', 'Minute(s)'),
+    ('1', 'Heure(s)')
 ]
 
 class SigninForm(ModelForm):
@@ -173,3 +178,28 @@ class ParameterForm(ModelForm):
 
     def isExist(self):
         return Statusparameter.objects.filter(status=self.cleaned_data['status']).exists()
+    
+class ParameterRefreshForm(ModelForm):
+    refresh_time = forms.FloatField(required=True, label='Value', widget=forms.NumberInput(
+                              attrs={'class': "form-control"}))
+    type = forms.CharField(widget=forms.Select(choices=type_time, attrs={'class': "form-control col-sm-7"}))
+    
+    class Meta:
+        model = RefreshTime
+        fields = ("refresh_time", "type")
+
+    def save(self):
+        refresh = RefreshTime()
+        
+        refresh.refresh_time = self.cleaned_data['refresh_time']
+        refresh.type = self.cleaned_data['type']
+        refresh.desce = dict(type_time).get(self.cleaned_data['type'])
+        refresh.is_activate = True
+        print("refresh ", refresh.type)
+            
+        if int(self.cleaned_data['type']) != 0:
+            refresh.value = refresh.refresh_time * 60
+        else:
+            refresh.value = refresh.refresh_time
+
+        refresh.save()

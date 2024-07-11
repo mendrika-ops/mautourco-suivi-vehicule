@@ -337,3 +337,12 @@ class Recaprefresh(models.Model):
         db_table = 'suivivehicule_recaprefresh'
 
 
+class RefreshTime(models.Model):
+    refresh_time = models.IntegerField()
+    type = models.CharField(max_length=150)
+    value = models.IntegerField(null=True)
+    date_time = models.DateTimeField(auto_now_add=True)
+    is_activate = models.BooleanField(default=True)
+    desce = models.CharField(max_length=150, null=True)
+
+

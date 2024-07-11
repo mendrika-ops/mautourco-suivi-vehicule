@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import json
 from suiviVehicule.export import Recordexport
-from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom, ParameterForm
-from suiviVehicule.models import Recordcommenttrajet, TrajetcoordonneeSamm
+from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom, ParameterForm, ParameterRefreshForm
+from suiviVehicule.models import Recordcommenttrajet, TrajetcoordonneeSamm, RefreshTime
 from suiviVehicule.planning import planning
 from suiviVehicule.services import services
 from django.conf import settings
@@ -73,6 +73,7 @@ def dashboard_request(request):
     data_list = []
     load_value = 0
     defaut = 50
+    cron_minute = RefreshTime.objects.latest("date_time").value
     service = services()
     is_disable = False
     form = setForm(request)
@@ -118,7 +119,7 @@ def dashboard_request(request):
                            "form_search": form, 
                            "load_value": load_value, 
                            "record": record, 
-                           "cron_minute":settings.JOB_MINUTE,
+                           "cron_minute": cron_minute,
                            "is_disable": is_disable,
                            "legend":legend,
                            "total_page":count,
@@ -253,3 +254,17 @@ def recaprefresh_request(request):
     
     data = services().getRecaprefresh(datefrom, dateto)
     return render(request, "suiviVehicule/logrecap.html",context={"data_list": data, "sum_api": sum(data.values_list('nbre_call_api', flat=True)) })
+
+def parameter_refresh(request):
+    param = ParameterRefreshForm(request.GET)  
+    try:
+        parameter = RefreshTime.objects.latest("date_time")
+        if request.method == 'GET': 
+            if param.is_valid() :
+                param.save()
+                parameter = RefreshTime.objects.latest("date_time")
+                return redirect("/parameter/refresh")
+        param = ParameterRefreshForm(instance=parameter) 
+    except Exception as e:
+        messages.error(request, e)
+    return render(request, "suiviVehicule/refresh-parameter.html", context={"form": param})
