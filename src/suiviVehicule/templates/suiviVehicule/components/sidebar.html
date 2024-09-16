@@ -1,0 +1,43 @@
+{% load static %}
+<!-- Sidebar -->
+<nav id="sidebar">
+    <h1>
+      <a href="/dashboard" class="logo">
+        <img src="{% static 'image/logo.png' %}" alt="" />
+      </a>
+    </h1>
+    <ul class="list-unstyled components mb-5">
+        <li class="active">
+            <a href="/dashboard"><span class="fa fa-home mr-3"></span> Dashboard</a>
+        </li>
+        <li>
+            <a href="#"><span class="fa fa-sticky-note mr-3"></span> Profile</a>
+        </li>
+        <li>
+            <a href="#"><span class="fa fa-paper-plane mr-3"></span> Visualisation</a>
+        </li>
+        <li>
+            <a href="#"><span class="fa fa-paper-plane mr-3"></span> Rapports</a>
+        </li>
+        <li>
+            <a href="#"><span class="fa fa-paper-plane mr-3"></span> Notification</a>
+        </li>
+        <li class="dropdown">
+            <a href="#settingsDropdown" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <span class="fa fa-paper-plane mr-3"></span> Settings
+            </a>
+            <ul class="collapse list-unstyled" id="settingsDropdown">
+                <li><a href="/parameter/list">Parameters</a></li>
+                <li><a href="/parameter/refresh">Timing Refresh</a></li>
+                <li><a href="#">Privacy Settings</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><span class="fa fa-paper-plane mr-3"></span> Information</a>
+        </li>
+    </ul>
+    <!-- Copyright -->
+    <div class="copyright">
+        <p>&copy; 2024 Ltd Mautourco</p>
+    </div>
+</nav>
