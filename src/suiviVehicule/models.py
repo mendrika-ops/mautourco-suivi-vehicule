@@ -26,23 +26,6 @@ class Units(models.Model):
     PhoneNumber = models.CharField(max_length=100, null=True)
     UnitType = models.CharField(max_length=100, null=True)
 
-    def set_Uid(self, Uid):
-        self.Uid = Uid
-    def set_Name(self, Name):
-        self.Name = Name
-    def set_IMEI(self, IMEI):
-        self.IMEI = IMEI
-    def set_Status(self, Status):
-        self.Status = Status
-    def set_GroupName(self, GroupName):
-        self.GroupName = GroupName
-    def set_CompanyName(self, CompanyName):
-        self.CompanyName = CompanyName
-    def set_PhoneNumber(self, PhoneNumber):
-        self.PhoneNumber = PhoneNumber
-    def set_UnitType(self, UnitType):
-        self.UnitType = UnitType
-
 class TrajetcoordonneeSamm(models.Model):
     vehicleno = models.CharField(max_length=100)
     driver_oname = models.CharField(max_length=150)
@@ -94,57 +77,6 @@ class Trajetcoordonnee(models.Model):
     estimatetime = models.CharField(max_length=50, null=True)
     trip_start_time = models.TimeField(null=True)
     refresh = models.ForeignKey(Refresh, on_delete=models.CASCADE, null=True)
-        
-    def get_vehicleno(self):
-        return self.vehicleno
-    def set_vehicleno(self, vehiculeno):
-        self.vehicleno = vehiculeno
-    
-    def get_driver_oname(self):
-        return self.driver_oname
-    def set_driver_oname(self, driver_oname):
-        self.driver_oname = driver_oname
-    
-    def get_driver_mobile_number(self):
-        return self.driver_mobile_number
-    def set_driver_mobile_number(self, driver_mobile_number):
-        self.driver_mobile_number= driver_mobile_number
-
-    def get_FromPlace(self):
-        return self.FromPlace
-    def set_FromPlace(self, FromPlace):
-        self.FromPlace = FromPlace
-
-    def get_ToPlace(self):
-        return self.ToPlace
-    def set_ToPlace(self, ToPlace):
-        self.ToPlace = ToPlace
-
-    def get_id_trip(self):
-        return self.id_trip
-    def set_id_trip(self, id_trip):
-        self.id_trip = id_trip
-
-    def get_trip_no(self):
-        return self.trip_no
-    def set_trip_no(self, trip_no):
-        self.trip_no = trip_no
-
-    def get_trip_start_date(self):
-        return self.trip_start_date
-    def set_trip_start_date(self, trip_start_date):
-        self.trip_start_date = trip_start_date
-
-    def get_pick_up_time(self):
-        return self.pick_up_time
-    def set_pick_up_time(self, pick_up_time):
-        self.pick_up_time = pick_up_time
-    
-    def get_PickUp_H_Pos(self):
-        return self.PickUp_H_Pos
-    def set_PickUp_H_Pos(self, PickUp_H_Pos):
-        self.PickUp_H_Pos = PickUp_H_Pos
-
     
 class TrajetcoordonneeWithUid(models.Model):
     vehicleno = models.CharField(max_length=100)
@@ -193,7 +125,12 @@ class Statusposdetail(models.Model):
     distance = models.FloatField(null=True)
     daty_api_google = models.DateTimeField(null=True)
     is_call_api = models.IntegerField(null=True)
-
+    speed = models.IntegerField(default=0)
+    speedMeasure = models.CharField(max_length=150, default="kph")
+    odometer = models.DecimalField(default=0, max_digits=5, decimal_places=2)
+    ignition = models.CharField(max_length=150, null=True)
+    engineTime = models.CharField(max_length=150, null=True)
+    engineStatus = models.CharField(max_length=150, null=True)
 
 class Statusparameter(models.Model):
     id = models.indexes
@@ -235,6 +172,14 @@ class Recordcomment(models.Model):
     current = models.CharField(max_length=150,null=True)
     difftimestart = models.FloatField(null=True)
     difftimepickup = models.FloatField(null=True)
+    #new add
+    speed = models.IntegerField(default=0)
+    speedMeasure = models.CharField(max_length=150, default="kph")
+    odometer = models.DecimalField(null=True, max_digits=5, decimal_places=2)
+    ignition = models.CharField(max_length=150, null=True)
+    engineTime = models.CharField(max_length=150, null=True)
+    engineStatus = models.CharField(max_length=150, null=True) 
+    
 class Recordcommenttrajet(models.Model):
     id = models.indexes
     id_trip = models.IntegerField(null=False)
@@ -273,39 +218,6 @@ class Planning(models.Model):
     resa_trans_type = models.CharField(max_length=100)
     daty_time = models.DateTimeField(null=True)
     gpsid = models.CharField(null=True, max_length=100)
-    
-    def set_vehicleno(self, vehiculeno):
-        self.vehicleno = vehiculeno
-
-    def set_driver_oname(self, driver_oname):
-        self.driver_oname = driver_oname
-   
-    def set_driver_mobile_number(self, driver_mobile_number):
-        self.driver_mobile_number= driver_mobile_number
-
-    def set_FromPlace(self, FromPlace):
-        self.FromPlace = FromPlace
-
-    def set_ToPlace(self, ToPlace):
-        self.ToPlace = ToPlace
-
-    def set_id_trip(self, id_trip):
-        self.id_trip = id_trip
-
-    def set_trip_no(self, trip_no):
-        self.trip_no = trip_no
-
-    def set_trip_start_date(self, trip_start_date):
-        self.trip_start_date = trip_start_date
-
-    def set_pick_up_time(self, pick_up_time):
-        self.pick_up_time = pick_up_time
-    
-    def set_PickUp_H_Pos(self, PickUp_H_Pos):
-        self.PickUp_H_Pos = PickUp_H_Pos
-
-    def set_resa_trans_type(self, resa_trans_type):
-        self.resa_trans_type = resa_trans_type
 
 class Planninglib(models.Model):
     id = models.indexes
@@ -344,5 +256,64 @@ class RefreshTime(models.Model):
     date_time = models.DateTimeField(auto_now_add=True)
     is_activate = models.BooleanField(default=True)
     desce = models.CharField(max_length=150, null=True)
+
+    from django.db import models
+
+class ReasonCancel(models.Model):
+    reason_name = models.CharField(max_length=100)
+    reason_description = models.TextField(blank=True, null=True)
+    is_active = models.BooleanField(default=True) 
+    created_at = models.DateTimeField(auto_now_add=True) 
+
+    def __str__(self):
+        return self.reason_name
+
+
+class SubReasonCancel(models.Model):
+    reason = models.ForeignKey(ReasonCancel, on_delete=models.CASCADE, related_name='sub_reasons')
+    sub_reason_name = models.CharField(max_length=100)
+    sub_reason_description = models.TextField(blank=True, null=True) 
+    is_active = models.BooleanField(default=True)  
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.sub_reason_name
+
+
+class ReasonCancelRecord(models.Model):
+    id = models.indexes
+    reason = models.ForeignKey(ReasonCancel, on_delete=models.CASCADE, related_name='records') 
+    record_comment = models.ForeignKey(Recordcomment, on_delete=models.CASCADE, related_name='cancel_records') 
+    created_at = models.DateTimeField(auto_now_add=True)
+    state = models.BooleanField(default=True)
+    def __str__(self):
+        return f"Record for {self.reason} - {self.record_comment}"
+    
+class SubReasonCancelRecord(models.Model):
+    id = models.indexes
+    sub_reason = models.ForeignKey(SubReasonCancel, on_delete=models.CASCADE, related_name='sub_records') 
+    record_comment_sub = models.ForeignKey(Recordcomment, on_delete=models.CASCADE, related_name='sub_cancel_records') 
+    created_at = models.DateTimeField(auto_now_add=True)
+    state = models.BooleanField(default=True)
+   
+    def __str__(self):
+        return f"Record for {self.sub_reason} - {self.record_comment_sub}"
+    
+from django.db import models
+
+class SubReasonCancelRecordV1(models.Model):
+    id = models.IntegerField(primary_key=True)
+    state = models.BooleanField()
+    record_comment_sub_id = models.IntegerField()
+    sub_reason_id = models.IntegerField()
+    sub_reason_name = models.CharField(max_length=255)
+    sub_reason_description = models.TextField()
+    reason_name = models.CharField(max_length=255)
+    reason_id = models.IntegerField()
+    created_at = models.DateTimeField()
+    class Meta:
+        managed = False
+        db_table = 'suivivehicule_subreasoncancelrecord_v1'
+
 
 

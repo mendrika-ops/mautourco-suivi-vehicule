@@ -20,6 +20,13 @@ urlpatterns = [
     path("planning/list", log_planning_request),
     path("log/export", export_users_xls),
     path("log/recap", recaprefresh_request),
-    path("parameter/refresh", parameter_refresh)
+    path("parameter/refresh", parameter_refresh),
     
+    path("trip/detail/<str:id_trip>", trip_detail_request),
+    path("trip/cancel/<str:id_trip>", trip_cancel_request),
+    path("trip/cancel/save/<str:id_trip>", trip_cancel_action),
+    path("trip/cancel/get_current_reasons/<str:id_trip>", trip_get_current_reason),
+    path("trip/cancel/remove_reason/<str:id_trip>", trip_remove_reason),
+    path("trip/cancel/remove_sub_reason/<str:id_trip>", trip_remove_reason),
+
 ]

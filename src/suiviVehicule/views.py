@@ -1,19 +1,21 @@
+import json
+import xlwt
 from django.contrib import messages
 from django.contrib.auth import login
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
-import json
 from suiviVehicule.export import Recordexport
 from suiviVehicule.forms import SigninForm, LoginForm, SearchForm ,CommentFrom, ParameterForm, ParameterRefreshForm
 from suiviVehicule.models import Recordcommenttrajet, TrajetcoordonneeSamm, RefreshTime
 from suiviVehicule.planning import planning
-from suiviVehicule.services import services
+from suiviVehicule.services import Services
 from django.conf import settings
-import xlwt
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from suiviVehicule.trip_service import TripService
+from django.core import serializers
 
 # Create your views here.
 def index(request):
@@ -53,7 +55,7 @@ def register_request(request):
             error = "Register successful"
             return render(request, "suiviVehicule/signin.html", context={"register_form": form, "error": error})
         else:
-            return render(request, "suiviVehicule/error.html")
+            return render(request, "suiviVehicule/pages/error.html")
     form = SigninForm()
     return render(request=request, template_name="suiviVehicule/signin.html", context={"register_form": form})
 
@@ -74,7 +76,7 @@ def dashboard_request(request):
     load_value = 0
     defaut = 50
     cron_minute = RefreshTime.objects.latest("date_time").value
-    service = services()
+    service = Services()
     is_disable = False
     form = setForm(request)
     data_list = []
@@ -111,7 +113,7 @@ def dashboard_request(request):
         is_disable = True
         count = 0
 
-    return render(request, "suiviVehicule/dashboard.html",
+    return render(request, "suiviVehicule/pages/dashboard.html",
                   context={"data_list": data_list, 
                            "data_auto": data_search, 
                            "last_refresh": refresh, 
@@ -127,7 +129,7 @@ def dashboard_request(request):
                            "ToPlace":ToPlace,
                            "status":statuses,
                            "vehicleno":vehicleno,
-                           "now": services().date_time()})
+                           "now": Services().date_time()})
 
 def googlemap_request(request, pos):
     return redirect("https://www.google.com/maps?q=" + pos)
@@ -135,14 +137,14 @@ def googlemap_request(request, pos):
 
 def refresh_request(request):
     try:
-        services().refresh()
+        Services().refresh()
     except Exception as e:
         messages.error(request, e)
     return redirect("/dashboard")
 
 def one_refresh_request(request,idstatusposdetail,id):
     try:
-        services().set_one_refresh(idstatusposdetail,id)
+        Services().set_one_refresh(idstatusposdetail,id)
     except Exception as e:
         messages.error(request,e)
     return redirect("/dashboard")
@@ -161,43 +163,43 @@ def log_request(request):
     datefrom = request.GET.get('datefrom')
     dateto = request.GET.get('dateto')
     try:
-        records = services().get_listes_record(datefrom ,dateto)
+        records = Services().get_listes_record(datefrom ,dateto)
        
     except Exception as e:
         messages.error(request, e)
-    return render(request, "suiviVehicule/logrecord.html",context={"data_list": records, "datefrom": datefrom, "dateto":dateto})
+    return render(request, "suiviVehicule/pages/log_record.html",context={"data_list": records, "datefrom": datefrom, "dateto":dateto})
 
 def parameter_update_request(request,id):
     param = ParameterForm(request.POST)  
     try:
-        parameter = services().get_liste_parameter_byId(id)
+        parameter = Services().get_liste_parameter_byId(id)
         if request.method == 'POST': 
             param = ParameterForm(request.POST)
             if param.is_valid() :
                 param.update(parameter)
-                parameter = services().get_liste_parameter_byId(id)
+                parameter = Services().get_liste_parameter_byId(id)
                 return redirect("/parameter/list")
         param = ParameterForm(instance=parameter) 
     except Exception as e:
         messages.error(request, e)
-    return render(request, "suiviVehicule/update-parameter.html",context={"form": param})
+    return render(request, "suiviVehicule/pages/update_parameter.html",context={"form": param})
 
 def parameter_liste_request(request):
-    data = services().get_liste_parameter()
-    return render(request, "suiviVehicule/liste-parameter.html",context={"data_list": data})
+    data = Services().get_liste_parameter()
+    return render(request, "suiviVehicule/pages/liste_parameter.html",context={"data_list": data})
 
 def rechange_request(request):
-    services().rechange()
-    return render(request, "suiviVehicule/error.html", context={"error": "Notify: loading data"})
+    Services().rechange()
+    return render(request, "suiviVehicule/pages/error.html", context={"error": "Notify: loading data"})
 
 def last_api_request(request):
-    refresh = services().get_last_refresh()
-    now = services().date_time()
+    refresh = Services().get_last_refresh()
+    now = Services().date_time()
     print("Api refresh - ", refresh)
     return JsonResponse({'now': now, 'datetime': refresh, 'result': '200'})
 
 def log_planning_request(request):
-    defaut = str(services().date_time().strftime('%Y-%m-%d'))
+    defaut = str(Services().date_time().strftime('%Y-%m-%d'))
     datefrom = defaut
     dateto = defaut
     if request.GET.get('datefrom') is not None and request.GET.get('dateto') is not None:
@@ -205,12 +207,12 @@ def log_planning_request(request):
         dateto = request.GET.get('dateto') 
                
     data = planning().get_list_planning(datefrom, dateto)
-    return render(request, "suiviVehicule/logplanning.html",context={"data_list": data})
+    return render(request, "suiviVehicule/pages/log_planning.html",context={"data_list": data})
 
 
 
 def export_users_xls(request):
-    services().date_time()
+    Services().date_time()
     datefrom = request.GET.get('datefrom')
     dateto = request.GET.get('dateto')
     dateinfrom = datetime. strptime(datefrom, '%Y-%m-%d')
@@ -252,8 +254,8 @@ def recaprefresh_request(request):
         datefrom = request.GET.get('datefrom')
         dateto = request.GET.get('dateto') 
     
-    data = services().getRecaprefresh(datefrom, dateto)
-    return render(request, "suiviVehicule/logrecap.html",context={"data_list": data, "sum_api": sum(data.values_list('nbre_call_api', flat=True)) })
+    data = Services().getRecaprefresh(datefrom, dateto)
+    return render(request, "suiviVehicule/pages/log_recap.html",context={"data_list": data, "sum_api": sum(data.values_list('nbre_call_api', flat=True)) })
 
 def parameter_refresh(request):
     param = ParameterRefreshForm(request.GET)  
@@ -267,4 +269,73 @@ def parameter_refresh(request):
         param = ParameterRefreshForm(instance=parameter) 
     except Exception as e:
         messages.error(request, e)
-    return render(request, "suiviVehicule/refresh-parameter.html", context={"form": param})
+    return render(request, "suiviVehicule/pages/refresh_parameter.html", context={"form": param})
+
+def trip_detail_request(request, id_trip):
+    data = Services().get_data_by_idtrip(id_trip)
+    return render(request, "suiviVehicule/pages/trip_detail.html", context={"item": data})
+
+def trip_cancel_request(request, id_trip):
+    trip = TripService()
+    service = Services()
+    data = service.get_data_by_idtrip(id_trip)
+
+    # Récupérer les motifs et sous-motifs
+    reasons = trip.get_reason_list()
+    subreasons_queryset = trip.get_subreason_list()
+
+    # Convertir les sous-motifs en format JSON
+    subreasons = list(subreasons_queryset.values("id", "sub_reason_name", "reason"))
+    subreasons_json = json.dumps(subreasons)
+
+    return render(request, "suiviVehicule/pages/trip_canceling.html", context={
+        "item": data,
+        "reasons": reasons,
+        "subreasons": subreasons_json
+    })
+
+
+def trip_cancel_action(request, id_trip):
+    trip = TripService()
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            reason_id = data.get('reason_id')
+            sub_reason_ids = data.get('sub_reason_ids')
+            print("Reason ", reason_id, " Sub reason ", sub_reason_ids)
+
+            #Record comment
+            record = trip.save_record_comment(id_trip, "My record")
+            trip.save_reason_record(record, reason_id)
+            trip.save_subreason_record(record, sub_reason_ids)
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+        
+def trip_get_current_reason(request, id_trip):
+    trip = TripService()
+    current_reasons_queryset = trip.get_subreason_recorded_current(id_trip)
+    current_reasons =  list(current_reasons_queryset.values())
+    # current_reasons_json = json.dumps(current_reasons)
+    # print("current : " + current_reasons)  
+    return JsonResponse(current_reasons, safe=False)
+
+def trip_remove_reason(request, id_trip):
+    trip = TripService()
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            reason_id = data.get('reason_id')
+            sub_reason_ids = data.get('sub_reason_ids')
+            subs = trip.sub_record_json_to_object(sub_reason_ids)
+            trip.change_state_reason_record(id_trip, reason_id, subs, 0)
+            return JsonResponse({'success': True}, status=200)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+def trip_remove_sub_reason(request, id_trip):
+    return JsonResponse({'success': False}, status=400)
+
+
+
+

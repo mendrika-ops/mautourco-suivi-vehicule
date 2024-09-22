@@ -1,0 +1,79 @@
+{% extends "suiviVehicule/template.html" %}
+{% block content %}
+{% load static %}
+
+<div class="main">
+    <div class="trip-canceled container">
+        <h2>Cancellation Trip - {{ item.id_trip }}</h2>
+        <form id="cancel-trip-form" method="post">
+            {% csrf_token %}
+
+            <label for="reason">Reason for cancellation</label>
+            <select id="reason" name="reason">
+                <option value="">Choose reason</option>
+                {% for reason in reasons %}
+                    <option value="{{ reason.id }}">{{ reason.reason_name }}</option>
+                {% endfor %}
+            </select>
+
+            <div id="sub-reasons" style="margin-top: 15px;">
+                <h3>Choose the sub-patterns :</h3>
+                <!-- Les sous-motifs vont s'afficher ici dynamiquement -->
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button type="submit">Push</button>
+            </div>
+        </form>
+
+        <!-- Section pour afficher les cartes récapitulatives des motifs et sous-motifs -->
+        <div id="selected-reasons-container" style="margin-top: 30px;">
+            <h3>Summary of Cancellations:</h3>
+            <!-- Les cartes des raisons et sous-raisons sélectionnées seront ajoutées ici -->
+        </div>
+    </div>
+    <div class="cancel-container container">
+        <div class="row cancel-row">
+            <div class="col-md-6 text-center">
+                <p class="cancel-text">Do you want to cancel this trip?</p>
+                <a href="/trip/cancel/{{ item.id_trip }}" class="btn btn-primary">
+                    Annuler ce trajet
+                </a>
+            </div>
+            <div class="col-md-6 text-center">
+                <p class="cancel-text">Do you want to validate to remove this trip?</p>
+                <a href="/trip/cancel/{{ item.id_trip }}" class="btn btn-primary">
+                    Validate
+                </a>
+            </div>
+        </div>
+      </div>
+</div>
+
+<!-- Charger toutes les sous-raisons et les raisons déjà ajoutées en JSON -->
+<script>
+    const subReasons = JSON.parse('{{ subreasons|safe }}');
+    const id_trip = '{{ item.id_trip }}'
+</script>
+
+<script src="{% static './main.js' %}"></script>
+<script src="{% static './function.js' %}"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+
+<style>
+    /* Style général de la page */
+    /* .main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    } */
+
+    
+</style>
+
+
+
+{% endblock %}

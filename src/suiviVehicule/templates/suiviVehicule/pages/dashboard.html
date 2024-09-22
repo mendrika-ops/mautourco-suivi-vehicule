@@ -116,7 +116,8 @@
         <div class="row list-table" >
             <table class="table table-borderless col-md-12">
                 <thead>
-                    <tr>
+                    <tr>      
+                        <th scope="col" class="box">Id</th>
                         <th scope="col" class="box head">Driver name</th>
                         <th scope="col" class="box">Vehicule N°</th>
                         <th scope="col" class="box">Driver Mob N°</th>
@@ -150,6 +151,11 @@
                 <tbody>
                 {% for item in data_list %}
                 <tr>
+                    <td>
+                        <a href="/trip/detail/{{ item.id_trip }}" class="outline-btn" data-toggle="tooltip" title="Id trip">
+                        {{ item.id_trip }}
+                        </a>
+                    </td>
                     <td>{{ item.driver_oname }}</td>
                     <td>{{ item.vehicleno }}</td>
                     <td>{{ item.driver_mobile_number }}</td>

@@ -12,36 +12,39 @@ class planning():
 
     def save_planning(self, data, now):
         planning = Planning()
-        planning.set_vehicleno(data[0].strip())
-        planning.set_driver_oname(data[1].strip())
-        planning.set_driver_mobile_number(data[2].strip())
-        planning.set_FromPlace(data[3])
-        planning.set_ToPlace(data[4])
-        planning.set_id_trip(data[5])
-        planning.set_trip_no(data[6])
-        planning.set_trip_start_date(data[7])
-        planning.set_pick_up_time(data[8])
-        planning.set_PickUp_H_Pos(data[9])
-        planning.set_resa_trans_type(data[10])
-        planning.daty_time = now
-        planning.gpsid = data[11]
-        self.verify_planning(planning,now)
+        
+        setattr(planning, 'vehicleno', data[0].strip())
+        setattr(planning, 'driver_oname', data[1].strip())
+        setattr(planning, 'driver_mobile_number', data[2].strip())
+        setattr(planning, 'FromPlace', data[3])
+        setattr(planning, 'ToPlace', data[4])
+        setattr(planning, 'id_trip', data[5])
+        setattr(planning, 'trip_no', data[6])
+        setattr(planning, 'trip_start_date', data[7])
+        setattr(planning, 'pick_up_time', data[8])
+        setattr(planning, 'PickUp_H_Pos', data[9])
+        setattr(planning, 'resa_trans_type', data[10])
+        setattr(planning, 'daty_time', now)
+        setattr(planning, 'gpsid', data[11])
 
+        self.verify_planning(planning, now)
     def save_trajetcoordonne(self, data, refresh_id):
         trajetcoordonnee = Trajetcoordonnee()
-        trajetcoordonnee.set_vehicleno(data[0].strip())
-        trajetcoordonnee.set_driver_oname(data[1].strip())
-        trajetcoordonnee.set_driver_mobile_number(data[2].strip())
-        trajetcoordonnee.set_FromPlace(data[3])
-        trajetcoordonnee.set_ToPlace(data[4])
-        trajetcoordonnee.set_id_trip(data[5])
-        trajetcoordonnee.set_trip_no(data[6])
-        trajetcoordonnee.set_trip_start_date(data[7])
-        trajetcoordonnee.set_pick_up_time(data[8])
-        trajetcoordonnee.set_PickUp_H_Pos(data[9])
-        trajetcoordonnee.refresh_id = refresh_id
+        
+        setattr(trajetcoordonnee, 'vehicleno', data[0].strip())
+        setattr(trajetcoordonnee, 'driver_oname', data[1].strip())
+        setattr(trajetcoordonnee, 'driver_mobile_number', data[2].strip())
+        setattr(trajetcoordonnee, 'FromPlace', data[3])
+        setattr(trajetcoordonnee, 'ToPlace', data[4])
+        setattr(trajetcoordonnee, 'id_trip', data[5])
+        setattr(trajetcoordonnee, 'trip_no', data[6])
+        setattr(trajetcoordonnee, 'trip_start_date', data[7])
+        setattr(trajetcoordonnee, 'pick_up_time', data[8])
+        setattr(trajetcoordonnee, 'PickUp_H_Pos', data[9])
+        setattr(trajetcoordonnee, 'refresh_id', refresh_id)
 
         trajetcoordonnee.save()
+
 
     def get_list_planning(self, datefrom, dateto):
         dateinfrom = datetime. strptime(datefrom, '%Y-%m-%d')

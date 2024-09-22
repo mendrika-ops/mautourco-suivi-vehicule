@@ -9,7 +9,7 @@ from django.db import connection
 from django.forms import ModelForm
 
 from suiviVehicule.models import User, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcomment, Statusparameter, RefreshTime
-from suiviVehicule.services import services
+from suiviVehicule.services import Services
 from datetime import datetime
 
 list_sexe = [
@@ -146,6 +146,7 @@ class CommentFrom(ModelForm):
             record.etat = 0
 
             record.save()
+            
     def checkexist(self):
         return Recordcomment.objects.filter(id_trip=self.cleaned_data['id_trip'],etat=0).exists()
     
