@@ -28,6 +28,7 @@ class planning():
         setattr(planning, 'gpsid', data[11])
 
         self.verify_planning(planning, now)
+        
     def save_trajetcoordonne(self, data, refresh_id):
         trajetcoordonnee = Trajetcoordonnee()
         

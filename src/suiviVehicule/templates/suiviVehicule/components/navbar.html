@@ -1,0 +1,37 @@
+{% load static %}
+<nav id="navbar">
+    <div class="header row">
+        <div class="col-md-4 header-logo d-flex align-items-center">
+          <div class="custom-menu ml-3">
+            <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                <i class="fa fa-bars"></i>
+                <span class="sr-only">Toggle Menu</span>
+            </button>
+          </div>  
+                   
+        </div>
+        <div class="col-md-4 header-title">
+            <h2>VEHICLE FLEET TRACKING</h2>
+        </div>
+
+        <div class="col-md-4 header-sign-in">
+            <!-- Example single danger button -->
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-link dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i class="fa-solid fa-user"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="/dashboard">My Profile</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/dashboard">Log out</a>
+              </div>
+            </div>
+        </div>
+    </div>
+</nav>

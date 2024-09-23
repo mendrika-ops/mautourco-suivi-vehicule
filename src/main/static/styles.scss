@@ -42,11 +42,10 @@ $primary: #1a5a9f;
       color: $colorHeader;
       display: block;
       padding: 2px 30px;
-      background: $white;
       text-decoration: none;
       border-radius: 3px 3px 0 0;
       img {
-        width: 135px;
+        width: 150px;
         /*margin-left: 52px;*/
       }
     }
@@ -323,6 +322,32 @@ a[data-toggle="collapse"] {
     max-height: 200px;
   }
 
+  .title-rec {
+    align-items: center;
+    margin-bottom: 30px;
+    .title-rec-head {
+      text-align: center;
+    }
+    .export {
+      margin-left: auto;
+      margin-top: 20px;
+      button {
+        background-color: white;
+        border-color: $button;
+        color: $button;
+        border: 1;
+        border-radius: 4px;
+        font-size: $font-size;
+        width: 85px;
+        &:hover {
+          color: $button-hover;
+        }
+        i {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
   .list {
     margin-top: 1rem;
     .head {
@@ -435,32 +460,7 @@ a[data-toggle="collapse"] {
         font-size: $font-size;
       }
     }
-    .title-rec {
-      align-items: center;
-      margin-bottom: 30px;
-      .title-rec-head {
-        text-align: center;
-      }
-      .export {
-        margin-left: auto;
-        margin-top: 20px;
-        button {
-          background-color: white;
-          border-color: $button;
-          color: $button;
-          border: 1;
-          border-radius: 4px;
-          font-size: $font-size;
-          width: 85px;
-          &:hover {
-            color: $button-hover;
-          }
-          i {
-            margin-left: 10px;
-          }
-        }
-      }
-    }
+    
 
     .legend-item {
       margin-left: 20px;

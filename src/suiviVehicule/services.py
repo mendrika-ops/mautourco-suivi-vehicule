@@ -588,11 +588,8 @@ class Services():
             raise e
         
     def getRecaprefresh(self, dateinfrom, dateinto):
-        data = []
-        if dateinfrom is None and dateinto is None:
-            data =  Recaprefresh.objects.all()
-        else:
-            data = Recaprefresh.objects.filter(date__range = [dateinfrom,dateinto])
+       
+        data = Recaprefresh.objects.filter(date__range = [dateinfrom,dateinto])
         return data
     
     def get_data_by_idtrip(self, id_trip):

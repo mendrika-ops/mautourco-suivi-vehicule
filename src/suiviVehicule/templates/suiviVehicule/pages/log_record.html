@@ -1,23 +1,49 @@
 {% extends "suiviVehicule/template.html" %}
 {% block content %}
 {% load static %}
-<div class="main">    
+<div class="main">  
+    <div class="title-rec row">
+        <div class="col-md-1 icon ">
+           <!-- <a href="/dashboard" ><i class="fa-regular fa-circle-left fa-xl"></i></a> -->
+        </div>       
+        <div class="col-md-9 title-rec-head" style="text-align: center;">
+            <h2>List Trip Completed&Canceled</h2>
+        </div>  
+        <div class="col-md-1 export">
+            <form action="/log/export" method="get">
+                <input type="hidden" name="datefrom" value="{{datefrom}}">
+                <input type="hidden" name="dateto" value="{{dateto}}">
+                <button class="right">Export<i class="fa-solid fa-file-export"></i></button>
+            </form>
+         </div>        
+    </div>   
+    <button class="carrosell" data-toggle="collapse" href="#multiCollapseExample2" role="button" onclick="clickIcon()"
+    aria-expanded="false" aria-controls="multiCollapseExample2">Show<i
+    class="fa-solid fa-angle-right fa-rotate-90"></i>
+    </button>
+
+    <form action="/record/listes" method="GET" >
+        <div class="row collapse multi-collapse" id="multiCollapseExample2">
+            <div class="search col-md-6 ">
+                <div class="form-row">
+                    <div class="form-group col-md-5 row">
+                        <label for="from" class="col-sm-5 col-form-label">Date From </label>
+                        <input type="text" class="form-control col-sm-7" id="datefrom" name="datefrom" value="" placeholder="yyyy-mm-dd" >
+                    </div>
+                    <div class="form-group col-md-5 row">
+                        <label for="from" class="col-sm-5 col-form-label">Date To </label>
+                        <input type="text" class="form-control col-sm-7" id="dateto" name="dateto" value="" placeholder="yyyy-mm-dd" >
+                    </div>
+                </div>
+            <div class="footer row">
+                <a href="/dashboard?reset" class="btn btn-default left">Reset</a>
+                <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            </div>
+        </div>
+    </form>
     <div class="list">
-        <div class="title-rec row">
-            <div class="col-md-1 icon ">
-               <a href="/dashboard" ><i class="fa-regular fa-circle-left fa-xl"></i></a>
-            </div>       
-            <div class="col-md-9 title-rec-head" style="text-align: center;">
-                <h2>Trip Log</h2>
-            </div>  
-            <div class="col-md-1 export">
-                <form action="/log/export" method="get">
-                    <input type="hidden" name="datefrom" value="{{datefrom}}">
-                    <input type="hidden" name="dateto" value="{{dateto}}">
-                    <button class="right">Export<i class="fa-solid fa-file-export"></i></button>
-                </form>
-             </div>        
-        </div> 
+        
         <div class="row table-responsive list-table">
             <table class="table table-borderless col-md-12">
                 <thead>
@@ -80,4 +106,5 @@
         </div>
     </div>
 </div>
+<script src="{% static './main.js' %}"></script>
 {% endblock %}
