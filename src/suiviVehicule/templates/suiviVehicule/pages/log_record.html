@@ -35,6 +35,19 @@
                         <input type="text" class="form-control col-sm-7" id="dateto" name="dateto" value="" placeholder="yyyy-mm-dd" >
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group col-md-5 row">
+                        <label for="status" class="col-sm-5 col-form-label">Status </label>
+                        <select name="status" class="form-control col-sm-7">
+                            <option value="">All</option>
+                            {% for lg in legend %}
+                            <option value="{{lg.status}}">{{lg.status}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group col-md-5 row">
+                    </div>        
+                </div>
             <div class="footer row">
                 <a href="/dashboard?reset" class="btn btn-default left">Reset</a>
                 <button class="right">Search <i class="fa-solid fa-magnifying-glass"></i></button>

@@ -3,7 +3,7 @@ import requests
 from django.db import IntegrityError, connection, connections, transaction
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Planning, Recaprefresh, Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units
+from suiviVehicule.models import Planning, Recaprefresh, Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units, StatusposMin, BankPosition, StatusPosMinBank
 from datetime import datetime,tzinfo
 from dateutil import tz
 import time
@@ -352,7 +352,7 @@ class Services():
             if pos and pos["Status"]["Result"] != 'Error':
                 setattr(status_detail, 'speed', pos["Result"]["Position"]["Speed"])
                 setattr(status_detail, 'speedMeasure', pos["Result"]["Position"]["SpeedMeasure"])
-                setattr(status_detail, 'odometer', pos["Result"]["Position"]["Odometer"])
+                setattr(status_detail, 'odometer', 1.0)
                 setattr(status_detail, 'ignition', pos["Result"]["Position"]["Ignition"])
                 setattr(status_detail, 'engineTime', pos["Result"]["Position"]["EngineTime"])
                 setattr(status_detail, 'engineStatus', pos["Result"]["Position"]["EngineStatus"])
@@ -526,11 +526,12 @@ class Services():
             "couleur": couleur
         }
     
-    def get_listes_record(self,datefrom,dateto):
+    def get_listes_record(self,datefrom,dateto, status):
         dateinfrom = datetime. strptime(datefrom, '%Y-%m-%d')
         dateinto = datetime. strptime(dateto, '%Y-%m-%d')
-        liste = Recordcommenttrajet.objects.filter(daterecord__range = [dateinfrom,dateinto]).order_by('-daterecord','-actualtime')
-        return liste
+        if status is not None:
+            return Recordcommenttrajet.objects.filter(daterecord__range = [dateinfrom,dateinto], status__icontains=status).order_by('-daterecord','-actualtime')
+        return Recordcommenttrajet.objects.filter(daterecord__range = [dateinfrom,dateinto]).order_by('-daterecord','-actualtime')
     
     def get_liste_parameter(self):
         return Statusparameterlib().getListeParameters()
@@ -554,7 +555,7 @@ class Services():
             req = "SELECT t.vehicleno, t.driver_oname,t.driver_mobile_number,t.FromPlace,t.ToPlace,t.id_trip,t.`trip_no`,t.`trip_start_date`,t.`pick_up_time` AS pick_up_time,t.PickUp_H_Pos,t.resa_trans_type, t.gpsid FROM VW_GPSTracking t"
             cursor.execute(req)
             for row in cursor: 
-                plan = planning()
+                plan = planning() 
                 plan.save_trajetcoordonne(row, ref.id)   
                 plan.save_planning(row, self.date_time())
 
@@ -579,8 +580,8 @@ class Services():
         sid = transaction.savepoint()
         try:  
             self.get_api_data() 
-            self.rechange()
-            self.gestion_status_pos()
+            # self.rechange()
+            # self.gestion_status_pos()
             transaction.savepoint_commit(sid)
         except Exception as e:
             print(e)
@@ -599,5 +600,121 @@ class Services():
         self.get_api_data()
         self.get_position_at_time("E39F3E", self.date_time())
         return
+    
+    def update_record_comment(self):
+        self.get_api_data()
+        posmin = StatusposMin.objects.all()[5000:10000]
+        count = 0
+        for ps in posmin:
+            count+=1
+            print(ps.uid, " - count ->", count)
+            pos = self.get_position_at_time(ps.uid, ps.daty_time.strftime("%d %B %Y %H:%M:%S"))
+
+            if pos["Status"]["Result"] != 'Error':
+                speed = pos["Result"]["Position"]["Speed"]
+                speedMeasure = pos["Result"]["Position"]["SpeedMeasure"]
+                odometer = pos["Result"]["Position"]["Odometer"]
+                ignition = pos["Result"]["Position"]["Ignition"]
+                engineTime = pos["Result"]["Position"]["EngineTime"]
+                engineStatus = pos["Result"]["Position"]["EngineStatus"]
+
+                bank_position = BankPosition(
+                    id_trip=ps.id_trip,
+                    uid=ps.uid,  
+                    daty_time=ps.daty_time,  
+                    speed=speed,
+                    speedMeasure=speedMeasure,
+                    odometer=odometer,
+                    ignition=ignition,
+                    engineTime=engineTime,
+                    engineStatus=engineStatus
+                )
+
+                print(
+                    "Logger: id_trip : " + str(bank_position.id_trip) + " - " +
+                    "uid : " + str(bank_position.uid) + " - " + 
+                    "daty_time : " + str(bank_position.daty_time) + " - " +
+                    "speed : " + str(bank_position.speed) + " - " +
+                    "speedMeasure : " + str(bank_position.speedMeasure) + " - " +
+                    "odometer : " + str(bank_position.odometer) + " - " +
+                    "ignition : " + str(bank_position.ignition) + " - " +
+                    "engineTime : " + str(bank_position.engineTime) + " - " +
+                    "engineStatus : " + str(bank_position.engineStatus)
+                )
+
+                bank_position.save()
+                print("Position enregistrée avec succès !")
+            else:
+                continue
+
+    def update_vehicule_parameter(self):
+        banks = BankPosition.objects.all()
+        for bank in banks:
+            record = Recordcomment.objects.filter(id_trip=bank.id_trip).first()
+            if record:
+                setattr(record, 'speed', bank.speed)
+                setattr(record, 'speedMeasure', bank.speedMeasure)
+                setattr(record, 'odometer', bank.odometer)
+                setattr(record, 'ignition', bank.ignition)
+                setattr(record, 'engineTime', bank.engineTime)
+                setattr(record, 'engineStatus', bank.engineStatus)
+                record.save()
+                print(
+                    "Logger: id_trip : " + str(record.id_trip) + " - " +
+                    "speed : " + str(record.speed) + " - " +
+                    "speedMeasure : " + str(record.speedMeasure) + " - " +
+                    "odometer : " + str(record.odometer) + " - " +
+                    "ignition : " + str(record.ignition) + " - " +
+                    "engineTime : " + str(record.engineTime) + " - " +
+                    "engineStatus : " + str(record.engineStatus)
+                )
+                print("Position enregistrée avec succès !")
+
+    def update_vehicule_parameter_record(self):
+        posBanks = StatusPosMinBank.objects.all()[0:1500]
+        count = 0
+        print("len ", len(posBanks))
+        for pos in posBanks:
+            plan = Planning.objects.filter(id_trip=pos.id_trip).first()
+            if plan:
+                count += 1
+                record = Recordcomment()
+                setattr(record, 'id_trip', pos.id_trip)
+                setattr(record, 'comment', "transit-to-cancel")
+                setattr(record, 'vehicleno', plan.vehicleno)
+                setattr(record, 'driver_oname', plan.driver_oname)
+                setattr(record, 'FromPlace', plan.FromPlace)
+                setattr(record, 'ToPlace', plan.ToPlace)
+                setattr(record, 'trip_start_date', plan.trip_start_date)
+                setattr(record, 'pick_up_time', plan.pick_up_time)
+                setattr(record, 'driver_mobile_number', plan.driver_mobile_number)
+                setattr(record, 'datetime', pos.daty_time)
+                setattr(record, 'etat', 0)
+                setattr(record, 'difftimestart', 0)
+                setattr(record, 'difftimepickup', 0)
+                setattr(record, 'speed', pos.speed)
+                setattr(record, 'speedMeasure', pos.speedMeasure)
+                setattr(record, 'odometer', pos.odometer)
+                setattr(record, 'ignition', pos.ignition)
+                setattr(record, 'engineTime', pos.engineTime)
+                setattr(record, 'engineStatus', pos.engineStatus)
+                # record.save()
+                print(
+                    "Logger: id_trip : " + str(record.id_trip) + " - " +
+                    "speed : " + str(record.speed) + " - " +
+                    "speedMeasure : " + str(record.speedMeasure) + " - " +
+                    "odometer : " + str(record.odometer) + " - " +
+                    "ignition : " + str(record.ignition) + " - " +
+                    "engineTime : " + str(record.engineTime) + " - " +
+                    "engineStatus : " + str(record.engineStatus)
+                )
+                print("Bank :", len(posBanks))
+                print("Position enregistrée avec succès ! -", count)
+            else:
+                print("Not in planning")
+                continue
+
+                
+        
         
     

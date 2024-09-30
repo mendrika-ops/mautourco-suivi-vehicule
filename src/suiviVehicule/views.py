@@ -170,19 +170,28 @@ def comment_request(request):
 
 def log_request(request):
     records = []
+    service = Services()
+    legend = service.get_liste_parameter_activate()
     datefrom = request.GET.get('datefrom')
     dateto = request.GET.get('dateto')
-
+    status = request.GET.get('status')
     try:
         if not datefrom:
             datefrom = datetime.now().strftime('%Y-%m-%d')
         if not dateto:
             dateto = datetime.now().strftime('%Y-%m-%d')
-        records = Services().get_listes_record(datefrom, dateto)
+        records = service.get_listes_record(datefrom, dateto, status)
 
     except Exception as e:
         messages.error(request, e)
-    return render(request, "suiviVehicule/pages/log_record.html", context={"data_list": records, "datefrom": datefrom, "dateto": dateto})
+    return render(request, "suiviVehicule/pages/log_record.html", 
+                  context={
+                      "data_list": records, 
+                      "datefrom": datefrom, 
+                      "dateto": dateto,
+                      "legend": legend,
+                      "status": status
+                      })
 
 
 def parameter_update_request(request, id):
@@ -334,3 +343,16 @@ def trip_remove_reason(request, id_trip):
 
 def trip_remove_sub_reason(request, id_trip):
     return JsonResponse({'success': False}, status=400)
+
+def update_record_data_api(request):
+    # try:
+    # Services().update_vehicule_parameter_record()
+    count = 0
+
+    while count != 10:
+        TripService().update_record_random()
+        count+=1
+    # except Exception as e:
+    #     return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    return JsonResponse({'success': True}, status=200)
+

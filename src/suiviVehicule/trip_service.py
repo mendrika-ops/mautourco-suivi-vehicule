@@ -2,15 +2,16 @@
 from suiviVehicule.models import *
 from datetime import datetime
 from suiviVehicule.state import State
+import random
 class TripService:
     def __init__(self) -> None:
         pass
 
     def get_reason_list(self):
-        return ReasonCancel.objects.filter(is_active=True)
+        return ReasonCancel.objects.filter(is_active=True).order_by('order')
     
     def get_subreason_list(self):
-        return SubReasonCancel.objects.filter(is_active=True) 
+        return SubReasonCancel.objects.filter(is_active=True).order_by('order')
     
     def get_reason_by_id(self, id_reason):
         return ReasonCancelRecord.objects.filter(reason=id_reason)
@@ -89,7 +90,23 @@ class TripService:
             sub_reason_rec = SubReasonCancelRecord.objects.filter(id=sub_reason_rec_id.id, record_comment_sub=record.id, state=State.CREATED.value).first()   
             setattr(sub_reason_rec, 'state', state)
             sub_reason_rec.save()
-    
+
+
+    def update_record_random(self):
+        elements_with_quotas = [
+            ["GPS, not responding", 30],  # 40% de chance
+            ["Probleme chauffeur", 30],    # 30% de chance
+            ["Retard du vehicule", 20],    # 20% de chance
+            ["Moteur défaillant", 10]      # 10% de chance
+        ]
+
+        elements = [item[0] for item in elements_with_quotas]
+        quotas = [item[1] for item in elements_with_quotas]
+
+        random_choice = random.choices(elements, weights=quotas, k=1)[0]
+
+        print("Élément sélectionné :", random_choice)
+            
 
 
         

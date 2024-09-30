@@ -174,7 +174,6 @@ a[data-toggle="collapse"] {
   }
 }
 
-
 .header {
   height: 58px;
   border-bottom: 0.3rem solid $colorHeader;
@@ -460,7 +459,6 @@ a[data-toggle="collapse"] {
         font-size: $font-size;
       }
     }
-    
 
     .legend-item {
       margin-left: 20px;
@@ -512,205 +510,157 @@ a[data-toggle="collapse"] {
 
   .trip-details {
     margin: 2rem auto;
-    padding: 2rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    background-color: $white;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 
     .trip-title {
       text-align: center;
-      font-size: 1.75rem;
-      color: $button;
-      margin-bottom: 1.5rem;
+      font-size: 16px;
+      color: $primary;
+      margin-bottom: 2rem;
+      font-weight: 600;
     }
 
-    .trip-info-block {
-      padding: 1rem;
-      background-color: #f9f9f9;
-      border-radius: 0.5rem;
-      margin-bottom: 1.5rem;
+    .card {
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
 
-      h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       }
 
-      p {
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
-        strong {
-          color: $button;
+      .card-body {
+        padding: 1.5rem;
+        background-color: #f9f9f9;
+
+        h3 {
+          font-size: 16px;
+          margin-bottom: 1rem;
+          color: $primary;
+          font-weight: 500;
+        }
+
+        p {
+          font-size: 14px;
+          margin-bottom: 0.75rem;
+          line-height: 1.6;
+          color: $grey;
+
+          strong {
+            color: $primary;
+            font-weight: 600;
+          }
         }
       }
     }
 
-    .timing-info {
-      padding: 1rem;
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 0.5rem;
-      margin-bottom: 1.5rem;
-      text-align: right;
-      h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-      }
+    .trip-status .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-size: 14px;
+      background-color: $primary;
+      color: $white;
+      text-decoration: none;
 
-      p {
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
-        strong {
-          color: $button;
-        }
-      }
-    }
-
-    .trip-status {
-      margin-top: 1rem;
-      text-align: center;
-
-      h3 {
-        font-size: 1.5rem;
-        color: $button-hover;
-        margin-bottom: 1rem;
-      }
-
-      .btn {
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        color: white;
-
-        font-size: 1.1rem;
-        text-decoration: none;
-      }
-    }
-
-    .trip-actions {
-      margin-top: 1.5rem;
-      text-align: center;
-
-      h3 {
-        font-size: 1.5rem;
-        color: $button-hover;
-        margin-bottom: 1rem;
-      }
-
-      .outline-btn {
-        border: 1px solid $button;
-        color: $button;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        font-size: 1.1rem;
-        text-decoration: none;
-
-        &:hover {
-          background-color: $button;
-          color: white;
-        }
-      }
-      .cancel-row {
-        margin-top: 20px;
-        padding-top: 10px;
-        border-top: 1px solid #ccc; // Ligne en haut de cette section pour la séparer
-
-        .cancel-text {
-          font-size: 1.2rem;
-          margin-bottom: 10px;
-        }
-
-        
+      &:hover {
+        background-color: darken($primary, 10%);
       }
     }
   }
-  .cancel-container {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: white; /* Même background que trip-details */
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Même effet d'ombre */
-    border-radius: 5px; /* Même border-radius que trip-details */
-    // border: 1px solid #ddd; /* Bordure similaire à celle de trip-details */
 
-    .cancel-row {
-      padding-top: 10px;
-      border-top: 1px solid #ccc; /* Ligne pour séparer la section */
-
-      .cancel-text {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-        font-weight: 500;
-        color: #333; /* Couleur de texte similaire à celle du trip-details */
-      }
-      
-    }
-  }
   .trip-canceled {
     margin: 2rem auto;
     padding: 2rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: $white;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    max-width: 800px; // Constrain form width for better readability
+    
     form {
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
-
-    label {
-      font-size: 16px;
-      font-weight: 600;
-      color: #555;
+  
+    h2 {
+      font-size: 1.25rem; // Slightly smaller heading
+      text-align: center;
+      margin-bottom: 20px;
+      color: $primary; // Blue heading
     }
-
+  
+    label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px; // Better spacing between label and field
+    }
+  
     select,
     button {
       width: 100%;
-      padding: 10px;
-      font-size: 16px;
+      padding: 10px 15px; // More balanced padding
+      font-size: 1rem;
       border: 1px solid #ddd;
       border-radius: 8px;
       transition: border-color 0.3s ease;
+      background-color: #fff; // Consistent white background for fields
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
-
+  
     select:focus,
     button:focus {
-      border-color: #007bff;
+      border-color: $primary;
       outline: none;
     }
-
+  
     button {
-      background-color: #007bff;
-      color: #fff;
+      background-color: $primary;
+      color: $white;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      
+      &:hover {
+        background-color: darken($primary, 5%);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
     }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    /* Section pour les sous-motifs */
+  
+    /* Section for sub-reasons */
     #sub-reasons {
-      padding: 10px;
+      padding: 15px;
       background-color: #f9f9f9;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-top: 15px;
+  
+      h3 {
+        font-size: 1rem;
+        color: #444;
+        margin-bottom: 10px;
+      }
     }
-
-    h3 {
-      font-size: 22px;
-      color: #444;
-    }
-
-    /* Cartes des raisons et sous-raisons sélectionnées */
+  
+    /* Cards for selected reasons and sub-reasons */
     #selected-reasons-container {
       margin-top: 30px;
-      padding: 10px;
+      padding: 15px;
       background-color: #f0f4f7;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  
+      h3 {
+        font-size: 1rem;
+        color: #444;
+        margin-bottom: 10px;
+      }
     }
-
+  
     .reason-card {
       background-color: #fff;
       border: 1px solid #ddd;
@@ -719,60 +669,99 @@ a[data-toggle="collapse"] {
       margin-top: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .reason-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .reason-card h4 {
-      margin: 0;
-      font-size: 18px;
-      color: #333;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Grand X pour les raisons */
-    .reason-card h4 span {
-      color: #dc3545;
-      font-size: 16px;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-
-    .reason-card h4 span:hover {
-      color: #ff0000;
-    }
-
-    .reason-card p {
-      margin: 5px 0;
-      font-size: 13px;
-      color: #555;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Style pour les sous-motifs (sub-reasons) */
-    .subreason-card {
-      margin-left: 20px; /* Indentation pour les sous-motifs */
-    }
-
-    /* Petit X pour les sous-motifs */
-    .subreason-card p span {
-      color: #dc3545;
-      font-size: 14px; /* Taille plus petite pour le X des sous-motifs */
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-
-    .subreason-card p span:hover {
-      color: #ff0000;
+  
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      }
+  
+      h4 {
+        margin: 0;
+        font-size: 1rem;
+        color: #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+  
+      /* Large X for reasons */
+      h4 span {
+        color: #dc3545;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+  
+        &:hover {
+          color: #ff0000;
+        }
+      }
+  
+      p {
+        margin: 5px 0;
+        font-size: 0.875rem;
+        color: #555;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+  
+      /* Sub-reason cards */
+      .subreason-card {
+        margin-left: 20px;
+      }
+  
+      /* Smaller X for sub-reasons */
+      .subreason-card p span {
+        color: #dc3545;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+  
+        &:hover {
+          color: #ff0000;
+        }
+      }
     }
   }
+  
+  /* Cancel and validate section */
+  .cancel-container {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: $white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+  
+    .cancel-row {
+      padding-top: 10px;
+      border-top: 1px solid #ddd;
+  
+      .cancel-text {
+        font-size: 1rem;
+        margin-bottom: 15px;
+        font-weight: 500;
+        color: #333;
+      }
+  
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        color: $primary;
+        border: 1px solid $primary;
+        background-color: $white;
+        transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  
+        &:hover {
+          background-color: $primary;
+          color: $white;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+      }
+    }
+  }
+  
 }
 
 .autocomplete-items {

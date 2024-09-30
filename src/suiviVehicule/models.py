@@ -143,7 +143,7 @@ class Statusposdetail(models.Model):
     ignition = models.CharField(max_length=150, null=True)
     engineTime = models.CharField(max_length=150, null=True)
     engineStatus = models.CharField(max_length=150, null=True)
-
+    modified = models.IntegerField(default=0)
 
 class Statusparameter(models.Model):
     id = models.indexes
@@ -188,13 +188,14 @@ class Recordcomment(models.Model):
     current = models.CharField(max_length=150, null=True)
     difftimestart = models.FloatField(null=True)
     difftimepickup = models.FloatField(null=True)
-    # new add
-    speed = models.IntegerField(default=0)
+    speed = models.DecimalField(default=0.0, max_digits=5, decimal_places=2)
     speedMeasure = models.CharField(max_length=150, default="kph")
-    odometer = models.DecimalField(null=True, max_digits=5, decimal_places=2)
+    odometer = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
     ignition = models.CharField(max_length=150, null=True)
-    engineTime = models.CharField(max_length=150, null=True)
+    engineTime = models.DecimalField(default=0.0, max_digits=10, decimal_places=1)
     engineStatus = models.CharField(max_length=150, null=True)
+    catno = models.IntegerField(default=0)
+    
 
 
 class Recordcommenttrajet(models.Model):
@@ -311,7 +312,7 @@ class ReasonCancel(models.Model):
     reason_description = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    order = models.IntegerField(default=0)
     def __str__(self):
         return self.reason_name
 
@@ -323,7 +324,7 @@ class SubReasonCancel(models.Model):
     sub_reason_description = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    order = models.IntegerField(default=0)
     def __str__(self):
         return self.sub_reason_name
 
@@ -368,3 +369,41 @@ class SubReasonCancelRecordV1(models.Model):
     class Meta:
         managed = False
         db_table = 'suivivehicule_subreasoncancelrecord_v1'
+
+class StatusposMin(models.Model):
+    uid = models.CharField(max_length=50, null=True)
+    daty_time = models.DateTimeField()
+    duration = models.IntegerField(null=True)
+    id_trip = models.IntegerField(null=True)
+    distance = models.FloatField(null=True)
+    is_call_api = models.IntegerField(null=True)
+    class Meta:
+        managed = False
+        db_table = 'suivivehicule_statuspos_min'
+    
+class BankPosition(models.Model):
+    id_trip = models.IntegerField(null=True)
+    uid = models.CharField(max_length=50, null=True)
+    daty_time = models.DateTimeField()
+    speed = models.DecimalField(default=0.0, max_digits=5, decimal_places=2)
+    speedMeasure = models.CharField(max_length=150, default="kph")
+    odometer = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
+    ignition = models.CharField(max_length=150, null=True)
+    engineTime = models.DecimalField(default=0.0, max_digits=10, decimal_places=1)
+    engineStatus = models.CharField(max_length=150, null=True)
+
+class StatusPosMinBank(models.Model):
+    id_trip = models.IntegerField(null=True)
+    uid = models.CharField(max_length=50, null=True)
+    daty_time = models.DateTimeField()
+    duration = models.IntegerField(null=True)
+    distance = models.FloatField(null=True)
+    speed = models.DecimalField(default=0.0, max_digits=5, decimal_places=2)
+    speedMeasure = models.CharField(max_length=150, default="kph")
+    odometer = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
+    ignition = models.CharField(max_length=150, null=True)
+    engineTime = models.DecimalField(default=0.0, max_digits=10, decimal_places=1)
+    engineStatus = models.CharField(max_length=150, null=True)
+    class Meta:
+        managed = False
+        db_table = 'suivivehicule_statuspos_min_transit'
