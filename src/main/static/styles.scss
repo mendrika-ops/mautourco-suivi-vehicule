@@ -120,6 +120,22 @@ $primary: #1a5a9f;
           border-color: transparent !important;
         }
       }
+
+      &.btn-cancel {
+        background: #5a4e4e;
+        border-color: transparent;
+
+        i {
+          color: black;
+          font-size: 24px;
+        }
+
+        &:hover,
+        &:focus {
+          background: #5a4e4e !important;
+          border-color: #5a4e4e !important;
+        }
+      }
     }
   }
   .copyright {
@@ -394,7 +410,7 @@ a[data-toggle="collapse"] {
       tbody {
         font-size: $font-size;
         .list-action {
-          padding: 0;
+          // padding: 0;
           padding-top: 10px;
           .action {
             font-size: $font-size-table;
@@ -570,6 +586,45 @@ a[data-toggle="collapse"] {
         background-color: darken($primary, 10%);
       }
     }
+
+    .cancel-bar {
+      background-color: #5a4e4e;
+    }
+
+    .offtrack-bar {
+      background-color: #ff0000;
+    }
+
+    .completed-bar {
+      background-color: #1183ee;
+    }
+
+    .prediction-card {
+        border: 2px solid #007bff;
+        border-radius: 12px;
+        background-color: #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+    
+    .trip-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #007bff;
+        margin-bottom: 20px;
+    }
+    
+    .progress {
+        height: 25px;
+        margin-bottom: 20px;
+    }
+    
+    .progress-bar {
+        font-weight: bold;
+        text-align: center;
+        line-height: 25px;
+    }
+  
   }
 
   .trip-canceled {
@@ -578,7 +633,7 @@ a[data-toggle="collapse"] {
     background-color: $white;
     border-radius: 8px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    max-width: 800px; // Constrain form width for better readability
+    // max-width: 800px; // Constrain form width for better readability
     
     form {
       display: flex;
@@ -719,6 +774,40 @@ a[data-toggle="collapse"] {
   
         &:hover {
           color: #ff0000;
+        }
+      }
+    }
+    .card {
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-body {
+        padding: 1.5rem;
+        background-color: #f9f9f9;
+
+        h3 {
+          font-size: 16px;
+          margin-bottom: 1rem;
+          color: $primary;
+          font-weight: 500;
+        }
+
+        p {
+          font-size: 14px;
+          margin-bottom: 0.75rem;
+          line-height: 1.6;
+          color: $grey;
+
+          strong {
+            color: $primary;
+            font-weight: 600;
+          }
         }
       }
     }

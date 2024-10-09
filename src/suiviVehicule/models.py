@@ -407,3 +407,39 @@ class StatusPosMinBank(models.Model):
     class Meta:
         managed = False
         db_table = 'suivivehicule_statuspos_min_transit'
+
+class TrajetcoordonneeVehicleInfo(models.Model):
+    vehicleno = models.CharField(max_length=100)
+    driver_oname = models.CharField(max_length=150)
+    driver_mobile_number = models.CharField(max_length=50)
+    FromPlace = models.CharField(max_length=150)
+    ToPlace = models.CharField(max_length=150)
+    id_trip = models.IntegerField()
+    trip_no = models.IntegerField()
+    trip_start_date = models.CharField(max_length=15, null=False)
+    pick_up_time = models.TimeField()
+    PickUp_H_Pos = models.CharField(max_length=100)
+    PickEnd_H_Pos = models.CharField(max_length=100, null=True)
+    status = models.CharField(max_length=100, null=True)
+    duration = models.CharField(max_length=100, null=True)
+    couleur = models.CharField(max_length=100, null=True)
+    estimatetime = models.CharField(max_length=50, null=True)
+    datetime = models.CharField(max_length=15, null=False)
+    Uid = models.CharField(max_length=50, null=True)
+    idstatusposdetail = models.IntegerField(null=True)
+    trip_start_time = models.TimeField()
+    idstatusparameter = models.IntegerField(null=True)
+    difftimestart = models.FloatField()
+    difftimepickup = models.FloatField()
+    lateby = models.FloatField()
+    current = models.CharField(max_length=150, null=True)
+    speed = models.DecimalField(default=0.0, max_digits=5, decimal_places=2)
+    speedMeasure = models.CharField(max_length=150, default="kph")
+    odometer = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
+    ignition = models.CharField(max_length=150, null=True)
+    engineTime = models.DecimalField(default=0.0, max_digits=10, decimal_places=1)
+    engineStatus = models.CharField(max_length=150, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'suivivehicule_laststatuswithvehiculeinfo'

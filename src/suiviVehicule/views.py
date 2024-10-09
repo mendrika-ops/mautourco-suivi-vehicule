@@ -16,6 +16,7 @@ from suiviVehicule.trip_service import TripService
 from django.core import serializers
 from suiviVehicule.export import Export
 from dateutil.relativedelta import relativedelta
+from suiviVehicule.ia_service import IAService
 
 # Create your views here.
 
@@ -275,8 +276,12 @@ def parameter_refresh(request):
 
 
 def trip_detail_request(request, id_trip):
+    iaService = IAService()
     data = Services().get_data_by_idtrip(id_trip)
-    return render(request, "suiviVehicule/pages/trip_detail.html", context={"item": data})
+    pred = iaService.loadModeleSupervisé(data)
+    predict = [[float(value * 100) for value in sublist] for sublist in pred][0]
+    print (predict[1])
+    return render(request, "suiviVehicule/pages/trip_detail.html", context={"item": data, "predicts": predict})
 
 
 def trip_cancel_request(request, id_trip):
@@ -293,30 +298,44 @@ def trip_cancel_request(request, id_trip):
         "id", "sub_reason_name", "reason"))
     subreasons_json = json.dumps(subreasons)
 
+    record = trip.get_record_comment(id_trip)
+
     return render(request, "suiviVehicule/pages/trip_canceling.html", context={
         "item": data,
         "reasons": reasons,
-        "subreasons": subreasons_json
+        "subreasons": subreasons_json,
+        "current_date": record.datetime.strftime('%Y-%m-%dT%H:%M') if record is not None else '',
+        "comment" : record.comment if record is not None else ''
     })
 
 
 def trip_cancel_action(request, id_trip):
     trip = TripService()
-    if request.method == 'POST':
+    if request.method == 'POST':  
         try:
             data = json.loads(request.body)
             reason_id = data.get('reason_id')
             sub_reason_ids = data.get('sub_reason_ids')
-            print("Reason ", reason_id, " Sub reason ", sub_reason_ids)
 
+            record = trip.get_record_comment(id_trip)
             # Record comment
-            record = trip.save_record_comment(id_trip, "My record")
             trip.save_reason_record(record, reason_id)
             trip.save_subreason_record(record, sub_reason_ids)
             return JsonResponse({'success': True})
         except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+            messages.error(request, e)
 
+def trip_cancel_action_savecomment(request, id_trip):
+    trip = TripService()
+    if request.method == 'POST':
+        try:
+            comment = request.POST.get("comment")
+            date = request.POST.get("date")
+            print("les 2 " , comment, date)
+            record = trip.save_record_comment(id_trip, comment, date)
+        except Exception as e:
+            messages.error(request, e)
+    return redirect("/trip/cancel/"+ id_trip)
 
 def trip_get_current_reason(request, id_trip):
     trip = TripService()
@@ -347,12 +366,14 @@ def trip_remove_sub_reason(request, id_trip):
 def update_record_data_api(request):
     # try:
     # Services().update_vehicule_parameter_record()
-    count = 0
+    # count = 0
 
-    while count != 10:
-        TripService().update_record_random()
-        count+=1
+    # # while count != 10:
+    # TripService().update_record_random()
+    # count+=1
     # except Exception as e:
     #     return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+    #iaService.loadModeleSupervisé()
     return JsonResponse({'success': True}, status=200)
 

@@ -92,7 +92,7 @@
             <table class="table table-borderless col-md-12">
                 <thead>
                     <tr>      
-                        <th scope="col" class="box">Id</th>
+                        <th scope="col" class="box"></th>
                         <th scope="col" class="box head">Driver name</th>
                         <th scope="col" class="box">Vehicule N°</th>
                         <th scope="col" class="box">Driver Mob N°</th>
@@ -126,10 +126,8 @@
                 <tbody>
                 {% for item in data_list %}
                 <tr>
-                    <td>
-                        <a href="/trip/detail/{{ item.id_trip }}" class="outline-btn" data-toggle="tooltip" title="Id trip">
-                        {{ item.id_trip }}
-                        </a>
+                    <td class="list-action">
+                        <a href="/trip/detail/{{ item.id_trip }}" class="btnannulation outline-btn" data-id="{{ item.id_trip }}" title="More info"><img  class="svg" src="{% static '/more-horizontal.svg' %}" alt=""></a> 
                     </td>
                     <td>{{ item.driver_oname }}</td>
                     <td>{{ item.vehicleno }}</td>
@@ -151,8 +149,7 @@
                         <!--<a id="btn-send-2" href="/onerefresh/{{ item.idstatusposdetail }}/{{ item.id }}" class="outline-btn btn-send" data-toggle="tooltip" title="Refresh trip" ><img  class="svg" src="{% static '/reset.svg' %}" alt=""></a>-->
                         <a href="https://www.google.com/maps/dir/{{ item.PickEnd_H_Pos }}/{{  item.PickUp_H_Pos }}" target="_blank" class="outline-btn" data-toggle="tooltip" title="Google map"><img class="svg" target="_blank"
                                                                                         src="{% static '/map.svg' %}"
-                                                                                        alt=""></a>
-                        <a href="" class="btnannulation outline-btn" data-id="{{ item.id_trip }}" data-toggle="modal" data-target="#myModal" data-toggle="tooltip"  title="Cancel trip"><img  class="svg" src="{% static '/garbage.svg' %}" alt=""></a>                                                
+                                                                                        alt=""></a>                                    
                     </td>
                 </tr>
                 {% endfor %}

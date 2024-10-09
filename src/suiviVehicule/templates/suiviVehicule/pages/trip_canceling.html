@@ -5,6 +5,42 @@
 <div class="main">
     <div class="trip-canceled container">
         <h2>Cancellation Trip - {{ item.id_trip }}</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Driver Information Card -->
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Information Importante -->
+                        <p><em class="important-info">Please confirm and update driver details.</em></p>
+                        
+                        <!-- Formulaire qui redirige vers l'URL appropriée -->
+                        <form action="/trip/cancel/comment/save/3002738" method="POST">
+                            {% csrf_token %}
+                            
+                            <!-- Sélecteur de date avec la date par défaut -->
+                            <div class="form-group mt-3">
+                                <label for="date">Date:</label>
+                                <input type="datetime-local" id="date" name="date" class="form-control" value="{{ current_date }}" required>
+                            </div>
+
+                            <!-- Champ Description -->
+                            <div class="form-group mt-3">
+                                <label for="comment">Comment:</label>
+                                <textarea id="comment" name="comment" class="form-control" rows="5" value="" placeholder="Enter your comment here...">{{ comment }}</textarea>
+                            </div>
+
+                            <!-- Bouton Ajouter Commentaire -->
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Add Comment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="trip-canceled container">
         <form id="cancel-trip-form" method="post">
             {% csrf_token %}
 
@@ -59,21 +95,11 @@
 <script src="{% static './main.js' %}"></script>
 <script src="{% static './function.js' %}"></script>
 <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
-
-<style>
-    /* Style général de la page */
-    /* .main {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #ffffff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-    } */
-
-    
-</style>
-
-
-
+<script>
+    // Définir la date actuelle dans le champ de date
+    document.addEventListener('DOMContentLoaded', (event) => {
+        let today = new Date().toISOString().substr(0, 10);
+        document.querySelector("#date").value = today;
+    });
+</script>
 {% endblock %}

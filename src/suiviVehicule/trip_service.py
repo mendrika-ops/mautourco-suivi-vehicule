@@ -23,22 +23,25 @@ class TripService:
     def save_subreason_record(self, record, id_sub_reasons):
         try:
             for id_subreason in id_sub_reasons:
-                if not SubReasonCancelRecord.objects.filter(record_comment_sub_id = record.id, sub_reason_id = id_subreason).exists():
-                    subreason = SubReasonCancel.objects.filter(id = id_subreason).first() 
-                    subreason_record = SubReasonCancelRecord()
-                    setattr(subreason_record, 'record_comment_sub', record)
-                    setattr(subreason_record, 'sub_reason', subreason)
-                    setattr(subreason_record, 'state', State.CREATED.value)
-                    print(subreason_record)
-                    subreason_record.save()
-                else:
-                   subreason = SubReasonCancelRecord.objects.filter(record_comment_sub_id = record.id, sub_reason_id = id_subreason).first()
-                   setattr(subreason, 'state', State.CREATED.value)
-                   subreason.save()
+                self.save_subreason_one_record(record, id_subreason)
             
         except Exception as a:
             raise a
-        
+
+    def save_subreason_one_record(self, record, id_subreason):
+        if not SubReasonCancelRecord.objects.filter(record_comment_sub_id = record.id, sub_reason_id = id_subreason).exists():
+            subreason = SubReasonCancel.objects.filter(id = id_subreason).first() 
+            subreason_record = SubReasonCancelRecord()
+            setattr(subreason_record, 'record_comment_sub', record)
+            setattr(subreason_record, 'sub_reason', subreason)
+            setattr(subreason_record, 'state', State.CREATED.value)
+            print(subreason_record)
+            subreason_record.save()
+        else:
+            subreason = SubReasonCancelRecord.objects.filter(record_comment_sub_id = record.id, sub_reason_id = id_subreason).first()
+            setattr(subreason, 'state', State.CREATED.value)
+            subreason.save() 
+
     def save_reason_record(self, record, id_reason):
         try:
             if not ReasonCancelRecord.objects.filter(record_comment_id = record.id, reason_id = id_reason).exists():
@@ -50,16 +53,16 @@ class TripService:
         except Exception as a:
             raise a
 
-    def save_record_comment(self,id_trip, comment):
+    def save_record_comment(self,id_trip, comment, date):
         if self.checkexist(id_trip):
-            pass
+            raise Exception("Error! Already canceled")
         else:
             data = Trajetcoordonnee.objects.filter(id_trip=id_trip)
             row = data[0]
             record = Recordcomment()
             record.comment = comment
             record.id_trip = id_trip
-            record.datetime = datetime.now() 
+            record.datetime = date
             record.vehicleno = row.vehicleno
             record.driver_oname = row.driver_oname
             record.FromPlace = row.FromPlace
@@ -89,23 +92,36 @@ class TripService:
         for sub_reason_rec_id in sub_reason_rec_ids:
             sub_reason_rec = SubReasonCancelRecord.objects.filter(id=sub_reason_rec_id.id, record_comment_sub=record.id, state=State.CREATED.value).first()   
             setattr(sub_reason_rec, 'state', state)
-            sub_reason_rec.save()
-
-
+            sub_reason_rec.save()        
+        
     def update_record_random(self):
-        elements_with_quotas = [
-            ["GPS, not responding", 30],  # 40% de chance
-            ["Probleme chauffeur", 30],    # 30% de chance
-            ["Retard du vehicule", 20],    # 20% de chance
-            ["Moteur défaillant", 10]      # 10% de chance
-        ]
+        subreasons = SubReasonCancel.objects.filter()
 
-        elements = [item[0] for item in elements_with_quotas]
-        quotas = [item[1] for item in elements_with_quotas]
+        elements = [(index, subreason.sub_reason_name) for index, subreason in enumerate(subreasons)]
+        quotas = [subreason.order for subreason in subreasons]
 
-        random_choice = random.choices(elements, weights=quotas, k=1)[0]
+        k = random.choice([2,1,4])
 
-        print("Élément sélectionné :", random_choice)
+        records = Recordcomment.objects.filter(etat=0, catno=10)
+        for record in records:
+            random_choices = random.sample(random.choices(elements, weights=quotas, k=len(elements)), k=k)
+            comment = ""
+            for rand in set(random_choices):
+                print("indroo "+ record.comment+ " ::: "+ str(rand[1]) + " : "+ subreasons[rand[0]].sub_reason_name)
+                subreason_id = subreasons[rand[0]].id
+                reason_id = subreasons[rand[0]].reason_id
+                #self.save_reason_record(record, reason_id)
+                #self.save_subreason_one_record(record, subreason_id)
+                comment+= subreasons[rand[0]].sub_reason_name + ", "
+            setattr(record, "comment", comment)
+            #record.save()
+            print("Élément sélectionné : ", comment)
+
+    def get_record_comment(self, id_trip):
+        record = Recordcomment.objects.filter(id_trip=id_trip).first()
+        return record
+        
+    
             
 
 

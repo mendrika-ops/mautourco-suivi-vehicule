@@ -25,6 +25,7 @@ urlpatterns = [
     path("trip/detail/<str:id_trip>", trip_detail_request),
     path("trip/cancel/<str:id_trip>", trip_cancel_request),
     path("trip/cancel/save/<str:id_trip>", trip_cancel_action),
+    path("trip/cancel/comment/save/<str:id_trip>", trip_cancel_action_savecomment),
     path("trip/cancel/get_current_reasons/<str:id_trip>", trip_get_current_reason),
     path("trip/cancel/remove_reason/<str:id_trip>", trip_remove_reason),
     path("trip/cancel/remove_sub_reason/<str:id_trip>", trip_remove_reason),

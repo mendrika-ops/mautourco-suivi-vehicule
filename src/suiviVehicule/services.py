@@ -3,7 +3,7 @@ import requests
 from django.db import IntegrityError, connection, connections, transaction
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Planning, Recaprefresh, Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units, StatusposMin, BankPosition, StatusPosMinBank
+from suiviVehicule.models import Planning, Recaprefresh, Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units, StatusposMin, BankPosition, StatusPosMinBank, TrajetcoordonneeVehicleInfo
 from datetime import datetime,tzinfo
 from dateutil import tz
 import time
@@ -594,7 +594,7 @@ class Services():
         return data
     
     def get_data_by_idtrip(self, id_trip):
-        return Trajetcoordonnee.objects.filter(id_trip=id_trip).first()
+        return TrajetcoordonneeVehicleInfo.objects.filter(id_trip=id_trip).first()
     
     def get_data_at_time(self):
         self.get_api_data()
@@ -713,6 +713,7 @@ class Services():
             else:
                 print("Not in planning")
                 continue
+
 
                 
         
