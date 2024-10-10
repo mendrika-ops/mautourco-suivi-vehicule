@@ -1,0 +1,32 @@
+{% extends "admin/login.html" %}
+{% load static %}
+<link
+      rel="icon"
+      type="image/x-icon"
+      href="{% static './image/favicon.png' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static './bootstrap-4.3.1/bootstrap-4.3.1/dist/css/bootstrap.min.css' %}"
+    />
+    <!-- <link rel="stylesheet" href="{% static './sass/dist/style.css' %}?v=1.5" /> -->
+    {% load sass_tags %}
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'styles.scss' %}?v=1.6">
+
+{% block content %}
+    
+    <div class="custom-login-container">
+        <h2>Welcome to Vehicle flotte</h2>
+        
+        {% if user.is_authenticated %}
+            <p>Hello, {{ user.username }}! You are logged in.</p>
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            {{ block.super }}
+            
+            <div class="additional-links">
+                <a href="#">Forgot Password?</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

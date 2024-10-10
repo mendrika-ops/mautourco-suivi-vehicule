@@ -17,6 +17,7 @@ from django.core import serializers
 from suiviVehicule.export import Export
 from dateutil.relativedelta import relativedelta
 from suiviVehicule.ia_service import IAService
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -76,6 +77,11 @@ def check(checked):
         return obj
     return ""
 
+def load_login(request):
+    return redirect('/user/login')
+
+def load_init(request):
+    return redirect('/user/init')
 
 def dashboard_request(request):
     data_list = []
@@ -84,7 +90,7 @@ def dashboard_request(request):
     cron_minute = RefreshTime.objects.latest("date_time").value
     service = Services()
     is_disable = False
-    form = setForm(request)
+    form = setForm(request) 
     data_list = []
 
     if request.GET.get("page") is not None and request.GET.get("page").isnumeric() == True:
@@ -138,13 +144,15 @@ def dashboard_request(request):
                            "vehicleno": vehicleno,
                            "now": Services().date_time()})
 
-
+@login_required
 def googlemap_request(request, pos):
     return redirect("https://www.google.com/maps?q=" + pos)
 
-
+@login_required
 def refresh_request(request):
     try:
+        if not request.user.is_superuser:
+            return redirect('/user/noaccess')
         Services().refresh()
     except Exception as e:
         messages.error(request, e)
@@ -158,7 +166,7 @@ def one_refresh_request(request, idstatusposdetail, id):
         messages.error(request, e)
     return redirect("/dashboard")
 
-
+@login_required
 def comment_request(request):
     try:
         record = CommentFrom(request.GET)
@@ -168,7 +176,7 @@ def comment_request(request):
         messages.error(request, e)
     return redirect("/dashboard")
 
-
+@login_required
 def log_request(request):
     records = []
     service = Services()
@@ -194,8 +202,10 @@ def log_request(request):
                       "status": status
                       })
 
-
+@login_required
 def parameter_update_request(request, id):
+    if not request.user.is_superuser:
+        return redirect('/user/noaccess')
     param = ParameterForm(request.POST)
     try:
         parameter = Services().get_liste_parameter_byId(id)
@@ -210,8 +220,10 @@ def parameter_update_request(request, id):
         messages.error(request, e)
     return render(request, "suiviVehicule/pages/update_parameter.html", context={"form": param})
 
-
+@login_required
 def parameter_liste_request(request):
+    if not request.user.is_superuser:
+        return redirect('/user/noaccess')
     data = Services().get_liste_parameter()
     return render(request, "suiviVehicule/pages/liste_parameter.html", context={"data_list": data})
 
@@ -239,7 +251,7 @@ def log_planning_request(request):
     data = planning().get_list_planning(datefrom, dateto)
     return render(request, "suiviVehicule/pages/log_planning.html", context={"data_list": data})
 
-
+@login_required
 def export_users_xls(request):
     Services().date_time()
     datefrom = request.GET.get('datefrom')
@@ -247,8 +259,11 @@ def export_users_xls(request):
     response = Export().export_record(datefrom, dateto)
     return response
 
-
+@login_required
 def recaprefresh_request(request):
+    if not request.user.is_superuser:
+        return redirect('/user/noaccess')
+    
     datefrom = request.GET.get('datefrom')
     dateto = request.GET.get('dateto')
     if not datefrom:
@@ -259,8 +274,11 @@ def recaprefresh_request(request):
     data = Services().getRecaprefresh(datefrom, dateto)
     return render(request, "suiviVehicule/pages/log_recap.html", context={"data_list": data, "sum_api": sum(data.values_list('nbre_call_api', flat=True))})
 
-
+@login_required
 def parameter_refresh(request):
+    if not request.user.is_superuser:
+            return redirect('/user/noaccess')
+    
     param = ParameterRefreshForm(request.GET)
     try:
         parameter = RefreshTime.objects.latest("date_time")
@@ -274,7 +292,7 @@ def parameter_refresh(request):
         messages.error(request, e)
     return render(request, "suiviVehicule/pages/refresh_parameter.html", context={"form": param})
 
-
+@login_required
 def trip_detail_request(request, id_trip):
     iaService = IAService()
     data = Services().get_data_by_idtrip(id_trip)
@@ -283,7 +301,7 @@ def trip_detail_request(request, id_trip):
     print (predict[1])
     return render(request, "suiviVehicule/pages/trip_detail.html", context={"item": data, "predicts": predict})
 
-
+@login_required
 def trip_cancel_request(request, id_trip):
     trip = TripService()
     service = Services()
@@ -308,7 +326,7 @@ def trip_cancel_request(request, id_trip):
         "comment" : record.comment if record is not None else ''
     })
 
-
+@login_required
 def trip_cancel_action(request, id_trip):
     trip = TripService()
     if request.method == 'POST':  
@@ -325,6 +343,7 @@ def trip_cancel_action(request, id_trip):
         except Exception as e:
             messages.error(request, e)
 
+@login_required
 def trip_cancel_action_savecomment(request, id_trip):
     trip = TripService()
     if request.method == 'POST':
@@ -337,6 +356,7 @@ def trip_cancel_action_savecomment(request, id_trip):
             messages.error(request, e)
     return redirect("/trip/cancel/"+ id_trip)
 
+@login_required
 def trip_get_current_reason(request, id_trip):
     trip = TripService()
     current_reasons_queryset = trip.get_subreason_recorded_current(id_trip)
@@ -345,7 +365,7 @@ def trip_get_current_reason(request, id_trip):
     # print("current : " + current_reasons)
     return JsonResponse(current_reasons, safe=False)
 
-
+@login_required
 def trip_remove_reason(request, id_trip):
     trip = TripService()
     if request.method == 'POST':
@@ -359,10 +379,11 @@ def trip_remove_reason(request, id_trip):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
-
+@login_required
 def trip_remove_sub_reason(request, id_trip):
     return JsonResponse({'success': False}, status=400)
 
+@login_required
 def update_record_data_api(request):
     # try:
     # Services().update_vehicule_parameter_record()

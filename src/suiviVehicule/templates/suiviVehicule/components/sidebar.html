@@ -10,7 +10,7 @@
         <li class="active">
             <a href="/dashboard"><span class="fa fa-dashboard mr-3"></span> Dashboard</a>
         </li>
-    
+        {% if user.is_staff %}
         <li class="dropdown">
             <a href="#tripMenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 <span class="fa fa-list mr-3"></span> Trips
@@ -21,17 +21,18 @@
                 <li><a href="/record/listes">Trip Logs</a></li>
             </ul>
         </li>
-    
         <li>
-            <a href="#"><span class="fa fa-file mr-3"></span> Reports</a>
+            <a href="#"><span class="fa fa-bell mr-3"></span> Notifications</a>
         </li>
+        {% endif %}
+        {% if user.is_superuser %}
         <li>
             <a href="#"><span class="fa fa-user mr-3"></span> Profile</a>
         </li>
         <li>
-            <a href="#"><span class="fa fa-bell mr-3"></span> Notifications</a>
+            <a href="#"><span class="fa fa-file mr-3"></span> Reports</a>
         </li>
-    
+        
         <li class="dropdown">
             <a href="#settingsDropdown" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 <span class="fa fa-cog mr-3"></span> Settings
@@ -42,6 +43,7 @@
                 <li><a href="/log/recap">API Logs</a></li>
             </ul>
         </li>
+        {% endif %}
     </ul>
     
     <!-- Copyright -->

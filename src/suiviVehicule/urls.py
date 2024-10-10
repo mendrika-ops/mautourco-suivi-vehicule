@@ -2,10 +2,10 @@ from django.urls import path
 from suiviVehicule.views import *
 
 urlpatterns = [
+    path("", load_init, name="dashboard"),
     path('index/', index),
     path("article_<str:numpage>", article),
     path("register", register_request, name="signin"),
-    path("", dashboard_request, name="login"),
     path("dashboard", dashboard_request),
     path("dashboard/", dashboard_request),
     path("map/<str:pos>", googlemap_request),

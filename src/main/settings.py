@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'suiviVehicule',
     'sass_processor',
-    'django.contrib.humanize'
+    'django.contrib.humanize',
+    'userManagement'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -167,3 +168,8 @@ STATICFILES_FINDERS = (
     'sass_processor.finders.CssFinder',
 )
 
+LOGIN_REDIRECT_URL = '/dashboard'
+LOGOUT_REDIRECT_URL = 'login'
+
+SESSION_COOKIE_AGE = 3600
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

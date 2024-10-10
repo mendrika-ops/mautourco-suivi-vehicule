@@ -971,3 +971,66 @@ a[data-toggle="collapse"] {
     padding: 15px;
   }
 }
+
+$hover-color: #004999;
+$text-color: #555;
+$button-padding: 10px 20px;
+$button-font-size: 16px;
+$border-radius: 5px;
+
+@mixin button-style {
+    background-color: #0056b3;
+    color: white;
+    padding: $button-padding;
+    border: none;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-size: $button-font-size;
+    &:hover {
+        background-color: $hover-color;
+    }
+}
+
+// Container for the login form
+.custom-login-container {
+    text-align: center;
+    padding-top: 20px;
+}
+
+// Logo style
+.mautourco-logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+// Heading style
+h2 {
+    color: #0056b3;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+// Description text style
+.login-description {
+    font-size: 14px;
+    color: $text-color;
+    margin-bottom: 20px;
+}
+
+// Additional links for "Forgot password" and "Contact Support"
+.additional-links {
+    margin-top: 20px;
+    
+    a {
+        color: #0056b3;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+// Style for the login button
+input[type="submit"] {
+    @include button-style;
+}

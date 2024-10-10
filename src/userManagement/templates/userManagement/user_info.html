@@ -1,0 +1,24 @@
+{% extends "suiviVehicule/template.html" %}
+{% block content %}
+{% load static %}
+<div class="main">
+    <div class="trip-details container">
+        <h2 class="trip-title">User Info</h2>
+      
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Driver Information Card -->
+            <div class="card">
+              <div class="card-body">
+                <h3>My Profile</h3>
+                <p><strong>Username:</strong> {{ username }}</p>
+                <p><strong>Email:</strong> {{ email }}</p>
+                <p><strong>Is Staff:</strong> {{ is_staff }}</p>
+                <p><strong>Is SuperUser:</strong> {{ is_superuser }}</p>
+              </div>
+            </div>
+           </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

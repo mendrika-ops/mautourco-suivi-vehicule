@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Vehicle Flotte</title>
+    <link
+        rel="icon"
+        type="image/x-icon"
+        href="{% static './image/favicon.png' %}"
+    />
+    <link
+        rel="stylesheet"
+        href="{% static './bootstrap-4.3.1/bootstrap-4.3.1/dist/css/bootstrap.min.css' %}"
+    />
+</head>
+<body>
+    <div class="custom-init-container">
+        <h2>Welcome to Vehicle Flotte</h2>
+
+        <div class="link-buttons">
+            <a href="/user/login" class="btn btn-primary">Users</a>
+            <a href="/dashboard" class="btn btn-success">Connect as guest</a>
+        </div>
+    </div>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .custom-init-container {
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .link-buttons {
+            margin-top: 20px;
+        }
+
+        .btn {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+    </style>
+</body>
+</html>
