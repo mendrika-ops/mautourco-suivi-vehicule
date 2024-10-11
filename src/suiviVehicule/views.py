@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
-from django.utils.datetime_safe import datetime
+from datetime import datetime
 from suiviVehicule.forms import SigninForm, LoginForm, SearchForm, CommentFrom, ParameterForm, ParameterRefreshForm
 from suiviVehicule.models import Recordcommenttrajet, TrajetcoordonneeSamm, RefreshTime, Recordexport
 from suiviVehicule.planning import planning

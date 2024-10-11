@@ -1,42 +1,163 @@
 {% load static %}
 <nav id="navbar">
-    <div class="header row">
-        <div class="col-md-4 header-logo d-flex align-items-center">
-          <div class="custom-menu ml-3">
-            <button type="button" id="sidebarCollapse" class="btn btn-primary">
-                <i class="fa fa-bars"></i>
-                <span class="sr-only">Toggle Menu</span>
-            </button>
-          </div>  
-                   
-        </div>
-        <div class="col-md-4 header-title">
-            <h2>VEHICLE FLEET TRACKING</h2>
-        </div>
-
-        <div class="col-md-4 header-sign-in">
-            <!-- Example single danger button -->
-            <div class="btn-group">
-              <button
-                type="button"
-                class="btn btn-link dropdown-toggle"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <i class="fa-solid fa-user"></i>
-              </button>
-              <div class="dropdown-menu dropdown-menu-right">
-                {% if user.is_authenticated %}
-                <a class="dropdown-item" href="/user/information">My Profile</a>
-                {% endif %}
-                <div class="dropdown-divider"></div>
-               
-                  <a class="dropdown-item" href="/user/logout">Log out</a>
-                
-                
-              </div>
-            </div>
-        </div>
+  <div class="header row">
+    <div class="col-md-4 header-logo d-flex align-items-center">
+      <div class="custom-menu ml-3">
+        <button type="button" id="sidebarCollapse" class="btn btn-primary">
+          <i class="fa fa-bars"></i>
+          <span class="sr-only">Toggle Menu</span>
+        </button>
+      </div>
     </div>
+    <div class="col-md-4 header-title">
+      <h2>VEHICLE FLEET TRACKING</h2>
+    </div>
+
+    <div class="col-md-4 header-sign-in">
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-link dropdown-toggle"
+          id="notification-bell"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <i class="fa-solid fa-bell" style="font-size: 24px;"></i>
+          <span id="notification-counter" class="badge badge-danger">0</span>
+        </button>
+        <ul id="notification-list" class="dropdown-menu dropdown-menu-right notification-dropdown">
+          <!-- Notifications will be dynamically loaded here -->
+        </ul>
+      </div>
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-link dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <i class="fa-solid fa-user" style="font-size: 20px;"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+          {% if user.is_authenticated %}
+          <a class="dropdown-item" href="/user/information">My Profile</a>
+          {% endif %}
+          <div class="dropdown-divider"></div>
+
+          <form id="logout-form" action="/user/logout" method="post" style="display: inline;text-decoration: none;">
+            {% csrf_token %}
+            <button type="submit" class="dropdown-item">Log out</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </nav>
+<style>
+  .notification-icon {
+    position: relative;
+  }
+
+  #notification-bell {
+    cursor: pointer;
+  }
+
+  #notification-counter {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 12px;
+  }
+
+  .notification-dropdown {
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    padding: 10px;
+  }
+
+  .notification-dropdown li {
+    padding: 10px;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .notification-dropdown li:last-child {
+    border-bottom: none;
+  }
+
+  .notification-item {
+    color: inherit;
+    display: block;
+  }
+
+  .notification-item:hover {
+    background-color: #f0f0f0;
+    color: #007bff;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Initial Fetch to Load Notifications
+    fetch('/user/get_notifications')
+      .then(response => response.json())
+      .then(data => {
+        notifications = data;
+        updateNotificationUI();
+      });
+
+    const notificationList = document.getElementById("notification-list");
+    const notificationCounter = document.getElementById("notification-counter");
+    let notifications = [];
+    const socket = new WebSocket(
+      "ws://" + window.location.hostname + ":8001/ws/notifications/"
+    );
+
+    const pingInterval = setInterval(function () {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: "ping" }));  // Envoyer un message de type "ping"
+      }
+    }, 30000);
+
+    socket.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      notifications.push(...data.notifications); // Ajoute les nouvelles notifications
+      updateNotificationUI();
+    };
+
+    function updateNotificationUI() {
+      notificationList.innerHTML = "";
+      notifications.forEach((notification) => {
+        const listItem = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = `/user/mynotification/${notification.id}`; // Assurez-vous que l'ID est correcte
+        link.innerHTML = `<strong>${notification.id} - ${notification.title}</strong><br><small>${notification.message.split(" ").slice(0, 10).join(" ")}...</small>`;
+        link.classList.add("notification-item");
+        link.style.textDecoration = "none"; // Désactiver la décoration par défaut
+        listItem.appendChild(link);
+        notificationList.appendChild(listItem);
+      });
+
+      notificationCounter.textContent = notifications.length;
+    }
+
+    // Gérer l'affichage du dropdown avec Bootstrap
+    $('#notification-bell').on('show.bs.dropdown', function () {
+      console.log('Notification dropdown opened');
+    });
+
+    $('#notification-bell').on('hide.bs.dropdown', function () {
+      console.log('Notification dropdown closed');
+    });
+  });
+</script>
+
+

@@ -1,0 +1,50 @@
+{% extends "suiviVehicule/template.html" %}
+{% block content %}
+{% load static %}
+<div class="main">
+    <div class="notification-details container">
+        <h2 class="notification-title">Notification Details</h2>
+      
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Notification Information Card -->
+            <div class="card">
+              <div class="card-body">
+                <h3>Notification Info</h3>
+                <p><strong>Title:</strong> {{ notification.title }}</p>
+                <p><strong>Message:</strong> {{ notification.message }}</p>
+                <p><strong>Created At:</strong> {{ notification.created_at }}</p>
+                <p><strong>Is Read:</strong> {{ notification.is_read }}</p>
+                
+                {% if not notification.is_read %}
+                <form method="post" action="/user/mynotification/{{ notification.id }}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Mark as Read</button>
+                </form>
+                {% endif %}
+              </div>
+            </div>
+           </div>
+        </div>
+        <div class="cancel-container container">
+            <div >
+                <p>More action ...</p>
+            </div>
+            <div class="row cancel-row">
+                <div class="col-md-6 text-center">
+                    <p class="cancel-text">do you want to cancel this trip ?</p>
+                    <a href="/trip/cancel/{{ item.id_trip }}" class="btn btn-cancel">
+                         Cancel Trip
+                    </a>
+                </div>
+                <div class="col-md-6 text-center">
+                  <p class="cancel-text">Need to reorganised this trip ?</p>
+                  <a href="/trip/cancel/{{ item.id_trip }}" class="btn btn-primary">
+                      Reorganise
+                  </a>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+{% endblock %}

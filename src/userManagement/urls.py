@@ -24,4 +24,7 @@ urlpatterns = [
     path('information', user_info_view, name='user_info'),
     path('noaccess', no_access_view, name='access_denied'),
     path('init', init_view, name='init'),
+    path('get_notifications', get_notifications, name='get_notifications'),
+    path('send', some_event_trigger, name='some_event_trigger'),
+    path('mynotification/<str:notification_id>', load_my_notification, name='load_my_notification'),
 ]

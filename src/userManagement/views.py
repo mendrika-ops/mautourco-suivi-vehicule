@@ -4,6 +4,11 @@ from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.utils import timezone
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from django.http import JsonResponse
+from .models import *
+from .signals import *
 
 def login(request):
     if request.user.is_authenticated:
@@ -49,3 +54,42 @@ def no_access_view(request):
 
 def init_view(request):
     return render(request, 'userManagement/init.html')
+
+def check_cancellation_prediction(trip):
+    send_cancel_notification_to_staff(trip)
+
+def send_cancel_notification_to_staff(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "staff_notifications",
+        {
+            'type': 'notification_message',
+            'message': f'Le véhicule testa a une probabilité d\'annulation supérieure à 20% '
+        }
+    )
+    return JsonResponse({'success': True}, status=200)
+
+@login_required
+def get_notifications(request):
+    notifications = Notification.objects.filter(user=request.user, is_read=False).order_by('-created_at')
+    data = [{"id": n.id,"title": n.title ,"message": n.message, "created_at": n.created_at.strftime('%Y-%m-%d %H:%M:%S')} for n in notifications]
+    return JsonResponse(data, safe=False)
+
+def some_event_trigger(request):
+    if request.user.is_authenticated:
+        user = request.user 
+        notification = Notification.objects.create(
+            user=user,
+            message="Le véhicule a une probabilité d'annulation supérieure à 20%"
+        )
+        notification.save()
+    else:
+        pass
+    return JsonResponse({'success': True}, status=200)
+
+def load_my_notification(request,notification_id):
+    notification = Notification.objects.filter(user=request.user, id= notification_id).first()
+    if request.POST:
+        setattr(notification, "is_read", True)
+        notification.save()
+    return render(request, 'userManagement/my_notification.html', context={'notification': notification})

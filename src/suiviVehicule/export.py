@@ -1,6 +1,6 @@
 import xlwt
 from django.http import HttpResponse
-from django.utils.datetime_safe import datetime
+from datetime import datetime
 from suiviVehicule.models import Recordexport
 class Export:
 

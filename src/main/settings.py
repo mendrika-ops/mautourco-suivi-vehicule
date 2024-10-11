@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'suiviVehicule',
     'sass_processor',
     'django.contrib.humanize',
-    'userManagement'
+    'userManagement',
+    'channels'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -173,3 +174,15 @@ LOGOUT_REDIRECT_URL = 'login'
 
 SESSION_COOKIE_AGE = 3600
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+ASGI_APPLICATION = 'main.asgi.application'
+
+# Configuration du Channel Layer (Redis pour la gestion des messages)
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
