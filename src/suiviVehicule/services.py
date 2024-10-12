@@ -3,12 +3,12 @@ import requests
 from django.db import IntegrityError, connection, connections, transaction
 from humanfriendly import format_timespan
 from django.conf import settings
-from suiviVehicule.models import Planning, Recaprefresh, Recordcomment, Refresh, Statusparameter, Statusparameterlib,Statuspos, TrajetcoordonneeWithUid, UidName, Statusposdetail, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcommenttrajet, Units, StatusposMin, BankPosition, StatusPosMinBank, TrajetcoordonneeVehicleInfo
+from suiviVehicule.models import *
 from datetime import datetime,tzinfo
 from dateutil import tz
 import time
 from suiviVehicule.planning import planning
-
+from userManagement.twilio_service import send_trip_sms
 
 
 class Services():
@@ -375,11 +375,14 @@ class Services():
             setattr(status, 'datetime', now)
             setattr(status, 'desc', 'opp')
             setattr(status, 'nbre', len(list_uid))
-            status.save()
+            # status.save()
             count = 1
             for row in list_uid:
                 print(count,"/",len(list_uid))
-                self.get_position_lat_long(row.Uid, date_time, row, status, now)    
+                # api get position google map
+                # self.get_position_lat_long(row.Uid, date_time, row, status, now)
+                # send message
+                self.set_trip_message(row)
                 count = count + 1 
             self.add_log(now)
         except Exception as e:
@@ -579,9 +582,9 @@ class Services():
     def refresh(self):
         sid = transaction.savepoint()
         try:  
-            self.get_api_data() 
+            # self.get_api_data() 
             # self.rechange()
-            # self.gestion_status_pos()
+            self.gestion_status_pos()
             transaction.savepoint_commit(sid)
         except Exception as e:
             print(e)
@@ -714,6 +717,26 @@ class Services():
                 print("Not in planning")
                 continue
 
+    def set_trip_message(self, trip):
+        message = f"Hello {trip.driver_oname}, your trip from {trip.FromPlace} to {trip.ToPlace} is scheduled to start now. Please begin your journey and ensure arrival at {trip.ToPlace} by {trip.pick_up_time}. Drive safely!"
+        driver_number = "+261341793201"
+        tripMessageLib = TripMessageSendingLib.objects.filter(id_trip=trip.id_trip).exists()
+        try:
+            if not tripMessageLib:
+                # send_trip_sms(driver_number, message)
+                tripMessage = TripMessageSending()
+                setattr(tripMessage, "name", "Begin trip Driver")
+                setattr(tripMessage, "message", message)
+                setattr(tripMessage, "id_trip", trip.id_trip)
+                setattr(tripMessage, "is_send", True)
+                tripMessage.save()
+                print("message saved !")
+        except Exception as e:
+            #send notification 
+            print(e)
+
+
+            
 
                 
         

@@ -9,6 +9,8 @@ from asgiref.sync import async_to_sync
 from django.http import JsonResponse
 from .models import *
 from .signals import *
+from .twilio_service import send_trip_sms
+
 
 def login(request):
     if request.user.is_authenticated:
@@ -93,3 +95,14 @@ def load_my_notification(request,notification_id):
         setattr(notification, "is_read", True)
         notification.save()
     return render(request, 'userManagement/my_notification.html', context={'notification': notification})
+
+
+def notify_driver_sms(request):
+    message = f"Bonjour bob, tena gaigy le izy. Veuillez consulter vos détails."
+    try:
+        send_trip_sms("+261341793201", message)
+        # messages.success(request, "Le chauffeur a été notifié par SMS.")
+    except Exception as e:
+        # messages.error(request, f"Erreur lors de l'envoi du SMS: {str(e)}")
+        return JsonResponse({'error': True}, status=400, message=str(e))
+    return JsonResponse({'success': True}, status=200)

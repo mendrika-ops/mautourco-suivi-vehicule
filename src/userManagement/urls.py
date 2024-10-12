@@ -26,5 +26,6 @@ urlpatterns = [
     path('init', init_view, name='init'),
     path('get_notifications', get_notifications, name='get_notifications'),
     path('send', some_event_trigger, name='some_event_trigger'),
+    path('notify_driver_sms', notify_driver_sms, name='notify_driver_sms'),
     path('mynotification/<str:notification_id>', load_my_notification, name='load_my_notification'),
 ]

@@ -443,3 +443,29 @@ class TrajetcoordonneeVehicleInfo(models.Model):
     class Meta:
         managed = False
         db_table = 'suivivehicule_laststatuswithvehiculeinfo'
+
+
+class TripMessageSending(models.Model):
+    name = models.CharField(max_length=150, null=True)
+    id_trip = models.IntegerField(null=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_send = models.BooleanField(default=False)
+
+class TripMessageSendingLib(models.Model):
+    name = models.CharField(max_length=150, null=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_send = models.BooleanField(default=False)
+    vehicleno = models.CharField(max_length=100)
+    driver_oname = models.CharField(max_length=150)
+    driver_mobile_number = models.CharField(max_length=50)
+    FromPlace = models.CharField(max_length=150)
+    ToPlace = models.CharField(max_length=150)
+    id_trip = models.IntegerField()
+    pick_up_time = models.TimeField()
+    PickUp_H_Pos = models.CharField(max_length=100)
+    resa_trans_type = models.CharField(max_length=100)
+    class Meta:
+        managed = False
+        db_table = 'suivivehicule_tripmessagesendinglib'
