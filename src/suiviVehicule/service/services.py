@@ -8,7 +8,8 @@ from datetime import datetime,tzinfo
 from dateutil import tz
 import time
 from suiviVehicule.planning import planning
-from userManagement.twilio_service import send_trip_sms
+from userManagement.service.twilio_service import send_trip_sms
+from suiviVehicule.service.ia_service import IAService
 
 
 class Services():
@@ -381,6 +382,16 @@ class Services():
                 print(count,"/",len(list_uid))
                 # api get position google map
                 # self.get_position_lat_long(row.Uid, date_time, row, status, now)
+                data = Statusposdetail.objects.get(id_trip=row.id_trip)
+                iaService = IAService()
+                datapred = self.get_data_by_idtrip(row.id_trip)
+                pred = iaService.loadModeleSupervisé(datapred)
+                predict = [[float(value * 100) for value in sublist] for sublist in pred][0]
+                print (predict[1])
+                setattr(data, "annulated", predict[0])
+                setattr(data, "risky", predict[1])
+                setattr(data, "completed", predict[2])
+                data.save()
                 # send message
                 self.set_trip_message(row)
                 count = count + 1 

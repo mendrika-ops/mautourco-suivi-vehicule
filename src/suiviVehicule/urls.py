@@ -30,4 +30,5 @@ urlpatterns = [
     path("trip/cancel/remove_reason/<str:id_trip>", trip_remove_reason),
     path("trip/cancel/remove_sub_reason/<str:id_trip>", trip_remove_reason),
     path("api/update", update_record_data_api),
+    path("trip/visualisation", load_visualisation),
 ]

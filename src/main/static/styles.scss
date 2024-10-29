@@ -850,6 +850,20 @@ a[data-toggle="collapse"] {
       }
     }
   }
+  .visualisation {
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: $white;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    &-title {
+      text-align: center;
+      font-size: 25px;
+      color: $primary;
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+  }
   
 }
 
@@ -925,7 +939,7 @@ a[data-toggle="collapse"] {
 }
 
 #sidebar {
-  flex: 0 0 250px; /* Sidebar has a fixed width */
+  flex: 0 0 200px; /* Sidebar has a fixed width */
   background-color: #343a40; /* Dark background */
   padding: 15px;
   display: flex;

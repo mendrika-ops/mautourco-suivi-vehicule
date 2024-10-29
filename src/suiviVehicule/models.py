@@ -54,7 +54,9 @@ class TrajetcoordonneeSamm(models.Model):
     difftimepickup = models.FloatField()
     lateby = models.FloatField()
     current = models.CharField(max_length=150, null=True)
-
+    annulated = models.FloatField(default=0)
+    risky = models.FloatField(default=0)
+    completed = models.FloatField(default=0)
     class Meta:
         managed = False
         db_table = 'suivivehicle_laststatus'
@@ -144,6 +146,9 @@ class Statusposdetail(models.Model):
     engineTime = models.CharField(max_length=150, null=True)
     engineStatus = models.CharField(max_length=150, null=True)
     modified = models.IntegerField(default=0)
+    annulated = models.FloatField(default=0)
+    risky = models.FloatField(default=0)
+    completed = models.FloatField(default=0)
 
 class Statusparameter(models.Model):
     id = models.indexes
@@ -469,3 +474,40 @@ class TripMessageSendingLib(models.Model):
     class Meta:
         managed = False
         db_table = 'suivivehicule_tripmessagesendinglib'
+
+class VehicleFleetStatistics(models.Model):
+    available_vehicles = models.IntegerField()
+    notavailable_vehicles = models.IntegerField()
+    active_users = models.IntegerField()
+    current_trips = models.IntegerField()
+    last_google_api_call = models.IntegerField()
+    trips_today = models.IntegerField()
+
+    class Meta:
+        managed = False  
+        db_table = 'vehicle_fleet_statistics' 
+        auto_created = True 
+
+    def __str__(self):
+        return f"Stats: {self.available_vehicles} vehicles, {self.active_users} users"
+    
+class PlanningWeekMoy(models.Model):
+    year = models.IntegerField() 
+    month = models.IntegerField() 
+    week = models.IntegerField() 
+    total_plannings = models.IntegerField() 
+    average_plannings_per_day = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
+
+    class Meta:
+        managed = False  
+        db_table = 'planning_week_moy' 
+        auto_created = True 
+
+class PlanningDriverMonth(models.Model):
+    driver_oname = models.CharField(max_length=100)
+    driver_mobile_number = models.CharField(max_length=100)
+    nombre_trajets = models.IntegerField()
+    class Meta:
+        managed = False  
+        db_table = 'planning_driver_month' 
+        auto_created = True 

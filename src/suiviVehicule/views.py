@@ -5,18 +5,18 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from datetime import datetime
 from suiviVehicule.forms import SigninForm, LoginForm, SearchForm, CommentFrom, ParameterForm, ParameterRefreshForm
-from suiviVehicule.models import Recordcommenttrajet, TrajetcoordonneeSamm, RefreshTime, Recordexport
+from suiviVehicule.models import *
 from suiviVehicule.planning import planning
-from suiviVehicule.services import Services
+from suiviVehicule.service.services import Services
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-from suiviVehicule.trip_service import TripService
+from suiviVehicule.service.trip_service import TripService
 from django.core import serializers
 from suiviVehicule.export import Export
 from dateutil.relativedelta import relativedelta
-from suiviVehicule.ia_service import IAService
+from suiviVehicule.service.ia_service import IAService
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -397,4 +397,21 @@ def update_record_data_api(request):
 
     #iaService.loadModeleSupervisé()
     return JsonResponse({'success': True}, status=200)
+
+@login_required
+def load_visualisation(request):
+    stats = VehicleFleetStatistics.objects.all().first()
+    planning_week = PlanningWeekMoy.objects.filter().order_by('week')
+    planning_driver_month = PlanningDriverMonth.objects.all()
+
+    labels = [f"Week {p.week}" for p in planning_week]
+    data = [float(p.average_plannings_per_day) for p in planning_week]
+
+    return render(request, "suiviVehicule/pages/visualisation.html",
+                  context={"stats" : stats,
+                           'labels': json.dumps(labels),
+                            'data': json.dumps(data), 
+                            'planning_driver' : planning_driver_month      
+                    })
+
 

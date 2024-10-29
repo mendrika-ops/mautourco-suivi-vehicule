@@ -20,6 +20,7 @@
         
         {% if user.is_authenticated %}
             <p>Hello, {{ user.username }}! You are logged in.</p>
+            <a href="/dashboard">Go to home</a>
             <form id="logout-form" action="/user/logout" method="post" style="display: inline;text-decoration: none;">
                 {% csrf_token %}
                 <button type="submit" class="dropdown-item">Log out</button>

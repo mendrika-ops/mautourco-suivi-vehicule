@@ -29,9 +29,10 @@
     <body>
       {% load crispy_forms_tags %} {% csrf_token %}
       <div class="wrapper d-flex align-items-stretch">
-          
+        {% if user.is_authenticated %}
+        
           {% include 'suiviVehicule/components/sidebar.html' %}
-
+        {% endif %}
           <!-- Page Content -->
           <div id="content">
             {% include 'suiviVehicule/components/navbar.html' %}

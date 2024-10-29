@@ -9,7 +9,7 @@ from asgiref.sync import async_to_sync
 from django.http import JsonResponse
 from .models import *
 from .signals import *
-from .twilio_service import send_trip_sms
+from .service.twilio_service import send_trip_sms
 
 
 def login(request):

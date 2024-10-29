@@ -9,7 +9,7 @@ from django.db import connection
 from django.forms import ModelForm
 
 from suiviVehicule.models import User, Trajetcoordonnee, TrajetcoordonneeSamm, Recordcomment, Statusparameter, RefreshTime
-from suiviVehicule.services import Services
+from suiviVehicule.service.services import Services
 from datetime import datetime
 
 list_sexe = [
