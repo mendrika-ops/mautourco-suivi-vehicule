@@ -22,7 +22,8 @@ urlpatterns = [
     path("log/recap", recaprefresh_request),
     path("parameter/refresh", parameter_refresh),
     
-    path("trip/detail/<str:id_trip>", trip_detail_request),
+    path("trip/detail/<str:id_trip>", trip_detail_request, name='trip_detail'),
+    path("trip/prediction/<str:id_trip>", trip_prediction_request, name='trip_prediction'),
     path("trip/cancel/<str:id_trip>", trip_cancel_request),
     path("trip/cancel/save/<str:id_trip>", trip_cancel_action),
     path("trip/cancel/comment/save/<str:id_trip>", trip_cancel_action_savecomment),
@@ -31,4 +32,6 @@ urlpatterns = [
     path("trip/cancel/remove_sub_reason/<str:id_trip>", trip_remove_reason),
     path("api/update", update_record_data_api),
     path("trip/visualisation", load_visualisation),
+    path("trip/kpi", load_kpi),
+    path("trip/usagegoogle", load_usage_google),
 ]

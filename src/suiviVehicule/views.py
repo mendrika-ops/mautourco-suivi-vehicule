@@ -18,7 +18,7 @@ from suiviVehicule.export import Export
 from dateutil.relativedelta import relativedelta
 from suiviVehicule.service.ia_service import IAService
 from django.contrib.auth.decorators import login_required
-
+from decimal import Decimal
 # Create your views here.
 
 
@@ -296,10 +296,32 @@ def parameter_refresh(request):
 def trip_detail_request(request, id_trip):
     iaService = IAService()
     data = Services().get_data_by_idtrip(id_trip)
-    pred = iaService.loadModeleSupervisé(data)
-    predict = [[float(value * 100) for value in sublist] for sublist in pred][0]
-    print (predict[1])
-    return render(request, "suiviVehicule/pages/trip_detail.html", context={"item": data, "predicts": predict})
+    details = Services().get_detail_info(id_trip)
+    dates = [entry.daty_time.strftime('%H:%M:%S') for entry in details]
+    speeds = [entry.speed for entry in details]
+    return render(request, "suiviVehicule/pages/trip_detail.html", 
+                  context={"item": data, 
+                            "details": details,
+                            "dates": dates,
+                            "speeds": speeds})
+
+@login_required
+def trip_prediction_request(request, id_trip):
+    iaService = IAService()
+    data = Services().get_data_by_idtrip(id_trip)
+    details = Services().get_detail_info(id_trip)
+    dates = [entry.daty_time.strftime('%H:%M:%S') for entry in details]
+    anormaly = [entry.annulated for entry in details]
+    risky = [entry.risky for entry in details]
+    completed = [entry.completed for entry in details]
+    
+    return render(request, "suiviVehicule/pages/trip_prediction.html", 
+                  context={"item": data,
+                           "dates": dates,
+                           "details": details,
+                           "anormaly": anormaly,
+                           "risky": risky,
+                           "completed": completed})
 
 @login_required
 def trip_cancel_request(request, id_trip):
@@ -414,4 +436,62 @@ def load_visualisation(request):
                             'planning_driver' : planning_driver_month      
                     })
 
+@login_required
+def load_kpi(request):
+    service = Services()
+    datefrom = request.GET.get('datefrom')
+    dateto = request.GET.get('dateto')
+    now = Services().date_time()
+    today = now.strftime('%Y-%m-%d')
+    if not datefrom:
+        datefrom = (now - relativedelta(months=1))
+    if not dateto:
+        dateto = today
+
+    trajetPerf = service.get_trajet_performance_summary(datefrom, dateto)
+
+    queryset = TrajetPerformanceSummary.objects.filter(
+        trip_day__range=[datefrom, dateto]
+    ).order_by('trip_day')
+
+    dates = [entry.trip_day.strftime('%Y-%m-%d') for entry in queryset]
+    total_trips = [entry.total_trips for entry in queryset]
+    completed_trips = [entry.completed_trips for entry in queryset]
+    late_trips = [entry.late_trips for entry in queryset]
+    canceled_trips = [entry.canceled_trips for entry in queryset]
+
+    context = {
+        'trajetPerf' : trajetPerf,
+        'dates': dates,
+        'total_trips': total_trips,
+        'completed_trips': completed_trips,
+        'late_trips': late_trips,
+        'canceled_trips': canceled_trips,
+        'datefrom': datefrom,
+        'dateto': dateto,
+    }
+    return render(request, "suiviVehicule/pages/performance_indicator.html",
+                  context)
+
+@login_required
+def load_usage_google(request):
+    service = Services()
+    datefrom = request.GET.get('datefrom')
+    dateto = request.GET.get('dateto')
+    if not datefrom:
+        datefrom = (Services().date_time() - relativedelta(months=1)).strftime('%Y-%m-%d')
+    if not dateto:
+        dateto = Services().date_time().strftime('%Y-%m-%d')
+    
+    data = Services().getRecaprefresh(datefrom, dateto)
+
+    context = {
+        'data_list' : data,
+        'datefrom': datefrom,
+        'dateto': dateto,
+        "sum_api": sum(data.values_list('nbre_call_api', flat=True))
+
+    }
+    return render(request, "suiviVehicule/pages/usage_google.html",
+                  context)
 

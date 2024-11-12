@@ -1,0 +1,270 @@
+{% extends "suiviVehicule/template.html" %}
+{% block content %}
+{% load static %}
+<script src="assets/js/plugin/webfont/webfont.min.js"></script>
+<!-- CSS Files -->
+<link rel="stylesheet" href="{% static './css/bootstrap.min.css' %}" />
+<link rel="stylesheet" href="{% static './css/plugins.min.css' %}" />
+<link rel="stylesheet" href="{% static './css/kaiadmin.min.css' %}" />
+
+<!-- CSS Just for demo purpose, don't include it in your project -->
+<link rel="stylesheet" href="{% static './css/demo=.css' %}" />
+<div class="main">
+  <nav class="navbar navbar-expand-lg">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/trip/visualisation' %}active{% endif %}" href="/trip/visualisation">Global</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/trip/kpi' %}active{% endif %}" href="/trip/kpi">Trip Information</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == '/trip/usagegoogle' %}active{% endif %}" href="/trip/usagegoogle">Usage Google Maps</a>
+          </li>
+        </ul>
+    </div>
+</nav>
+
+    <div class="visualisation">
+        <h2 class="visualisation-title">Key Performance Indicator</h2>
+        <div class="page-inner">
+          <form action="/trip/kpi" method="GET" class="date-filter-form">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label for="startDate" class="form-label">Date from</label>
+                    <input type="date" class="form-control" id="datefrom" name="datefrom" placeholder="yyyy-mm-dd">
+                </div>
+                <div class="col-md-3">
+                    <label for="endDate" class="form-label">Date to</label>
+                    <input type="date" class="form-control" id="dateto" name="dateto" placeholder="yyyy-mm-dd">
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-secondary me-2">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </div>
+          </form>
+            <div class="row">
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-secondary bubble-shadow-small"
+                        >
+                          <i class="fa-brands fa-google"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <p class="card-category">Total</p>
+                          <h4 class="card-title">{{ trajetPerf.total_trips }}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-primary bubble-shadow-small"
+                        >
+                          <i class="fas fa-user-check"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <p class="card-category">Completed Trip</p>
+                          <h4 class="card-title">{{ trajetPerf.completed_trips }} / {{ trajetPerf.completed_percentage }}%</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-info bubble-shadow-small"
+                        >
+                            <i class="fas fa-car"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                            <p class="card-category">Late Trip</p>
+                            <h4 class="card-title">{{ trajetPerf.late_trips }} / {{ trajetPerf.late_percentage }}%</h4>  
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-success bubble-shadow-small"
+                        >
+                          <i class="fas fa-luggage-cart"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <p class="card-category">Canceled Trip</p>
+                          <h4 class="card-title">{{ trajetPerf.canceled_trips }} / {{ trajetPerf.canceled_percentage }}%</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="card card-stats card-round">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Trip Performance</h5>
+                        <canvas id="tripPerformanceChart2" width="100" height="100"></canvas>
+                        <div class="text-center mt-2">
+                            <h4>Total Trips: {{ trajetPerf.total_trips }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+              <div class="card card-chart">
+                <div class="card-body">
+                  <h4 class="card-title">Trip Performance Over Time</h4>
+                  <canvas id="tripPerformanceChart" ></canvas>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+
+            <div class="row">
+              
+            </div>
+            
+          </div>
+        
+    </div>    
+</div>      
+<script src="{% static './main.js' %}"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('tripPerformanceChart').getContext('2d');
+
+  const tripPerformanceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: {{ dates|safe }},
+          datasets: [
+              {
+                  label: 'Completed Trips',
+                  data: {{ completed_trips|safe }},
+                  borderColor: '#1183ee',
+                  backgroundColor: '#1183ee',
+                  fill: false
+              },
+              {
+                  label: 'Late Trips',
+                  data: {{ late_trips|safe }},
+                  borderColor: 'red',
+                  backgroundColor: 'red',
+                  fill: false
+              },
+              {
+                  label: 'Canceled Trips',
+                  data: {{ canceled_trips|safe }},
+                  borderColor: '#5a4e4e',
+                  backgroundColor: '#5a4e4e',
+                  fill: false
+              }
+          ]
+      },
+      options: {
+          responsive: true,
+          plugins: {
+              title: {
+                  display: true,
+                  text: 'Trip Performance Over Time'
+              }
+          },
+          scales: {
+              x: {
+                  type: 'category',
+                  title: {
+                      display: true,
+                      text: 'Date'
+                  }
+              },
+              y: {
+                  title: {
+                      display: true,
+                      text: 'Number of Trips'
+                  }
+              }
+          }
+      }
+  });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('tripPerformanceChart2').getContext('2d');
+
+        // Example data, replace these with your actual data from Django
+        const completedPercentage = {{ trajetPerf.completed_percentage }};
+        const latePercentage = {{ trajetPerf.late_percentage }};
+        const canceledPercentage = {{ trajetPerf.canceled_percentage }};
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Completed', 'Late', 'Canceled'],
+                datasets: [{
+                    data: [completedPercentage, latePercentage, canceledPercentage],
+                    backgroundColor: ['#1183ee', 'red', '#5a4e4e'],
+                    hoverBackgroundColor: ['#66BB6A', '#FFCA28', '#E57373']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            boxWidth: 15,
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                return `${label}: ${value}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

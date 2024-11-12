@@ -295,10 +295,11 @@ class Recordexport(models.Model):
 class Recaprefresh(models.Model):
     nbre_call_api = models.IntegerField()
     date = models.DateField()
-
+    unitprice = models.DecimalField(default=0.0, max_digits=10, decimal_places=1)
+    price = models.DecimalField(default=0.0, max_digits=10, decimal_places=1)
     class Meta:
         managed = False
-        db_table = 'suivivehicule_recaprefresh'
+        db_table = 'suivivehicule_recaprefresh_withprice'
 
 
 class RefreshTime(models.Model):
@@ -444,6 +445,9 @@ class TrajetcoordonneeVehicleInfo(models.Model):
     ignition = models.CharField(max_length=150, null=True)
     engineTime = models.DecimalField(default=0.0, max_digits=10, decimal_places=1)
     engineStatus = models.CharField(max_length=150, null=True)
+    annulated = models.FloatField(default=0)
+    risky = models.FloatField(default=0)
+    completed = models.FloatField(default=0)
 
     class Meta:
         managed = False
@@ -511,3 +515,37 @@ class PlanningDriverMonth(models.Model):
         managed = False  
         db_table = 'planning_driver_month' 
         auto_created = True 
+
+class TrajetPerformanceSummary(models.Model):
+    total_trips = models.IntegerField()
+    completed_trips = models.IntegerField()
+    completed_percentage = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
+    late_trips = models.IntegerField()
+    late_percentage = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
+    canceled_trips = models.IntegerField()
+    canceled_percentage = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
+    trip_day = models.DateField(primary_key=True)
+    class Meta:
+        managed = False  
+        db_table = 'trajet_performance_summary' 
+        auto_created = True 
+
+class TrajetDetailInfoVehicule(models.Model):
+    id_trip = models.IntegerField()
+    duration = models.CharField(max_length=100, null=True)
+    daty_time = models.CharField(max_length=15, null=False)
+    Uid = models.CharField(max_length=50, null=True)
+    current = models.CharField(max_length=150, null=True)
+    speed = models.DecimalField(default=0.0, max_digits=5, decimal_places=2)
+    speedMeasure = models.CharField(max_length=150, default="kph")
+    odometer = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
+    ignition = models.CharField(max_length=150, null=True)
+    engineTime = models.DecimalField(default=0.0, max_digits=10, decimal_places=1)
+    engineStatus = models.CharField(max_length=150, null=True)
+    annulated = models.FloatField(default=0)
+    risky = models.FloatField(default=0)
+    completed = models.FloatField(default=0)
+    
+    class Meta:
+        managed = False
+        db_table = 'suivivehicule_detailinfovehicule'

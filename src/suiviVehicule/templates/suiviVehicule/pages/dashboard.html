@@ -103,9 +103,9 @@
                         <th scope="col" class="box head-off" data-toggle="tooltip" title="Estimate time to reach pickup place from current position" >ETA</th>
                         <th scope="col" class="box head-off" data-toggle="tooltip" title="Estimate time to reach pickup place from current position" >Actual Time</th>
                         <th scope="col" class="box head-off" data-toggle="tooltip" title="Late by" >Late by</th>
-                        <th scope="col" class="box head-off" data-toggle="tooltip" title="Late by" >%Cncl</th>
-                        <th scope="col" class="box head-off" data-toggle="tooltip" title="Late by" >%Risk</th>
-                        <th scope="col" class="box head-off" data-toggle="tooltip" title="Completed" >%Cmpt</th>
+                        <th scope="col" class="box head-off" data-toggle="tooltip" title="Late by" >*Anomaly</th>
+                        <th scope="col" class="box head-off" data-toggle="tooltip" title="Late by" >*Late</th>
+                        <th scope="col" class="box head-off" data-toggle="tooltip" title="Completed" >*Safe</th>
                         <th scope="col" class="box head-off">
                             Status
                         </th>
@@ -128,13 +128,13 @@
                     <td style="text-align: center;">{{ item.estimatetime|date:"H:i:s " }}</td>
                     <td style="text-align: center;">{{ item.datetime|date:"H:i:s " }}</td>
                     <td style="text-align: center;">{{ item.lateby |floatformat:0}}</td>
-                    <td style="text-align: center; background-color: rgba(0, 165, 0, 0.2);">
+                    <td style="text-align: center;">
                         {{ item.annulated |floatformat:1}}%
                     </td>
-                    <td style="text-align: center; background-color: rgba(0, 165, 0, 0.2);">
+                    <td style="text-align: center;">
                         {{ item.risky |floatformat:1}}%
                     </td>
-                    <td style="text-align: center; background-color:  rgba(0, 165, 0, 0.2);">
+                    <td style="text-align: center;">
                         {{ item.completed |floatformat:1}}%
                     </td>
                     <td class="list-action">

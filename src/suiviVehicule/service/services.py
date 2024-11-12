@@ -10,7 +10,7 @@ import time
 from suiviVehicule.planning import planning
 from userManagement.service.twilio_service import send_trip_sms
 from suiviVehicule.service.ia_service import IAService
-
+from django.db.models import Sum, F, FloatField, ExpressionWrapper
 
 class Services():
     UserIdGuid=''
@@ -746,6 +746,25 @@ class Services():
             #send notification 
             print(e)
 
+    def get_trajet_performance_summary(self, start_date, end_date):
+        summary = TrajetPerformanceSummary.objects.filter(
+            trip_day__range=[start_date, end_date]
+        ).aggregate(
+            total_trips=Sum('total_trips'),
+            completed_trips=Sum('completed_trips'),
+            late_trips=Sum('late_trips'),
+            canceled_trips=Sum('canceled_trips')
+        )
+
+        total_trips = summary['total_trips'] or 0
+        summary['completed_percentage'] = round((summary['completed_trips'] * 100.0 / total_trips), 2) if total_trips > 0 else 0
+        summary['late_percentage'] = round((summary['late_trips'] * 100.0 / total_trips), 2) if total_trips > 0 else 0
+        summary['canceled_percentage'] = round((summary['canceled_trips'] * 100.0 / total_trips), 2) if total_trips > 0 else 0
+
+        return summary
+    
+    def get_detail_info(self, id_trip):
+        return TrajetDetailInfoVehicule.objects.filter(id_trip=id_trip).order_by('-daty_time')
 
             
 
