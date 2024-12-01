@@ -34,4 +34,9 @@ urlpatterns = [
     path("trip/visualisation", load_visualisation),
     path("trip/kpi", load_kpi),
     path("trip/usagegoogle", load_usage_google),
+
+    path("report/list", report_list_request),
+    path("report/list/details/<str:id_report>", report_detail_request),
+    path("report/send_email", send_email_request),
+
 ]

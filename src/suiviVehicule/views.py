@@ -10,15 +10,16 @@ from suiviVehicule.planning import planning
 from suiviVehicule.service.services import Services
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt  
 from django.http import HttpResponse
-from suiviVehicule.service.trip_service import TripService
+from suiviVehicule.service.service_trip import TripService
 from django.core import serializers
 from suiviVehicule.export import Export
 from dateutil.relativedelta import relativedelta
-from suiviVehicule.service.ia_service import IAService
+from suiviVehicule.service.service_ia import IAService
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal
+from suiviVehicule.service.service_email import EmailService
 # Create your views here.
 
 
@@ -495,3 +496,19 @@ def load_usage_google(request):
     return render(request, "suiviVehicule/pages/usage_google.html",
                   context)
 
+
+def report_list_request(request):
+    service = Services()
+    data = service.get_rapportauto_list()
+    context = {"data_list": data}
+    return render(request, "suiviVehicule/pages/liste_report.html", context)
+    
+def report_detail_request(request, id_report):
+    service = Services()
+    data = service.get_rapportauto_log(id_report)
+    context = {"data_list": data}
+    return render(request, "suiviVehicule/pages/liste_report_detail.html", context)
+   
+def send_email_request(request):
+    status = EmailService().send_mail_weekly()
+    return JsonResponse({'status': status})

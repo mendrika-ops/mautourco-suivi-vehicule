@@ -17,8 +17,12 @@
           </ul>
       </div>
   </nav>
-    <div class="trip-details container">
-        <h2 class="trip-title">Trip Details - {{ item.id_trip }}</h2>
+  <h2 style="text-align: center;">Trip Details - {{ item.id_trip }}</h2>
+
+  <div class="row">
+    <div class="col-md-7">
+    <div class="trip-details container" style="height: 650px;">
+        <h2 class="trip-title">Trip Information</h2>
       
         <div class="row">
           <div class="col-md-8">
@@ -31,14 +35,18 @@
               </div>
             </div>
 
-            <!-- Vehicle Information Card -->
+            <!-- Driver Information Card -->
             <div class="card mt-4">
-              <div class="card-body">
-                <h3>Vehicle Information</h3>
-                <p><strong>Vehicle N°:</strong> {{ item.vehicleno }}</p>
-                <p><strong>Current Position:</strong> {{ item.current }}</p>
+              <div class="card">
+                <div class="card-body">
+                  <h3>Resume Prediction</h3>
+                  <p><strong>Anormaly:</strong> {{ item.annulated }} %</p>
+                  <p><strong>Late:</strong> {{ item.risky }} %</p>
+                  <p><strong>Safe:</strong> {{ item.completed }} %</p>
+                </div>
               </div>
             </div>
+            
 
             <!-- Trip Information Card -->
             <div class="card mt-4">
@@ -55,12 +63,29 @@
             <div class="card">
               <div class="card-body">
                 <h3>Timing Information</h3>
-                <p><strong>Pick Up Time:</strong> {{ item.pick_up_time|date:"H:i:s" }}</p>
-                <p><strong>Estimated Time (ETA):</strong> {{ item.estimatetime|date:"H:i:s" }}</p>
-                <p><strong>Actual Time:</strong> {{ item.datetime|date:"H:i:s" }}</p>
-                <p><strong>Late By:</strong> {{ item.lateby|floatformat:0 }} minutes</p>
+                <div class="d-flex justify-content-between">
+                  <p><strong>Pick Up Time:</strong></p>
+                  <p>{{ item.pick_up_time|date:"H:i:s" }}</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <p><strong>Estimated Time (ETA):</strong></p>
+                  <p>{{ item.estimatetime|date:"H:i:s" }}</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <p><strong>Actual Time:</strong></p>
+                  <p>{{ item.datetime|date:"H:i:s" }}</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <p><strong>Late By:</strong></p>
+                  <p> {% if item.lateby == 0 or not item.lateby %}
+                    N/A
+                  {% else %}
+                    {{ item.lateby|floatformat:0 }} minutes
+                  {% endif %}</p>
+                </div>
               </div>
             </div>
+            
 
             <!-- Status Card -->
             <div class="card mt-4">
@@ -94,67 +119,75 @@
           </div>
         </div>
     </div>
-    <div class="trip-details container">
+    </div>
+    <div class="col-md-5">
+    <div class="trip-details container" style="height: 650px;">
       <h2 class="trip-title">Vehicule Information</h2>
       <div class="row">
-        <div class="col-md-4">
-          <!-- Driver Information Card -->
-          <div class="card">
+        <div class="col-md-12">
+          <div class="card mb-3">
             <div class="card-body">
-              <h3>Resume Prediction</h3>
-              <p><strong>Anormaly:</strong> {{ item.annulated }} %</p>
-              <p><strong>Late:</strong> {{ item.risky }} %</p>
-              <p><strong>Safe:</strong> {{ item.completed }} %</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <!-- Timing Information Card -->
-          <div class="card">
-            <div class="card-body">
-              <h3>Speed</h3>
-                <div class="text-center">
-                   <p>{{ item.speed }} / {{ item.speedMeasure }}</p>
-                </div>
-            </div>
-          </div>
-
-          <!-- Status Card -->
-          <div class="card mt-4">
-            <div class="card-body">
-              <h3>Odometer</h3>
-                <div class="text-center">
-                   <p>{{ item.odometer }} km</p>
-                </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <!-- Timing Information Card -->
-          <div class="card">
-            <div class="card-body">
-              <h3>Engine Status</h3>
-                <div class="text-center">
-                   <p>{{ item.engineStatus }}</p>
-                </div>
-            </div>
-          </div>
-
-          <!-- Status Card -->
-          <div class="card mt-4">
-            <div class="card-body">
-              <h3>Engine Time</h3>
-                <div class="text-center">
-                   <p>{{ item.engineTime }}</p>
-                </div>
+               <p><strong>Vehicle N°:</strong> {{ item.vehicleno }}</p>
+              <p><strong>Current Position:</strong> {{ item.current }}</p>
             </div>
           </div>
         </div>
       </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <!-- Speed Card -->
+          <div class="card mb-3">
+            <div class="card-body">
+              <h3>Speed</h3>
+              <div class="text-center">
+                <p>{{ item.speed }} / {{ item.speedMeasure }}</p>
+              </div>
+            </div>
+          </div>
+      
+          <!-- Odometer Card -->
+          <div class="card mb-3">
+            <div class="card-body">
+              <h3>Odometer</h3>
+              <div class="text-center">
+                <p>{{ item.odometer }} km</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <!-- Engine Status Card -->
+          <div class="card mb-3">
+            <div class="card-body">
+              <h3>Engine Status</h3>
+              <div class="text-center">
+                <p>{{ item.engineStatus }}</p>
+              </div>
+            </div>
+          </div>
+      
+          <!-- Engine Time Card -->
+          <div class="card mb-3">
+            <div class="card-body">
+              <h3>Engine Time</h3>
+              <div class="text-center">
+                <p>{{ item.engineTime }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
     </div>
+  </div>
+  </div>
+  <h2 style="text-align: center;">Trip Historic</h2>
 
+  <div class="row">
+    <div class="col-md-6">
     <div class="trip-details container">
-      <h2 class="trip-title">Trip historic</h2>
+      <!-- <h2 class="trip-title">Trip historic</h2> -->
       <div class="row">
         <div class="col-md-12">
           <div class="card card-round">
@@ -194,13 +227,17 @@
         </div>
       </div>
     </div>
-
+    </div>
+  <div class="col-md-6">
+    
     <div class="trip-details container">
       <h2 class="trip-title">Speed check list</h2>
-      <canvas id="tripHistoryChart" width="600" height="400"></canvas>
+      <canvas id="tripHistoryChart" width="600" height="300"></canvas>
     </div>
+  </div>
+</div>
     <!-- Cancel Trip Section -->
-    <div class="cancel-container container">
+    <div class="cancel-container">
       <div >
         <p>More action ...</p>
     </div>
@@ -219,7 +256,6 @@
         </div>
       </div>
     </div>
-
     
 </div>  
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>    

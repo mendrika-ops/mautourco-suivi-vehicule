@@ -17,11 +17,11 @@
             </a>
             <ul class="collapse list-unstyled show" id="tripMenu">
                 <li><a href="/dashboard">
-                    <i class="fa fa-road" aria-hidden="true"></i> Trip Current</a></li>
+                    <i class="fa fa-id-card-o" aria-hidden="true"></i> Current trip</a></li>
                 <li><a href="/planning/list"> 
-                    <i class="fa fa-id-card-o" aria-hidden="true"></i> Trip Planner</a></li>
+                    <i class="fa fa-id-card-o" aria-hidden="true"></i> Planner trip</a></li>
                 <li><a href="/record/listes"> 
-                    <i class="fa fa-fighter-jet" aria-hidden="true"></i> Trip Audit</a></li>
+                    <i class="fa fa-id-card-o" aria-hidden="true"></i> Audit</a></li>
             </ul>
         </li>
         <!--<li>
@@ -29,15 +29,6 @@
         </li>-->
         {% endif %}
         {% if user.is_superuser %}
-        <li class="dropdown">
-            <a href="/user/information" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                <span class="fa fa-user mr-3"></span> Profile
-            </a>
-            <ul class="collapse list-unstyled show" id="profileMenu">
-                <li><a href="/user/information"> 
-                    <i class="fa fa-users" aria-hidden="true"></i> My profile</a></li>
-            </ul>
-        </li>
         <li>
             <a href="#"><span class="fa fa-line-chart mr-3"></span> Visualisation</a>
             <ul class="collapse list-unstyled show" id="profileMenu">
@@ -49,7 +40,17 @@
                     <i class="fa fa-area-chart" aria-hidden="true"></i> Usage Google Maps</a></li>
             </ul>
         </li>
-        
+        <li class="dropdown">
+            <a href="/user/information" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <span class="fa fa-user mr-3"></span> User
+            </a>
+            <ul class="collapse list-unstyled show" id="profileMenu">
+                <li><a href="/user/information"> 
+                    <i class="fa fa-users" aria-hidden="true"></i> My profile</a></li>
+                <li><a href="/report/list"> 
+                    <i class="fa fa-auto" aria-hidden="true"></i> Automatic report</a></li>
+            </ul>
+        </li>
         <li class="dropdown">
             <a href="#settingsDropdown" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 <span class="fa fa-cog mr-3"></span> Settings

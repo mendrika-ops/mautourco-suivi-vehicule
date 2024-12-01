@@ -1,0 +1,76 @@
+{% extends "suiviVehicule/template.html" %}
+{% block content %}
+{% load static %}
+<script src="assets/js/plugin/webfont/webfont.min.js"></script>
+<!-- CSS Files -->
+<link rel="stylesheet" href="{% static './css/bootstrap.min.css' %}" />
+<link rel="stylesheet" href="{% static './css/plugins.min.css' %}" />
+
+<!-- CSS Just for demo purpose, don't include it in your project -->
+<link rel="stylesheet" href="{% static './css/demo=.css' %}" />
+<div class="main">
+    <div class="visualisation">
+        <h2 class="visualisation-title">Automatic Reports</h2>
+        <div class="page-inner">
+          <form action="/trip/usagegoogle" method="GET" class="date-filter-form">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label for="startDate" class="form-label">Date from</label>
+                    <input type="date" class="form-control" id="datefrom" name="datefrom" placeholder="yyyy-mm-dd">
+                </div>
+                <div class="col-md-3">
+                    <label for="endDate" class="form-label">Date to</label>
+                    <input type="date" class="form-control" id="dateto" name="dateto" placeholder="yyyy-mm-dd">
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-secondary me-2">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </div>
+          </form>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card card-round">
+                  <div class="card-header">
+                    <div class="card-head-row card-tools-still-right">
+                      <div class="card-title">Reports</div>
+                    </div>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="table-responsive">
+                      <table class="table align-items-center mb-0">
+                        <thead class="thead-light">
+                          <tr>
+                            <th scope="col" >Creation date</th>
+                            <th scope="col" >Report type</th>
+                            <th scope="col" >Group</th>
+                            <th scope="col" >Object</th>
+                            <th scope="col" >Description</th>
+                            <th scope="col" ></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% load humanize %}
+                            {% for item in data_list %}
+                            <td >{{ item.rapport_created_at }}</td><td >{{ item.type_rapport_type }}</td>
+                            <td >{{ item.group_name }}</td>
+                            <td >{{ item.rapport_title }}</td>
+                            <td >{{ item.rapport_description }}</td>
+                            <td >
+                              <a href="/report/list/details/{{item.id}}">details</a>
+                            </td>
+                           </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+    </div>    
+</div>      
+<script src="{% static './main.js' %}"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+{% endblock %}

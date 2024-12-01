@@ -2,21 +2,9 @@ from datetime import date
 import datetime
 
 from django.db import models
-
+from django.contrib.auth.models import User, Group
 
 # Create your models here.
-
-class User(models.Model):
-    id = models.indexes
-    username = models.CharField(max_length=100)
-    mail = models.EmailField(max_length=150)
-    pswd = models.CharField(max_length=250)
-    contact = models.CharField(max_length=50, null=True)
-    address = models.CharField(max_length=100, null=True)
-    sexe = models.CharField(max_length=20, null=True)
-    description = models.TextField()
-    etat = models.IntegerField()
-
 
 class Units(models.Model):
     Uid = models.CharField(max_length=50, null=True)
@@ -549,3 +537,69 @@ class TrajetDetailInfoVehicule(models.Model):
     class Meta:
         managed = False
         db_table = 'suivivehicule_detailinfovehicule'
+
+class TypeRapport(models.Model):
+    type = models.CharField(max_length=100, null=True)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=False)
+
+class RapportAuto(models.Model):
+    title = models.CharField(max_length=100, null=True)
+    type_rapport = models.ForeignKey(TypeRapport, on_delete=models.CASCADE, related_name='type_rapport')
+    sent_to = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="sent_to")
+    description = models.TextField() 
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=False)
+
+class LogRapportAuto(models.Model):
+    rapport_auto = models.ForeignKey(RapportAuto, on_delete=models.CASCADE, related_name="rapport_auto")
+    recipient = models.CharField(max_length=100, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sent_to", null=True)
+    result = models.TextField()
+    status = models.CharField(max_length=100, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class RapportAutoView(models.Model):
+    rapport_title = models.CharField(max_length=100, null=True)
+    rapport_description = models.TextField()
+    rapport_created_at = models.DateTimeField()
+    rapport_is_active = models.BooleanField()
+    type_rapport_id = models.IntegerField()
+    type_rapport_type = models.CharField(max_length=100, null=True)
+    type_rapport_description = models.TextField()
+    type_rapport_created_at = models.DateTimeField()
+    type_rapport_is_active = models.BooleanField()
+    group_id = models.IntegerField()
+    group_name = models.CharField(max_length=150)
+
+    class Meta:
+        managed = False  
+        db_table = 'rapport_auto_view'
+
+class LogRapportAutoView(models.Model):
+    log_recipient = models.CharField(max_length=100, null=True)
+    log_result = models.TextField()
+    log_status = models.CharField(max_length=100, null=True)
+    log_created_at = models.DateTimeField()
+    rapport_id = models.IntegerField()
+    rapport_title = models.CharField(max_length=100, null=True)
+    rapport_description = models.TextField()
+    rapport_created_at = models.DateTimeField()
+    rapport_is_active = models.BooleanField()
+    type_rapport_id = models.IntegerField()
+    type_rapport_type = models.CharField(max_length=100, null=True)
+    type_rapport_description = models.TextField()
+    type_rapport_is_active = models.BooleanField()
+    user_id = models.IntegerField(null=True)
+    user_username = models.CharField(max_length=150, null=True)
+    user_email = models.EmailField(null=True)
+
+    class Meta:
+        managed = False 
+        db_table = 'log_rapport_auto_view'  
+    
+
+    
+
+    

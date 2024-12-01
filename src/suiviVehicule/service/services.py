@@ -9,7 +9,7 @@ from dateutil import tz
 import time
 from suiviVehicule.planning import planning
 from userManagement.service.twilio_service import send_trip_sms
-from suiviVehicule.service.ia_service import IAService
+from suiviVehicule.service.service_ia import IAService
 from django.db.models import Sum, F, FloatField, ExpressionWrapper
 
 class Services():
@@ -765,7 +765,12 @@ class Services():
     
     def get_detail_info(self, id_trip):
         return TrajetDetailInfoVehicule.objects.filter(id_trip=id_trip).order_by('-daty_time')
+    
+    def get_rapportauto_list(self):
+        return RapportAutoView.objects.all().order_by('-rapport_created_at')
 
+    def get_rapportauto_log(self, id_report):
+        return LogRapportAutoView.objects.filter(rapport_id=id_report)
             
 
                 

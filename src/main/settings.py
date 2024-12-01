@@ -190,3 +190,11 @@ CHANNEL_LAYERS = {
 TWILIO_ACCOUNT_SID = 'ACbb626283e1991798dfa5fbaf85f3fc55'
 TWILIO_AUTH_TOKEN = 'c2810c117889f94743f54a99cd1a2a3b'
 TWILIO_PHONE_NUMBER = '+19092560392'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.yahoo.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'mendrika16@yahoo.com'
+EMAIL_HOST_PASSWORD = 'vxdxpondfwoeawrh'
+DEFAULT_FROM_EMAIL = 'mendrika16@yahoo.com'
