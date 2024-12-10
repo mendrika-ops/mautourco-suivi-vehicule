@@ -30,10 +30,13 @@ urlpatterns = [
     path("trip/cancel/get_current_reasons/<str:id_trip>", trip_get_current_reason),
     path("trip/cancel/remove_reason/<str:id_trip>", trip_remove_reason),
     path("trip/cancel/remove_sub_reason/<str:id_trip>", trip_remove_reason),
+    path("trip/cancel/<str:id_trip>/state/<str:status>", trip_change_state),
+    path("trip/wait_confirmation", trip_list_confirmation),
     path("api/update", update_record_data_api),
     path("trip/visualisation", load_visualisation),
     path("trip/kpi", load_kpi),
     path("trip/usagegoogle", load_usage_google),
+    path("trip/reassignation/<str:id_trip>", trip_reassignation_request),
 
     path("report/list", report_list_request),
     path("report/list/details/<str:id_report>", report_detail_request),

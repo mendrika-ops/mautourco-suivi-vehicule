@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os.path
+import sys
 from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -95,13 +96,17 @@ DATABASES = {
      'asterix': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'Asterix',
-        'HOST': '192.168.0.60',
+        'HOST': 'localhost',
         'PORT': '3306',
-        'USER': 'fleet',
-        'PASSWORD': '*IxAyNqR',
+        'USER': 'root',
+        'PASSWORD': 'root',
     }
 }
-
+if 'pytest' in sys.modules:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

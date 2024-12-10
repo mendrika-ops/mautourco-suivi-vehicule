@@ -17,7 +17,7 @@ class TripService:
         return ReasonCancelRecord.objects.filter(reason=id_reason)
     
     def get_subreason_recorded_current(self, id_trip):
-        record = Recordcomment.objects.filter(id_trip=id_trip, etat=0).first()
+        record = Recordcomment.objects.filter(id_trip=id_trip, etat=7).first()
         return SubReasonCancelRecordV1.objects.filter(record_comment_sub_id=record.id, state = State.CREATED.value).all() if record is not None else SubReasonCancelRecordV1.objects.none()
 
     def save_subreason_record(self, record, id_sub_reasons):
@@ -53,7 +53,7 @@ class TripService:
         except Exception as a:
             raise a
 
-    def save_record_comment(self,id_trip, comment, date):
+    def save_record_comment(self,id_trip, comment, date, status):
         if self.checkexist(id_trip):
             raise Exception("Error! Already canceled")
         else:
@@ -70,14 +70,14 @@ class TripService:
             record.trip_start_date = row.trip_start_date
             record.pick_up_time = row.pick_up_time
             record.driver_mobile_number = row.driver_mobile_number
-            record.etat = State.CANCELED.value
+            record.etat = status
 
             record.save()
 
-        return Recordcomment.objects.filter(id_trip=id_trip,etat=State.CANCELED.value).first()
+        return Recordcomment.objects.filter(id_trip=id_trip,etat=status).first()
     
     def checkexist(self, id_trip):
-        return Recordcomment.objects.filter(id_trip=id_trip,etat=State.CANCELED.value).exists()
+        return Recordcomment.objects.filter(id_trip=id_trip,etat=State.WAITING.value).exists()
     
     def sub_record_json_to_object(self, sub_reasons):
         subs = []
@@ -88,7 +88,7 @@ class TripService:
         return subs
     
     def change_state_reason_record(self, id_trip, reason_id,sub_reason_rec_ids, state):
-        record = Recordcomment.objects.filter(id_trip=id_trip, etat=State.CANCELED.value).first()
+        record = Recordcomment.objects.filter(id_trip=id_trip, etat=State.WAITING.value).first()
         for sub_reason_rec_id in sub_reason_rec_ids:
             sub_reason_rec = SubReasonCancelRecord.objects.filter(id=sub_reason_rec_id.id, record_comment_sub=record.id, state=State.CREATED.value).first()   
             setattr(sub_reason_rec, 'state', state)
@@ -120,6 +120,16 @@ class TripService:
     def get_record_comment(self, id_trip):
         record = Recordcomment.objects.filter(id_trip=id_trip).first()
         return record
+    
+    def record_change_state(self, id_trip, status):
+        rec = self.get_record_comment(id_trip)  
+        if status == 1:
+            #change status to canceled
+            rec.etat = State.CANCELED_TRIP.value
+            rec.save()
+        elif status == 0:
+            rec.delete()
+            pass
         
     
             

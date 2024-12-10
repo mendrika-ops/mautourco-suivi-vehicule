@@ -7,4 +7,6 @@ class State(Enum):
     IN_PROGRESS = 4
     COMPLETED = 5
     CANCELED = 0
-    FAILED = 7
+    CANCELED_TRIP = 6
+    WAITING = 7
+    

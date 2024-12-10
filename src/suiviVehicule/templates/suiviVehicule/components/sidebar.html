@@ -17,11 +17,11 @@
             </a>
             <ul class="collapse list-unstyled show" id="tripMenu">
                 <li><a href="/dashboard">
-                    <i class="fa fa-id-card-o" aria-hidden="true"></i> Current trip</a></li>
+                    </i> Current trip</a></li>
                 <li><a href="/planning/list"> 
-                    <i class="fa fa-id-card-o" aria-hidden="true"></i> Planner trip</a></li>
+                    </i> Planner trip</a></li>
                 <li><a href="/record/listes"> 
-                    <i class="fa fa-id-card-o" aria-hidden="true"></i> Audit</a></li>
+                    </i> Audit</a></li>
             </ul>
         </li>
         <!--<li>
@@ -30,14 +30,38 @@
         {% endif %}
         {% if user.is_superuser %}
         <li>
+            <a href="#">
+                <span class="fa fa-ban mr-3"></span> Annulments
+            </a>
+            <ul class="collapse list-unstyled show" id="profileMenu">
+                <li>
+                    <a href="/trip/cancel/3002730">
+                        Add an Annulment
+                    </a>
+                </li>
+                <li>
+                    <a href="/trip/wait_confirmation?status=Pending">
+                        View Pending Trips
+                    </a>
+                </li>
+                <li>
+                    <a href="/trip/wait_confirmation?status=Canceled">
+                        View Canceled Trips
+                    </a>
+                </li>
+            </ul>
+        </li>
+        
+
+        <li>
             <a href="#"><span class="fa fa-line-chart mr-3"></span> Visualisation</a>
             <ul class="collapse list-unstyled show" id="profileMenu">
                 <li><a href="/trip/visualisation"> 
-                    <i class="fa fa-globe" aria-hidden="true"></i> Global information</a></li>
+                    </i> Overview</a></li>
                 <li><a href="/trip/kpi"> 
-                    <i class="fa fa-trophy" aria-hidden="true"></i> Trip information</a></li>
+                    </i> Journey Details</a></li>
                 <li><a href="/trip/kpi"> 
-                    <i class="fa fa-area-chart" aria-hidden="true"></i> Usage Google Maps</a></li>
+                    </i> Usage Google Maps</a></li>
             </ul>
         </li>
         <li class="dropdown">
@@ -46,9 +70,9 @@
             </a>
             <ul class="collapse list-unstyled show" id="profileMenu">
                 <li><a href="/user/information"> 
-                    <i class="fa fa-users" aria-hidden="true"></i> My profile</a></li>
+                     My profile</a></li>
                 <li><a href="/report/list"> 
-                    <i class="fa fa-auto" aria-hidden="true"></i> Automatic report</a></li>
+                     Automatic Report</a></li>
             </ul>
         </li>
         <li class="dropdown">
@@ -56,9 +80,9 @@
                 <span class="fa fa-cog mr-3"></span> Settings
             </a>
             <ul class="collapse list-unstyled show" id="settingsDropdown">
-                <li><a href="/parameter/list"> * Parameters</a></li>
-                <li><a href="/parameter/refresh"> * Refresh Timing</a></li>
-                <li><a href="/log/recap"> * API Logs</a></li>
+                <li><a href="/parameter/list"> Parameters</a></li>
+                <li><a href="/parameter/refresh"> Refresh Timing</a></li>
+                <li><a href="/log/recap"> API Logs</a></li>
             </ul>
         </li>
         {% endif %}

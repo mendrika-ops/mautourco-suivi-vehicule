@@ -15,7 +15,7 @@ class planning():
         
         setattr(planning, 'vehicleno', data[0].strip())
         setattr(planning, 'driver_oname', data[1].strip())
-        setattr(planning, 'driver_mobile_number', data[2].strip())
+        setattr(planning, 'driver_mobile_number', '-' if data[2] is None else data[2].strip())
         setattr(planning, 'FromPlace', data[3])
         setattr(planning, 'ToPlace', data[4])
         setattr(planning, 'id_trip', data[5])
@@ -33,8 +33,8 @@ class planning():
         trajetcoordonnee = Trajetcoordonnee()
         
         setattr(trajetcoordonnee, 'vehicleno', data[0].strip())
-        setattr(trajetcoordonnee, 'driver_oname', data[1].strip())
-        setattr(trajetcoordonnee, 'driver_mobile_number', data[2].strip())
+        setattr(trajetcoordonnee, 'driver_oname', '-' if data[1] is None else data[1].strip())
+        setattr(trajetcoordonnee, 'driver_mobile_number', '-' if data[2] is None else data[2].strip())
         setattr(trajetcoordonnee, 'FromPlace', data[3])
         setattr(trajetcoordonnee, 'ToPlace', data[4])
         setattr(trajetcoordonnee, 'id_trip', data[5])

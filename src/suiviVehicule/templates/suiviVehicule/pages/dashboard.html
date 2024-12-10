@@ -93,6 +93,7 @@
                 <thead>
                     <tr>      
                         <th scope="col" class="box"></th>
+                        <th scope="col" class="box">Id Trip</th>
                         <th scope="col" class="box head">Driver name</th>
                         <th scope="col" class="box">Vehicule N°</th>
                         <th scope="col" class="box">Driver Mob N°</th>
@@ -118,6 +119,7 @@
                     <td class="list-action">
                         <a href="/trip/detail/{{ item.id_trip }}" class="btnannulation outline-btn" data-id="{{ item.id_trip }}" title="More info"><img  class="svg" src="{% static '/more-horizontal.svg' %}" alt=""></a> 
                     </td>
+                    <td>{{ item.id_trip }}</td>
                     <td>{{ item.driver_oname }}</td>
                     <td>{{ item.vehicleno }}</td>
                     <td>{{ item.driver_mobile_number }}</td>
@@ -301,7 +303,8 @@ refresh_time()
 </script>
 <script>
    function reload(){
-     window.location.reload()
+    window.location.href = "/refresh";
+    //  window.location.reload()
    }
     /*var availableTags = [
       {% for item in data_auto %}

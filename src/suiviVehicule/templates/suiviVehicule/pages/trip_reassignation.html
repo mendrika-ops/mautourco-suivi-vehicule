@@ -1,0 +1,81 @@
+{% extends "suiviVehicule/template.html" %} {% block content %} {% load static %}
+<script src="assets/js/plugin/webfont/webfont.min.js"></script>
+<!-- CSS Files -->
+<link rel="stylesheet" href="{% static './css/bootstrap.min.css' %}" />
+<link rel="stylesheet" href="{% static './css/plugins.min.css' %}" />
+
+<!-- CSS Just for demo purpose, don't include it in your project -->
+<link rel="stylesheet" href="{% static './css/demo=.css' %}" />
+<div class="main">
+  <div class="visualisation">
+    <h2 class="visualisation-title">Reorganization Trip n° - {{ id_trip }}</h2>
+    <div class="page-inner">
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+          <div class="card card-round">
+            <div class="card-header">
+              <div class="card-head-row card-tools-still-right">
+                <div class="card-title">Reorganization</div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">UID</th>
+                      <th scope="col">Vehicule N°</th>
+                      <th scope="col">Driver Name</th>
+                      <th scope="col">Driver number</th>
+                      <th scope="col">Current Position</th>
+                      <th scope="col">Distance</th>
+                      <th scope="col">Estimate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% load humanize %} {% for item in data_list %} 
+                          <tr>
+                            <td >{{ item.id_trip }}</td>
+                            <td >{{ item.vehicleno }}</td>
+                            <td >{{ item.driver_oname }}</td>
+                            <td >{{ item.driver_number }}</td>
+                            <td >{{ item.current}}</td>
+                            <td >{{ item.difftimepickup|date:"H:i:s "}}</td>
+                            <td >{{ item.difftimepickup|date:"H:i:s "}}</td>
+                            <td >
+                              <a href="/trip/detail/{{ item.id_trip }}?mode=waiting">details</a>
+                            </td>
+                          </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1"></div>
+      </div>
+    </div>
+    <div class="cancel-container">
+        <h1>Add new Vehicule trip</h1>
+        <div class="row cancel-row">
+            <div class="col-md-2 text-center">
+                <input type="number" name="trip_id" class="form-control" value="" width="40">
+            </div>
+            <div class="col-md-2 text-center">
+                <input type="datetime-local" id="date" name="date" class="form-control" value="{{ current_date }}" required>
+            </div>
+            <div class="col-md-4 text-center">
+                <!-- Bouton Reorganise uniquement pour les autres modes -->
+                <a href="/trip/reassignation/{{ item.id_trip }}" class="btn btn-primary">
+                    Reorganize
+                </a>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
+<script src="{% static './main.js' %}"></script>
+<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+{% endblock %}

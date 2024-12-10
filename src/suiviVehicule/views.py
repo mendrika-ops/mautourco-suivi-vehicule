@@ -20,7 +20,7 @@ from suiviVehicule.service.service_ia import IAService
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal
 from suiviVehicule.service.service_email import EmailService
-# Create your views here.
+from suiviVehicule.state import State
 
 
 def index(request):
@@ -295,16 +295,19 @@ def parameter_refresh(request):
 
 @login_required
 def trip_detail_request(request, id_trip):
-    iaService = IAService()
+    mode = request.GET.get('mode')
+
     data = Services().get_data_by_idtrip(id_trip)
     details = Services().get_detail_info(id_trip)
+
     dates = [entry.daty_time.strftime('%H:%M:%S') for entry in details]
     speeds = [entry.speed for entry in details]
     return render(request, "suiviVehicule/pages/trip_detail.html", 
                   context={"item": data, 
                             "details": details,
-                            "dates": dates,
-                            "speeds": speeds})
+                            "dates": dates[::-1],
+                            "speeds": speeds[::-1],
+                            "mode": mode})
 
 @login_required
 def trip_prediction_request(request, id_trip):
@@ -374,7 +377,7 @@ def trip_cancel_action_savecomment(request, id_trip):
             comment = request.POST.get("comment")
             date = request.POST.get("date")
             print("les 2 " , comment, date)
-            record = trip.save_record_comment(id_trip, comment, date)
+            record = trip.save_record_comment(id_trip, comment, date, State.WAITING.value)
         except Exception as e:
             messages.error(request, e)
     return redirect("/trip/cancel/"+ id_trip)
@@ -405,6 +408,15 @@ def trip_remove_reason(request, id_trip):
 @login_required
 def trip_remove_sub_reason(request, id_trip):
     return JsonResponse({'success': False}, status=400)
+
+def trip_change_state(request, id_trip, status):
+    trip = TripService()
+    if request.method == 'GET':
+        try:
+            trip.record_change_state(id_trip, int(status))
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    return redirect('/trip/detail/'+ id_trip)
 
 @login_required
 def update_record_data_api(request):
@@ -512,3 +524,31 @@ def report_detail_request(request, id_report):
 def send_email_request(request):
     status = EmailService().send_mail_weekly()
     return JsonResponse({'status': status})
+
+def trip_list_confirmation(request):
+    records = []
+    service = Services()
+    datefrom = request.GET.get('datefrom')
+    dateto = request.GET.get('dateto')
+    status = request.GET.get('status')
+    try:
+        if not datefrom:
+            datefrom = "2024-07-01"
+        if not dateto:
+            dateto = "2024-12-01"
+        records = service.get_listes_record_wait(status)
+
+    except Exception as e:
+        messages.error(request, e)
+    return render(request, "suiviVehicule/pages/liste_canceled.html", 
+                  context={
+                      "data_list": records, 
+                      "datefrom": datefrom, 
+                      "dateto": dateto,
+                      "status": status
+                      })
+
+def trip_reassignation_request(request, id_trip):
+    context = {"data_list": None,
+               "id_trip": id_trip}
+    return render(request, "suiviVehicule/pages/trip_reassignation.html", context)

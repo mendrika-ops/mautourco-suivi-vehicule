@@ -129,7 +129,7 @@ class Statusposdetail(models.Model):
     is_call_api = models.IntegerField(null=True)
     speed = models.IntegerField(default=0)
     speedMeasure = models.CharField(max_length=150, default="kph")
-    odometer = models.DecimalField(default=0, max_digits=5, decimal_places=2)
+    odometer = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
     ignition = models.CharField(max_length=150, null=True)
     engineTime = models.CharField(max_length=150, null=True)
     engineStatus = models.CharField(max_length=150, null=True)

@@ -91,7 +91,6 @@ class IAService:
         return y_pred
     
     def prepareDataToPredict(self, data):
-        print("data ------- ", data.difftimepickup)
         new_trip_data = pd.DataFrame([{
             'difftimepickup': float(data.difftimepickup) if data.difftimepickup is not None else 0.0,
             'speed': float(data.speed) if data.speed is not None else 0.0 ,
